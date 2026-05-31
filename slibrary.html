@@ -6,115 +6,419 @@
 <title>BARBM312 · The Council of Giants</title>
 <link rel="stylesheet" href="styles.css">
 <script src="protect.js" defer></script>
+<style>
+  /* --- Council of Giants page-specific styles (self-contained, reuses site vars) --- */
+  .g-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:18px;margin-top:8px}
+  .giant{text-align:left;background:#1a1a1a;color:#fff;border:1px solid #2a2a2a;border-radius:14px;
+    padding:22px 20px 18px;display:flex;flex-direction:column;gap:8px;cursor:pointer;font:inherit;
+    transition:transform .15s ease,border-color .15s ease,box-shadow .15s ease;position:relative;overflow:hidden}
+  .giant:hover{transform:translateY(-3px);border-color:#9e1b32;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  .giant:focus-visible{outline:2px solid #9e1b32;outline-offset:2px}
+  .giant .mono{width:46px;height:46px;border-radius:50%;background:#9e1b32;color:#fff;display:flex;
+    align-items:center;justify-content:center;font-weight:700;letter-spacing:.5px;font-size:15px;margin-bottom:4px}
+  .giant .g-name{font-weight:700;font-size:17px;line-height:1.25}
+  .giant .g-fw{color:#d4566b;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+  .giant .g-quote{color:#bdbdbd;font-style:italic;font-size:14px;line-height:1.4;margin-top:2px}
+  .giant .g-cta{margin-top:auto;padding-top:10px;color:#e08a98;font-size:12.5px;font-weight:600;letter-spacing:.02em;opacity:0;transition:opacity .15s ease}
+  .giant:hover .g-cta,.giant:focus-visible .g-cta{opacity:1}
+  /* viewer overlay */
+  .pv{position:fixed;inset:0;background:rgba(10,10,12,.86);display:none;z-index:9999;
+    padding:24px;box-sizing:border-box;flex-direction:column}
+  .pv.open{display:flex}
+  .pv-bar{display:flex;align-items:center;gap:14px;color:#fff;padding:6px 4px 12px}
+  .pv-bar .pv-title{font-weight:700;font-size:16px}
+  .pv-bar .pv-sub{color:#bdbdbd;font-size:13px}
+  .pv-bar .pv-spacer{flex:1}
+  .pv-bar button,.pv-bar a{background:#9e1b32;color:#fff;border:0;border-radius:8px;
+    padding:8px 14px;font:inherit;font-weight:600;font-size:13px;cursor:pointer;text-decoration:none}
+  .pv-bar .pv-close{background:#2a2a2a}
+  .pv-frame-wrap{flex:1;border-radius:10px;overflow:hidden;background:#fff;min-height:0}
+  .pv-frame-wrap iframe{width:100%;height:100%;border:0}
+  @media(max-width:640px){
+    .pv{padding:10px}
+    .pv-bar{flex-wrap:wrap;gap:8px}
+  }
+</style>
 </head>
 <body>
-<div class="topbar"><div class="wrap">
+  <div class="topbar"><div class="wrap">
     <div class="tb-left"><span class="code">BARBM312</span> &nbsp;<span class="nm">The Council of Giants</span></div>
     <a class="back" href="index.html">‹ Course Overview</a>
   </div></div>
   <div class="copybar"><div class="wrap">© Dr. Hildegard Haas 2026 · EU Business School · BARBM312 AI in Investment and Business Growth</div></div>
-<header class="hero"><div class="wrap">
-  <div class="eyebrow">BARBM312 · Framework Author Slibrary</div>
-  <h1 class="serif">The <em>Council</em> of Giants</h1>
-  <p class="sub">"If I have seen further, it is by standing on the shoulders of giants." The thinkers behind every framework in the course — run your challenge through their lenses.</p>
-</div></header>
-<div class="wrap"><div class="stats">
-  <div class="stat"><div class="num">32+</div><div class="lbl">Giants</div></div>
-  <div class="stat"><div class="num">7</div><div class="lbl">Units</div></div>
-  <div class="stat"><div class="num">140</div><div class="lbl">Frameworks</div></div>
-  <div class="stat"><div class="num">5</div><div class="lbl">Lenses / unit</div></div>
-</div></div>
-<section style="padding-bottom:0"><div class="wrap">
-  <p class="sec-sub">Each unit summons a panel of five. They are simulations of public logic, not the people themselves — an echo, not a conversation. Use them to find friction and better distinctions, never as a substitute for your own judgment.</p>
-  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px"><a href="#unit1" style="text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:7px 13px;color:var(--ink-2)">Unit 1 · Data, Growth &amp; CX</a> <a href="#unit2" style="text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:7px 13px;color:var(--ink-2)">Unit 2 · AI Benefits</a> <a href="#unit3" style="text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:7px 13px;color:var(--ink-2)">Unit 3 · AI Costs</a> <a href="#unit4" style="text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:7px 13px;color:var(--ink-2)">Unit 4 · IP &amp; Value</a> <a href="#unit5" style="text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:7px 13px;color:var(--ink-2)">Unit 5 · Agility &amp; Disruption</a> <a href="#unit6" style="text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:7px 13px;color:var(--ink-2)">Unit 6 · Investment AI</a> <a href="#unit7" style="text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:7px 13px;color:var(--ink-2)">Unit 7 · Unicorns &amp; Scaling</a></div>
-</div></section>
 
-  <section id="unit1" style="padding-top:22px"><div class="wrap">
-    <div class="sec-head"><span class="kicker">Unit 1 · Guided Discovery</span><h2 class="serif">AI, Data &amp; Strategic Business Growth</h2></div>
-    <p class="sec-sub">The thinkers anchoring Unit 1's Slibrary. Convene them before you decide.</p>
-    <div class="giants">
-      <div class="giant"><div class="av">RA</div>
-        <div class="gn">Russell Ackoff</div><div class="gr">DIKW Pyramid</div><div class="gl">"A wealth of data creates a poverty of attention."</div></div><div class="giant"><div class="av">JB</div>
-        <div class="gn">John Boyd</div><div class="gr">OODA Loop</div><div class="gl">"Whoever can handle the quickest rate of change survives."</div></div><div class="giant"><div class="av">CC</div>
-        <div class="gn">Clayton Christensen</div><div class="gr">Jobs To Be Done</div><div class="gl">"Customers hire products to do a job."</div></div><div class="giant"><div class="av">JC</div>
-        <div class="gn">Jan Carlzon</div><div class="gr">Moments of Truth</div><div class="gl">"15 seconds decides the whole relationship."</div></div><div class="giant"><div class="av">WC</div>
-        <div class="gn">W. Chan Kim &amp; R. Mauborgne</div><div class="gr">Blue Ocean Strategy</div><div class="gl">"Make the competition irrelevant."</div></div>
+  <header class="hero"><div class="wrap">
+    <div class="eyebrow">BARBM312 · Framework Author Slibrary</div>
+    <h1 class="serif">The <em>Council</em> of Giants</h1>
+    <p class="sub">"If I have seen further, it is by standing on the shoulders of giants." The thinkers behind every framework in the course — run your challenge through their lenses.</p>
+  </div></header>
+
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><div class="num">32+</div><div class="lbl">Giants</div></div>
+      <div class="stat"><div class="num">7</div><div class="lbl">Units</div></div>
+      <div class="stat"><div class="num">140</div><div class="lbl">Frameworks</div></div>
+      <div class="stat"><div class="num">5</div><div class="lbl">Lenses / unit</div></div>
+    </div>
+  </div>
+
+  <section><div class="wrap">
+    <p class="sec-sub">Each unit summons a panel of five. They are simulations of public logic, not the people themselves — an echo, not a conversation. Use them to find friction and better distinctions, never as a substitute for your own judgment. <strong>Click any card to open that thinker's full profile sheet.</strong></p>
+    <div class="pillrow">
+<a class="pill" href="#unit1">Unit 1 · Data, Growth &amp; CX</a>
+<a class="pill" href="#unit2">Unit 2 · AI Benefits</a>
+<a class="pill" href="#unit3">Unit 3 · AI Costs</a>
+<a class="pill" href="#unit4">Unit 4 · IP &amp; Value</a>
+<a class="pill" href="#unit5">Unit 5 · Agility &amp; Disruption</a>
+<a class="pill" href="#unit6">Unit 6 · Investment AI</a>
+<a class="pill" href="#unit7">Unit 7 · Unicorns &amp; Scaling</a>
     </div>
   </div></section>
-  <section id="unit2" style="padding-top:22px"><div class="wrap">
-    <div class="sec-head"><span class="kicker">Unit 2 · Live Data Lab</span><h2 class="serif">The Economics of AI Adoption — Benefits</h2></div>
-    <p class="sec-sub">The thinkers anchoring Unit 2's Slibrary. Convene them before you decide.</p>
-    <div class="giants">
-      <div class="giant"><div class="av">EB</div>
-        <div class="gn">Erik Brynjolfsson</div><div class="gr">Productivity J-Curve</div><div class="gl">"The benefits lag the investment by years."</div></div><div class="giant"><div class="av">RS</div>
-        <div class="gn">Robert Solow</div><div class="gr">Productivity Paradox</div><div class="gl">"Computers everywhere except the productivity statistics."</div></div><div class="giant"><div class="av">ER</div>
-        <div class="gn">Everett Rogers</div><div class="gr">Diffusion of Innovations</div><div class="gl">"Adoption is a social process, not a switch."</div></div><div class="giant"><div class="av">EG</div>
-        <div class="gn">Eliyahu Goldratt</div><div class="gr">Theory of Constraints</div><div class="gl">"An hour saved off a non-bottleneck is a mirage."</div></div><div class="giant"><div class="av">DM</div>
-        <div class="gn">Dave McClure</div><div class="gr">Pirate Metrics</div><div class="gl">"Measure the funnel, not the vanity."</div></div>
+
+  <section id="unit1" class="u-sec">
+    <div class="wrap">
+      <div class="sec-head"><span class="kicker">Unit 1 · Guided Discovery</span><h2 class="serif">AI, Data &amp; Strategic Business Growth</h2></div>
+      <p class="sec-sub">The thinkers anchoring this unit's Slibrary. Convene them before you decide.</p>
+      <div class="g-grid">
+      <button class="giant" data-page="3" data-name="Russell Ackoff" data-fw="DIKW Pyramid" onclick="openGiant(this)">
+        <span class="mono">RA</span>
+        <span class="g-name">Russell Ackoff</span>
+        <span class="g-fw">DIKW Pyramid</span>
+        <span class="g-quote">&ldquo;A wealth of data creates a poverty of attention.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="4" data-name="John Boyd" data-fw="OODA Loop" onclick="openGiant(this)">
+        <span class="mono">JB</span>
+        <span class="g-name">John Boyd</span>
+        <span class="g-fw">OODA Loop</span>
+        <span class="g-quote">&ldquo;Whoever can handle the quickest rate of change survives.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="5" data-name="Clayton Christensen" data-fw="Jobs To Be Done" onclick="openGiant(this)">
+        <span class="mono">CC</span>
+        <span class="g-name">Clayton Christensen</span>
+        <span class="g-fw">Jobs To Be Done</span>
+        <span class="g-quote">&ldquo;Customers hire products to do a job.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="6" data-name="Jan Carlzon" data-fw="Moments of Truth" onclick="openGiant(this)">
+        <span class="mono">JC</span>
+        <span class="g-name">Jan Carlzon</span>
+        <span class="g-fw">Moments of Truth</span>
+        <span class="g-quote">&ldquo;15 seconds decides the whole relationship.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="7" data-name="W. Chan Kim &amp; R. Mauborgne" data-fw="Blue Ocean Strategy" onclick="openGiant(this)">
+        <span class="mono">WC</span>
+        <span class="g-name">W. Chan Kim &amp; R. Mauborgne</span>
+        <span class="g-fw">Blue Ocean Strategy</span>
+        <span class="g-quote">&ldquo;Make the competition irrelevant.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      </div>
     </div>
-  </div></section>
-  <section id="unit3" style="padding-top:22px"><div class="wrap">
-    <div class="sec-head"><span class="kicker">Unit 3 · Mini-Hackathon</span><h2 class="serif">The Economics of AI Adoption — Costs</h2></div>
-    <p class="sec-sub">The thinkers anchoring Unit 3's Slibrary. Convene them before you decide.</p>
-    <div class="giants">
-      <div class="giant"><div class="av">NN</div>
-        <div class="gn">Nassim Nicholas Taleb</div><div class="gr">Black Swan / Tail Risk</div><div class="gl">"It is the rare event that ruins you."</div></div><div class="giant"><div class="av">CO</div>
-        <div class="gn">Cathy O'Neil</div><div class="gr">Algorithmic Bias Audit</div><div class="gl">"Models are opinions embedded in maths."</div></div><div class="giant"><div class="av">AN</div>
-        <div class="gn">Andrew Ng</div><div class="gr">MLOps &amp; Data-Centric AI</div><div class="gl">"It's not the model, it's the data and the plumbing."</div></div><div class="giant"><div class="av">RS</div>
-        <div class="gn">Roy Schwartz et al.</div><div class="gr">Green AI vs. Red AI</div><div class="gl">"Efficiency must be a first-class metric."</div></div><div class="giant"><div class="av">JQ</div>
-        <div class="gn">J.B. Quinn</div><div class="gr">Strategic Outsourcing</div><div class="gl">"Own the core, rent the rest."</div></div>
+  </section>
+  <section id="unit2" class="u-sec">
+    <div class="wrap">
+      <div class="sec-head"><span class="kicker">Unit 2 · Live Data Lab</span><h2 class="serif">The Economics of AI Adoption — Benefits</h2></div>
+      <p class="sec-sub">The thinkers anchoring this unit's Slibrary. Convene them before you decide.</p>
+      <div class="g-grid">
+      <button class="giant" data-page="8" data-name="Erik Brynjolfsson" data-fw="Productivity J-Curve" onclick="openGiant(this)">
+        <span class="mono">EB</span>
+        <span class="g-name">Erik Brynjolfsson</span>
+        <span class="g-fw">Productivity J-Curve</span>
+        <span class="g-quote">&ldquo;The benefits lag the investment by years.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="9" data-name="Robert Solow" data-fw="Productivity Paradox" onclick="openGiant(this)">
+        <span class="mono">RS</span>
+        <span class="g-name">Robert Solow</span>
+        <span class="g-fw">Productivity Paradox</span>
+        <span class="g-quote">&ldquo;Computers everywhere except the productivity statistics.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="10" data-name="Everett Rogers" data-fw="Diffusion of Innovations" onclick="openGiant(this)">
+        <span class="mono">ER</span>
+        <span class="g-name">Everett Rogers</span>
+        <span class="g-fw">Diffusion of Innovations</span>
+        <span class="g-quote">&ldquo;Adoption is a social process, not a switch.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="11" data-name="Eliyahu Goldratt" data-fw="Theory of Constraints" onclick="openGiant(this)">
+        <span class="mono">EG</span>
+        <span class="g-name">Eliyahu Goldratt</span>
+        <span class="g-fw">Theory of Constraints</span>
+        <span class="g-quote">&ldquo;An hour saved off a non-bottleneck is a mirage.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="12" data-name="Dave McClure" data-fw="Pirate Metrics" onclick="openGiant(this)">
+        <span class="mono">DM</span>
+        <span class="g-name">Dave McClure</span>
+        <span class="g-fw">Pirate Metrics</span>
+        <span class="g-quote">&ldquo;Measure the funnel, not the vanity.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      </div>
     </div>
-  </div></section>
-  <section id="unit4" style="padding-top:22px"><div class="wrap">
-    <div class="sec-head"><span class="kicker">Unit 4 · Moot Court</span><h2 class="serif">IP &amp; Value Creation through AI</h2></div>
-    <p class="sec-sub">The thinkers anchoring Unit 4's Slibrary. Convene them before you decide.</p>
-    <div class="giants">
-      <div class="giant"><div class="av">JL</div>
-        <div class="gn">Jyh-An Lee et al.</div><div class="gr">Authorship Decision Tree</div><div class="gl">"Authorship requires a human spark."</div></div><div class="giant"><div class="av">HH</div>
-        <div class="gn">Hamilton Helmer</div><div class="gr">7 Powers</div><div class="gl">"Power is the potential to earn persistent returns."</div></div><div class="giant"><div class="av">PT</div>
-        <div class="gn">Peter Thiel</div><div class="gr">Differentiation &amp; Monopoly</div><div class="gl">"Is your product better — or different?"</div></div><div class="giant"><div class="av">LL</div>
-        <div class="gn">Lawrence Lessig</div><div class="gr">Code &amp; IP / Licensing</div><div class="gl">"Code is law; licences are choices."</div></div><div class="giant"><div class="av">AH</div>
-        <div class="gn">Andrei Hagiu &amp; Julian Wright</div><div class="gr">Data Network Effects</div><div class="gl">"Data advantage must compound to matter."</div></div>
+  </section>
+  <section id="unit3" class="u-sec">
+    <div class="wrap">
+      <div class="sec-head"><span class="kicker">Unit 3 · Mini-Hackathon</span><h2 class="serif">The Economics of AI Adoption — Costs</h2></div>
+      <p class="sec-sub">The thinkers anchoring this unit's Slibrary. Convene them before you decide.</p>
+      <div class="g-grid">
+      <button class="giant" data-page="13" data-name="Nassim Nicholas Taleb" data-fw="Black Swan / Tail Risk" onclick="openGiant(this)">
+        <span class="mono">NN</span>
+        <span class="g-name">Nassim Nicholas Taleb</span>
+        <span class="g-fw">Black Swan / Tail Risk</span>
+        <span class="g-quote">&ldquo;It is the rare event that ruins you.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="14" data-name="Cathy O'Neil" data-fw="Algorithmic Bias Audit" onclick="openGiant(this)">
+        <span class="mono">CO</span>
+        <span class="g-name">Cathy O'Neil</span>
+        <span class="g-fw">Algorithmic Bias Audit</span>
+        <span class="g-quote">&ldquo;Models are opinions embedded in maths.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="15" data-name="Andrew Ng" data-fw="MLOps &amp; Data-Centric AI" onclick="openGiant(this)">
+        <span class="mono">AN</span>
+        <span class="g-name">Andrew Ng</span>
+        <span class="g-fw">MLOps &amp; Data-Centric AI</span>
+        <span class="g-quote">&ldquo;It's not the model, it's the data and the plumbing.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="16" data-name="Roy Schwartz et al." data-fw="Green AI vs. Red AI" onclick="openGiant(this)">
+        <span class="mono">RS</span>
+        <span class="g-name">Roy Schwartz et al.</span>
+        <span class="g-fw">Green AI vs. Red AI</span>
+        <span class="g-quote">&ldquo;Efficiency must be a first-class metric.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="17" data-name="J.B. Quinn" data-fw="Strategic Outsourcing" onclick="openGiant(this)">
+        <span class="mono">JQ</span>
+        <span class="g-name">J.B. Quinn</span>
+        <span class="g-fw">Strategic Outsourcing</span>
+        <span class="g-quote">&ldquo;Own the core, rent the rest.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      </div>
     </div>
-  </div></section>
-  <section id="unit5" style="padding-top:22px"><div class="wrap">
-    <div class="sec-head"><span class="kicker">Unit 5 · Role Play</span><h2 class="serif">Agility, Disruption &amp; Rebranding in the Age of AI</h2></div>
-    <p class="sec-sub">The thinkers anchoring Unit 5's Slibrary. Convene them before you decide.</p>
-    <div class="giants">
-      <div class="giant"><div class="av">JB</div>
-        <div class="gn">John Boyd</div><div class="gr">OODA Loop</div><div class="gl">"Speed of re-decision wins."</div></div><div class="giant"><div class="av">CC</div>
-        <div class="gn">Clayton Christensen</div><div class="gr">Innovator's Dilemma</div><div class="gl">"Disruption starts at the bottom."</div></div><div class="giant"><div class="av">DS</div>
-        <div class="gn">Dave Snowden</div><div class="gr">Cynefin</div><div class="gl">"Match the response to the kind of problem."</div></div><div class="giant"><div class="av">JK</div>
-        <div class="gn">John Kotter</div><div class="gr">Leading Change</div><div class="gl">"Most change efforts fail for lack of urgency."</div></div><div class="giant"><div class="av">DM</div>
-        <div class="gn">Donald Miller</div><div class="gr">StoryBrand</div><div class="gl">"The customer is the hero, not the brand."</div></div>
+  </section>
+  <section id="unit4" class="u-sec">
+    <div class="wrap">
+      <div class="sec-head"><span class="kicker">Unit 4 · Moot Court</span><h2 class="serif">IP &amp; Value Creation through AI</h2></div>
+      <p class="sec-sub">The thinkers anchoring this unit's Slibrary. Convene them before you decide.</p>
+      <div class="g-grid">
+      <button class="giant" data-page="18" data-name="Jyh-An Lee et al." data-fw="Authorship Decision Tree" onclick="openGiant(this)">
+        <span class="mono">JL</span>
+        <span class="g-name">Jyh-An Lee et al.</span>
+        <span class="g-fw">Authorship Decision Tree</span>
+        <span class="g-quote">&ldquo;Authorship requires a human spark.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="19" data-name="Hamilton Helmer" data-fw="7 Powers" onclick="openGiant(this)">
+        <span class="mono">HH</span>
+        <span class="g-name">Hamilton Helmer</span>
+        <span class="g-fw">7 Powers</span>
+        <span class="g-quote">&ldquo;Power is the potential to earn persistent returns.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="20" data-name="Peter Thiel" data-fw="Differentiation &amp; Monopoly" onclick="openGiant(this)">
+        <span class="mono">PT</span>
+        <span class="g-name">Peter Thiel</span>
+        <span class="g-fw">Differentiation &amp; Monopoly</span>
+        <span class="g-quote">&ldquo;Is your product better — or different?&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="21" data-name="Lawrence Lessig" data-fw="Code &amp; IP / Licensing" onclick="openGiant(this)">
+        <span class="mono">LL</span>
+        <span class="g-name">Lawrence Lessig</span>
+        <span class="g-fw">Code &amp; IP / Licensing</span>
+        <span class="g-quote">&ldquo;Code is law; licences are choices.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="22" data-name="Andrei Hagiu &amp; Julian Wright" data-fw="Data Network Effects" onclick="openGiant(this)">
+        <span class="mono">AH</span>
+        <span class="g-name">Andrei Hagiu &amp; Julian Wright</span>
+        <span class="g-fw">Data Network Effects</span>
+        <span class="g-quote">&ldquo;Data advantage must compound to matter.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      </div>
     </div>
-  </div></section>
-  <section id="unit6" style="padding-top:22px"><div class="wrap">
-    <div class="sec-head"><span class="kicker">Unit 6 · Live Data Lab</span><h2 class="serif">Investment Strategies in the AI Era</h2></div>
-    <p class="sec-sub">The thinkers anchoring Unit 6's Slibrary. Convene them before you decide.</p>
-    <div class="giants">
-      <div class="giant"><div class="av">HM</div>
-        <div class="gn">Harry Markowitz</div><div class="gr">Modern Portfolio Theory</div><div class="gl">"Diversification is the only free lunch."</div></div><div class="giant"><div class="av">FB</div>
-        <div class="gn">Fischer Black &amp; Robert Litterman</div><div class="gr">Bayesian Allocation</div><div class="gl">"Start from the market, then add your views."</div></div><div class="giant"><div class="av">EF</div>
-        <div class="gn">Eugene Fama &amp; Kenneth French</div><div class="gr">Multi-Factor Pricing</div><div class="gl">"Returns have more than one source."</div></div><div class="giant"><div class="av">ML</div>
-        <div class="gn">Marcos López de Prado</div><div class="gr">Financial ML</div><div class="gl">"Most backtests are false discoveries."</div></div><div class="giant"><div class="av">AG</div>
-        <div class="gn">Agrawal, Gans &amp; Goldfarb</div><div class="gr">Prediction Machines</div><div class="gl">"AI lowers the cost of prediction."</div></div>
+  </section>
+  <section id="unit5" class="u-sec">
+    <div class="wrap">
+      <div class="sec-head"><span class="kicker">Unit 5 · Role Play</span><h2 class="serif">Agility, Disruption &amp; Rebranding in the Age of AI</h2></div>
+      <p class="sec-sub">The thinkers anchoring this unit's Slibrary. Convene them before you decide.</p>
+      <div class="g-grid">
+      <button class="giant" data-page="4" data-name="John Boyd" data-fw="OODA Loop" onclick="openGiant(this)">
+        <span class="mono">JB</span>
+        <span class="g-name">John Boyd</span>
+        <span class="g-fw">OODA Loop</span>
+        <span class="g-quote">&ldquo;Speed of re-decision wins.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="5" data-name="Clayton Christensen" data-fw="Innovator's Dilemma" onclick="openGiant(this)">
+        <span class="mono">CC</span>
+        <span class="g-name">Clayton Christensen</span>
+        <span class="g-fw">Innovator's Dilemma</span>
+        <span class="g-quote">&ldquo;Disruption starts at the bottom.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="23" data-name="Dave Snowden" data-fw="Cynefin" onclick="openGiant(this)">
+        <span class="mono">DS</span>
+        <span class="g-name">Dave Snowden</span>
+        <span class="g-fw">Cynefin</span>
+        <span class="g-quote">&ldquo;Match the response to the kind of problem.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="24" data-name="John Kotter" data-fw="Leading Change" onclick="openGiant(this)">
+        <span class="mono">JK</span>
+        <span class="g-name">John Kotter</span>
+        <span class="g-fw">Leading Change</span>
+        <span class="g-quote">&ldquo;Most change efforts fail for lack of urgency.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="25" data-name="Donald Miller" data-fw="StoryBrand" onclick="openGiant(this)">
+        <span class="mono">DM</span>
+        <span class="g-name">Donald Miller</span>
+        <span class="g-fw">StoryBrand</span>
+        <span class="g-quote">&ldquo;The customer is the hero, not the brand.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      </div>
     </div>
-  </div></section>
-  <section id="unit7" style="padding-top:22px"><div class="wrap">
-    <div class="sec-head"><span class="kicker">Unit 7 · Business Challenge · Capstone</span><h2 class="serif">Innovative AI Enterprises — From Unicorns to Industry Leaders</h2></div>
-    <p class="sec-sub">The thinkers anchoring Unit 7's Slibrary. Convene them before you decide.</p>
-    <div class="giants">
-      <div class="giant"><div class="av">PT</div>
-        <div class="gn">Peter Thiel</div><div class="gr">Zero to One / Monopoly</div><div class="gl">"Competition is for losers."</div></div><div class="giant"><div class="av">RH</div>
-        <div class="gn">Reid Hoffman</div><div class="gr">Blitzscaling</div><div class="gl">"Prioritise speed over efficiency to win."</div></div><div class="giant"><div class="av">GM</div>
-        <div class="gn">Geoffrey Moore</div><div class="gr">Crossing the Chasm</div><div class="gl">"Win the beachhead before the mainstream."</div></div><div class="giant"><div class="av">SC</div>
-        <div class="gn">Sangeet Choudary</div><div class="gr">Platform Revolution</div><div class="gl">"Platforms beat pipes."</div></div><div class="giant"><div class="av">SB</div>
-        <div class="gn">Sara Blakely</div><div class="gr">Resilient Builder</div><div class="gl">"Failure is the best classroom."</div></div>
+  </section>
+  <section id="unit6" class="u-sec">
+    <div class="wrap">
+      <div class="sec-head"><span class="kicker">Unit 6 · Live Data Lab</span><h2 class="serif">Investment Strategies in the AI Era</h2></div>
+      <p class="sec-sub">The thinkers anchoring this unit's Slibrary. Convene them before you decide.</p>
+      <div class="g-grid">
+      <button class="giant" data-page="26" data-name="Harry Markowitz" data-fw="Modern Portfolio Theory" onclick="openGiant(this)">
+        <span class="mono">HM</span>
+        <span class="g-name">Harry Markowitz</span>
+        <span class="g-fw">Modern Portfolio Theory</span>
+        <span class="g-quote">&ldquo;Diversification is the only free lunch.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="27" data-name="Fischer Black &amp; Robert Litterman" data-fw="Bayesian Allocation" onclick="openGiant(this)">
+        <span class="mono">FB</span>
+        <span class="g-name">Fischer Black &amp; Robert Litterman</span>
+        <span class="g-fw">Bayesian Allocation</span>
+        <span class="g-quote">&ldquo;Start from the market, then add your views.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="28" data-name="Eugene Fama &amp; Kenneth French" data-fw="Multi-Factor Pricing" onclick="openGiant(this)">
+        <span class="mono">EF</span>
+        <span class="g-name">Eugene Fama &amp; Kenneth French</span>
+        <span class="g-fw">Multi-Factor Pricing</span>
+        <span class="g-quote">&ldquo;Returns have more than one source.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="29" data-name="Marcos López de Prado" data-fw="Financial ML" onclick="openGiant(this)">
+        <span class="mono">ML</span>
+        <span class="g-name">Marcos López de Prado</span>
+        <span class="g-fw">Financial ML</span>
+        <span class="g-quote">&ldquo;Most backtests are false discoveries.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="30" data-name="Agrawal, Gans &amp; Goldfarb" data-fw="Prediction Machines" onclick="openGiant(this)">
+        <span class="mono">AG</span>
+        <span class="g-name">Agrawal, Gans &amp; Goldfarb</span>
+        <span class="g-fw">Prediction Machines</span>
+        <span class="g-quote">&ldquo;AI lowers the cost of prediction.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      </div>
     </div>
-  </div></section>
-<footer><div class="wrap">
-  <div><strong>© Dr. Hildegard Haas 2026</strong> · BARBM312 AI in Investment and Business Growth · EU Business School</div>
-  <div>Applying <span class="acc">Thumbnail Thinking</span> & the <span class="acc">Council of Giants</span> (JD Meier) · Core message via <span class="acc">Bostelaar</span></div>
-</div></footer>
-</body></html>
+  </section>
+  <section id="unit7" class="u-sec">
+    <div class="wrap">
+      <div class="sec-head"><span class="kicker">Unit 7 · Business Challenge · Capstone</span><h2 class="serif">Innovative AI Enterprises — From Unicorns to Industry Leaders</h2></div>
+      <p class="sec-sub">The thinkers anchoring this unit's Slibrary. Convene them before you decide.</p>
+      <div class="g-grid">
+      <button class="giant" data-page="20" data-name="Peter Thiel" data-fw="Zero to One / Monopoly" onclick="openGiant(this)">
+        <span class="mono">PT</span>
+        <span class="g-name">Peter Thiel</span>
+        <span class="g-fw">Zero to One / Monopoly</span>
+        <span class="g-quote">&ldquo;Competition is for losers.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="31" data-name="Reid Hoffman" data-fw="Blitzscaling" onclick="openGiant(this)">
+        <span class="mono">RH</span>
+        <span class="g-name">Reid Hoffman</span>
+        <span class="g-fw">Blitzscaling</span>
+        <span class="g-quote">&ldquo;Prioritise speed over efficiency to win.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="32" data-name="Geoffrey Moore" data-fw="Crossing the Chasm" onclick="openGiant(this)">
+        <span class="mono">GM</span>
+        <span class="g-name">Geoffrey Moore</span>
+        <span class="g-fw">Crossing the Chasm</span>
+        <span class="g-quote">&ldquo;Win the beachhead before the mainstream.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="33" data-name="Sangeet Choudary" data-fw="Platform Revolution" onclick="openGiant(this)">
+        <span class="mono">SC</span>
+        <span class="g-name">Sangeet Choudary</span>
+        <span class="g-fw">Platform Revolution</span>
+        <span class="g-quote">&ldquo;Platforms beat pipes.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      <button class="giant" data-page="34" data-name="Sara Blakely" data-fw="Resilient Builder" onclick="openGiant(this)">
+        <span class="mono">SB</span>
+        <span class="g-name">Sara Blakely</span>
+        <span class="g-fw">Resilient Builder</span>
+        <span class="g-quote">&ldquo;Failure is the best classroom.&rdquo;</span>
+        <span class="g-cta">View profile sheet →</span>
+      </button>
+      </div>
+    </div>
+  </section>
+
+  <footer><div class="wrap">
+    <div><strong>© Dr. Hildegard Haas 2026</strong> · BARBM312 AI in Investment and Business Growth · EU Business School</div>
+    <div>Applying <span class="acc">Thumbnail Thinking</span> &amp; the <span class="acc">Council of Giants</span> (JD Meier) · Core message via <span class="acc">Bostelaar</span></div>
+  </div></footer>
+
+  <!-- PDF viewer overlay -->
+  <div class="pv" id="pv" role="dialog" aria-modal="true" aria-label="Profile sheet viewer">
+    <div class="pv-bar">
+      <div>
+        <div class="pv-title" id="pv-title">Profile</div>
+        <div class="pv-sub" id="pv-sub"></div>
+      </div>
+      <div class="pv-spacer"></div>
+      <a id="pv-open" target="_blank" rel="noopener">Open in new tab</a>
+      <button class="pv-close" id="pv-close" onclick="closeGiant()">Close ✕</button>
+    </div>
+    <div class="pv-frame-wrap"><iframe id="pv-frame" title="Council of Giants profile sheet"></iframe></div>
+  </div>
+
+<script>
+  var PDF = "BARBM312_Council_of_Giants.pdf";
+  var pv = document.getElementById('pv');
+  var pvf = document.getElementById('pv-frame');
+  function openGiant(btn){
+    var page = btn.getAttribute('data-page');
+    var name = btn.getAttribute('data-name');
+    var fw   = btn.getAttribute('data-fw');
+    var url  = PDF + '#page=' + page;
+    document.getElementById('pv-title').textContent = name;
+    document.getElementById('pv-sub').textContent = fw + ' · Council of Giants · Sheet ' + (page - 2) + ' / 32';
+    pvf.src = url;
+    document.getElementById('pv-open').setAttribute('href', url);
+    pv.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeGiant(){
+    pv.classList.remove('open');
+    pvf.src = 'about:blank';
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeGiant(); });
+  pv.addEventListener('click', function(e){ if(e.target === pv) closeGiant(); });
+</script>
+</body>
+</html>
