@@ -1,58 +1,53 @@
-# BARBM312 — AI in Investment and Business Growth
+# BARBM312 — Interactive Framework Galleries (Unit 1–7)
 
-Course website for **BARBM312** (EU Business School · Bachelor · FHEQ Level 6 · 5 ECTS).
-Built on framework galleries (Thumbnail Thinking), a Council of Giants, and a clarified
-core message per unit. Styling: Arial + EU Business School crimson. © Dr. Hildegard Haas 2026.
+Seven interactive framework-gallery pages styled exactly like the MARTI301 reference:
+clickable framework cards → popup (definition, diagram, key points, Harvard reference)
+→ **View Full A4 Reference Sheet** button that opens the matching page in the
+140-sheet `BARBM312_Framework_Sheet_Library.pdf`.
 
-## What's in this folder
-
-- `index.html` — course landing page (accordion of all 7 units)
-- `unit1.html` … `unit7.html` — the seven unit framework galleries (Slibraries)
-- `slibrary.html` — the full Council of Giants
-- `activities/`, `cases/`, `prereading/`, `reflections/` — per-unit resources (one file per unit)
-- `styles.css` — shared stylesheet (includes copy/print protection rules)
-- `protect.js` — copy/print protection script (loaded by every page)
-- `BARBM312.html` — a standalone single-file version of the whole site
-- `.nojekyll` — tells GitHub Pages to serve files as-is
-- `*.js` (build/content sources) — used to regenerate the site; not required for hosting
-
-## Publish to GitHub Pages
-
-1. Create a new repository on GitHub (e.g. `barbm312`).
-2. Upload **the contents of this folder** to the repository root
-   (so `index.html` sits at the top level, not inside a subfolder).
-3. In the repository: **Settings -> Pages -> Build and deployment**,
-   set **Source = Deploy from a branch**, **Branch = `main` / `(root)`**, and Save.
-4. After a minute the site is live at
-   `https://<your-username>.github.io/<repository-name>/`.
-
-The `.nojekyll` file is included so GitHub serves the folders correctly.
+## Files
+- `unit1.html` … `unit7.html` — one interactive gallery per unit (20 frameworks each, 140 total).
+- `gallery.html` — **Complete Gallery Wall**: all 140 frameworks on one page, with a live search box (filter by name, theme, set, or unit). Same popup + PDF-viewer behaviour as the unit pages.
 
 ## Copy / print protection
+All 8 pages disable text selection, right-click, drag, copy/cut, and the Ctrl/Cmd+P / +S / +U / +C shortcuts; printing shows a "not available for printing" notice instead of the content. Note: these are deterrents against casual copying only — a browser must render content to display it, so a determined user can still screenshot or read source. This matches what the MARTI301 reference does; there is no way to make web content truly uncopyable.
 
-Students are prevented from copying and printing the material:
+## Linking it from your homepage
+On your `index.html`, point the "All 140 Frameworks — Complete Gallery Wall" button at `gallery.html` (same folder).
 
-- **Text selection is disabled** site-wide (`user-select: none`).
-- **Right-click / context menu** is blocked.
-- **Copy and cut** are blocked; any copy attempt writes only a copyright notice.
-- **Keyboard shortcuts** for copy, cut, save, print, view-source, select-all and
-  the developer tools (Ctrl/Cmd+C/X/S/P/U/A, F12, Ctrl+Shift+I/J/C) are blocked.
-- **Printing** is disabled: a print attempt shows only a copyright notice instead of the content.
-- **Images and diagrams** are not draggable and cannot be saved via right-click.
+## Deployment (GitHub Pages)
+1. Place these seven HTML files in your `BARBM312` repo (e.g. at the repo root, alongside
+   the existing `unit1.html`, or in a subfolder — see note below).
+2. **Place `BARBM312_Framework_Sheet_Library.pdf` in the SAME folder as the HTML files.**
+   The "View Full A4 Reference Sheet" button opens `BARBM312_Framework_Sheet_Library.pdf#page=N`
+   relative to the page, so the PDF must sit beside it.
+3. The "‹ Back to Course Overview" link points to `../index.html`. If you put these pages at
+   the repo root (not a subfolder), change that link to `index.html`.
 
-> Note: client-side protection deters casual copying and printing but cannot be absolute --
-> a determined user can still read the page source. For stronger protection, host behind
-> authentication. The protection here covers normal student copy/print behaviour.
+## PDF reference sheets — one combined library, jump to page (MARTI301 match)
+Each framework's "View Full A4 Reference Sheet" button opens the single combined
+`BARBM312_Framework_Sheet_Library.pdf` at that framework's page, using
+`BARBM312_Framework_Sheet_Library.pdf#page=N` — the same approach MARTI301 uses.
 
-## Regenerating the site (optional)
+The library is: cover = p.1, master index = pp.2–3, sheets start at p.4. So framework
+*k* (1-based, in course order) is at **PDF page k + 3**:
 
-Requires Node.js. From this folder:
+| Unit | Frameworks | PDF pages |
+|------|-----------|-----------|
+| 1 | 20 | 4–23 |
+| 2 | 20 | 24–43 |
+| 3 | 20 | 44–63 |
+| 4 | 20 | 64–83 |
+| 5 | 20 | 84–103 |
+| 6 | 20 | 104–123 |
+| 7 | 20 | 124–143 |
 
-    node build.js          # regenerates the 37-page site + styles.css + protect.js
-    node build_single.js   # regenerates BARBM312.html
+**Deploy:** put `BARBM312_Framework_Sheet_Library.pdf` in the SAME folder as the HTML
+files (repo root). If you ever regenerate the PDF with a different front-matter length,
+update the `pdfPageFor()` offset in `build.js` (currently `index + 3`).
 
-The PDFs (Framework Sheet Library, Council of Giants) are generated by
-build_sheets.js and build_giants.js (require a headless Chromium via Playwright).
-
----
-(c) Dr. Hildegard Haas 2026 · EU Business School · All rights reserved.
+## Notes
+- All popup content (definitions, key points, references) is authored for teaching;
+  well-known frameworks carry curated Harvard references, others a Thumbnail-Thinking source.
+- © 2026 Dr. Hildegard Haas · EU Business School. Applies JD Meier's *Thumbnail Thinking*
+  & *Council of Giants*; core messages after Bostelaar.
