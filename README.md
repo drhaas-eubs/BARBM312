@@ -24,27 +24,16 @@ On your `index.html`, point the "All 140 Frameworks — Complete Gallery Wall" b
 3. The "‹ Back to Course Overview" link points to `../index.html`. If you put these pages at
    the repo root (not a subfolder), change that link to `index.html`.
 
-## PDF reference sheets — one combined library, jump to page (MARTI301 match)
-Each framework's "View Full A4 Reference Sheet" button opens the single combined
-`BARBM312_Framework_Sheet_Library.pdf` at that framework's page, using
-`BARBM312_Framework_Sheet_Library.pdf#page=N` — the same approach MARTI301 uses.
+## PDF reference sheets — one single sheet per framework
+Each framework's "View Full A4 Reference Sheet" button opens a PDF containing **only that
+one framework's sheet** — students see a single page, nothing else. The 140 files live in
+the `sheets/` subfolder, named by title slug (e.g. `sheets/dikw-pyramid.pdf`,
+`sheets/modern-portfolio-theory.pdf`).
 
-The library is: cover = p.1, master index = pp.2–3, sheets start at p.4. So framework
-*k* (1-based, in course order) is at **PDF page k + 3**:
-
-| Unit | Frameworks | PDF pages |
-|------|-----------|-----------|
-| 1 | 20 | 4–23 |
-| 2 | 20 | 24–43 |
-| 3 | 20 | 44–63 |
-| 4 | 20 | 64–83 |
-| 5 | 20 | 84–103 |
-| 6 | 20 | 104–123 |
-| 7 | 20 | 124–143 |
-
-**Deploy:** put `BARBM312_Framework_Sheet_Library.pdf` in the SAME folder as the HTML
-files (repo root). If you ever regenerate the PDF with a different front-matter length,
-update the `pdfPageFor()` offset in `build.js` (currently `index + 3`).
+**Deploy:** upload the `sheets/` folder (all 140 PDFs) alongside the HTML files, keeping the
+folder name `sheets`. It must sit in the same directory as the unit pages and `gallery.html`.
+You do NOT need the combined `BARBM312_Framework_Sheet_Library.pdf` for the buttons — these
+140 single-sheet files replace it.
 
 ## Notes
 - All popup content (definitions, key points, references) is authored for teaching;
