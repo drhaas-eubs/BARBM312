@@ -30,10 +30,16 @@ one framework's sheet** — students see a single page, nothing else. The 140 fi
 the `sheets/` subfolder, named by title slug (e.g. `sheets/dikw-pyramid.pdf`,
 `sheets/modern-portfolio-theory.pdf`).
 
+## Sheet viewer (MARTI301-style, with Search PDF)
+The viewer renders each sheet with PDF.js and includes a toolbar: a **Search PDF** box
+(with match count and prev/next arrows), zoom −/+, open-in-new-tab, and close. PDF.js is
+loaded from a CDN (cdnjs) via two `<script type="module">` references already in each page —
+no extra files to upload, but the viewer needs internet access to load the library (which
+any student browser has). Search works across the whole sheet even though the source PDF
+splits text into single characters.
+
 **Deploy:** upload the `sheets/` folder (all 140 PDFs) alongside the HTML files, keeping the
 folder name `sheets`. It must sit in the same directory as the unit pages and `gallery.html`.
-You do NOT need the combined `BARBM312_Framework_Sheet_Library.pdf` for the buttons — these
-140 single-sheet files replace it.
 
 ## Notes
 - All popup content (definitions, key points, references) is authored for teaching;

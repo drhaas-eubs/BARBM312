@@ -83,6 +83,21 @@ a{color:inherit}
 .pvbar .sp{flex:1}
 .pvbar button{background:#1f3158;color:#fff;border:none;border-radius:8px;padding:7px 12px;cursor:pointer;font-size:14px}
 .pv iframe{flex:1;border:none;background:#fff;width:100%}
+/* PDF.js viewer */
+.pv-search{display:flex;align-items:center;gap:4px;background:#1f3158;border-radius:20px;padding:4px 8px}
+.pv-search .pv-mag{color:#9fb0cb;font-size:15px}
+.pv-search input{background:transparent;border:none;outline:none;color:#fff;font-size:13px;font-family:inherit;width:150px}
+.pv-search input::placeholder{color:#7f8ca8}
+.pv-search button{background:#2a4170;color:#fff;border:none;border-radius:6px;width:24px;height:24px;cursor:pointer;font-size:13px;padding:0}
+.pv-search button:hover{background:#34508a}
+.pv-search #pv-qcount{color:#9fb0cb;font-size:11px;min-width:34px;text-align:center}
+.pv-stage{flex:1;overflow:auto;display:flex;justify-content:center;align-items:flex-start;padding:22px}
+.pv-canvaswrap{position:relative;box-shadow:0 8px 30px rgba(0,0,0,.4);background:#fff}
+.pv-canvaswrap canvas{display:block}
+.pv-textlayer{position:absolute;inset:0;overflow:hidden;opacity:.25;line-height:1}
+.pv-textlayer span{position:absolute;white-space:pre;color:transparent;transform-origin:0 0}
+.pv-textlayer .pv-hl{background:#ffd54a;color:transparent;border-radius:2px}
+.pv-textlayer .pv-hl-current{background:#ff9800}
 .footer{background:#11203b;color:#9fb0cb;text-align:center;font-size:12.5px;padding:18px;line-height:1.6}
 .footer b{color:#fff}
 /* gallery wall search */
@@ -1260,15 +1275,30 @@ Applying JD Meier’s <b>Thumbnail Thinking</b> &amp; the <b>Council of Giants</
     <button class="viewbtn" id="m-view">📄 View Full A4 Reference Sheet</button>
   </div>
 </div>
-<!-- pdf viewer -->
+<!-- pdf viewer (PDF.js) -->
 <div class="pv" id="pv">
   <div class="pvbar">
     <div class="ti" id="pv-title">Framework Sheet<small id="pv-sub"></small></div>
+    <div class="pv-search">
+      <span class="pv-mag">⌕</span>
+      <input id="pv-q" type="text" placeholder="Search PDF…" autocomplete="off"/>
+      <span id="pv-qcount"></span>
+      <button id="pv-prev" title="Previous match">‹</button>
+      <button id="pv-next" title="Next match">›</button>
+      <button id="pv-qclear" title="Clear">×</button>
+    </div>
     <div class="sp"></div>
-    <button id="pv-open">Open in new tab ↗</button>
-    <button id="pv-close">✕ Close</button>
+    <button id="pv-zout" title="Zoom out">−</button>
+    <button id="pv-zin" title="Zoom in">+</button>
+    <button id="pv-open" title="Open in new tab">↗</button>
+    <button id="pv-close" title="Close">✕</button>
   </div>
-  <iframe id="pv-frame" title="Framework Sheet Library"></iframe>
+  <div class="pv-stage" id="pv-stage">
+    <div class="pv-canvaswrap" id="pv-canvaswrap">
+      <canvas id="pv-canvas"></canvas>
+      <div class="pv-textlayer" id="pv-textlayer"></div>
+    </div>
+  </div>
 </div>
 <script>
 const PDF = "BARBM312_Framework_Sheet_Library.pdf";
@@ -1298,7 +1328,7 @@ const GLY={
 };
 function DIAG(title,sub){ return GLY[classify(title,sub)](); }
 const scrim=document.getElementById('scrim'), modal=document.getElementById('modal');
-const pv=document.getElementById('pv'), pvf=document.getElementById('pv-frame');
+const pv=document.getElementById('pv');
 let current=null;
 function openModal(d){
   current=d;
@@ -1320,14 +1350,13 @@ document.getElementById('xbtn').addEventListener('click',closeModal);
 scrim.addEventListener('click',e=>{ if(e.target===scrim) closeModal(); });
 document.getElementById('m-view').addEventListener('click',()=>{
   if(!current) return;
-  const url = current.pdf;
   document.getElementById('pv-title').firstChild.textContent = current.title;
   document.getElementById('pv-sub').textContent = 'Slibrary '+current.slib+' · Framework Sheet';
-  pvf.src = url;
-  document.getElementById('pv-open').onclick=()=>window.open(url,'_blank');
+  document.getElementById('pv-open').onclick=()=>window.open(current.pdf,'_blank');
   pv.classList.add('open');
+  if(window.PDFViewer) window.PDFViewer.load(current.pdf);
 });
-document.getElementById('pv-close').addEventListener('click',()=>{ pv.classList.remove('open'); pvf.src='about:blank'; });
+document.getElementById('pv-close').addEventListener('click',()=>{ pv.classList.remove('open'); if(window.PDFViewer) window.PDFViewer.clear(); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModal(); pv.classList.remove('open'); } });
 document.addEventListener('contextmenu',e=>e.preventDefault());
 document.addEventListener('copy',e=>e.preventDefault());
@@ -1349,5 +1378,80 @@ function applyFilter(){
 box.addEventListener('input',applyFilter);
 document.getElementById('clear').addEventListener('click',()=>{ box.value=''; applyFilter(); box.focus(); });
 applyFilter();
+</script>
+<script type="module">
+import * as pdfjsLib from './pdfjs/pdf.min.mjs';
+pdfjsLib.GlobalWorkerOptions.workerSrc = './pdfjs/pdf.worker.min.mjs';
+const canvas=document.getElementById('pv-canvas'), ctx=canvas.getContext('2d');
+const tlayer=document.getElementById('pv-textlayer'), wrap=document.getElementById('pv-canvaswrap');
+const qbox=document.getElementById('pv-q'), qcount=document.getElementById('pv-qcount');
+let pdfDoc=null, pageObj=null, scale=1.35, baseViewport=null, textItems=[], matches=[], curMatch=-1, fullText='', spanMap=[];
+async function render(){
+  if(!pageObj) return;
+  const vp=pageObj.getViewport({scale});
+  baseViewport=vp;
+  canvas.width=vp.width; canvas.height=vp.height;
+  wrap.style.width=vp.width+'px'; wrap.style.height=vp.height+'px';
+  await pageObj.render({canvasContext:ctx, viewport:vp}).promise;
+  await buildTextLayer(vp);
+  applySearch();
+}
+async function buildTextLayer(vp){
+  tlayer.innerHTML=''; textItems=[]; fullText=''; spanMap=[];
+  const tc=await pageObj.getTextContent();
+  tc.items.forEach(it=>{
+    if(it.str===undefined) return;
+    const t=pdfjsLib.Util.transform(vp.transform, it.transform);
+    const span=document.createElement('span');
+    span.textContent=it.str;
+    const fs=Math.hypot(t[2],t[3]);
+    span.style.left=t[4]+'px'; span.style.top=(t[5]-fs)+'px';
+    span.style.fontSize=fs+'px';
+    tlayer.appendChild(span);
+    const start=fullText.length;
+    fullText += it.str.toLowerCase();
+    textItems.push({span});
+    spanMap.push({span, start, end:fullText.length});
+    if(it.hasEOL){ fullText+=' '; }
+  });
+}
+function applySearch(){
+  const q=qbox.value.trim().toLowerCase();
+  matches=[]; curMatch=-1;
+  textItems.forEach(ti=>{ ti.span.classList.remove('pv-hl','pv-hl-current'); });
+  if(q){
+    let idx=fullText.indexOf(q);
+    while(idx!==-1){
+      const mStart=idx, mEnd=idx+q.length;
+      const spans=spanMap.filter(s=> s.start < mEnd && s.end > mStart).map(s=>s.span);
+      if(spans.length){ matches.push(spans); spans.forEach(sp=>sp.classList.add('pv-hl')); }
+      idx=fullText.indexOf(q, idx+Math.max(1,q.length));
+    }
+    if(matches.length){ curMatch=0; focusMatch(); }
+  }
+  qcount.textContent = q ? (matches.length? (curMatch+1)+'/'+matches.length : '0/0') : '';
+}
+function focusMatch(){
+  document.querySelectorAll('.pv-hl-current').forEach(s=>s.classList.remove('pv-hl-current'));
+  if(curMatch>=0&&matches[curMatch]){ const grp=matches[curMatch]; grp.forEach(s=>s.classList.add('pv-hl-current')); grp[0].scrollIntoView({block:'center',inline:'center'}); }
+  qcount.textContent = matches.length? (curMatch+1)+'/'+matches.length : '0/0';
+}
+qbox.addEventListener('input',applySearch);
+document.getElementById('pv-next').addEventListener('click',()=>{ if(matches.length){ curMatch=(curMatch+1)%matches.length; focusMatch(); }});
+document.getElementById('pv-prev').addEventListener('click',()=>{ if(matches.length){ curMatch=(curMatch-1+matches.length)%matches.length; focusMatch(); }});
+document.getElementById('pv-qclear').addEventListener('click',()=>{ qbox.value=''; applySearch(); qbox.focus(); });
+document.getElementById('pv-zin').addEventListener('click',()=>{ scale=Math.min(scale+0.2,3); render(); });
+document.getElementById('pv-zout').addEventListener('click',()=>{ scale=Math.max(scale-0.2,0.6); render(); });
+window.PDFViewer={
+  async load(url){
+    qbox.value=''; qcount.textContent=''; scale=1.35;
+    try{
+      pdfDoc=await pdfjsLib.getDocument(url).promise;
+      pageObj=await pdfDoc.getPage(1);
+      await render();
+    }catch(e){ console.error('PDF load failed',e); }
+  },
+  clear(){ ctx&&ctx.clearRect(0,0,canvas.width,canvas.height); tlayer.innerHTML=''; pdfDoc=null; pageObj=null; }
+};
 </script>
 </body></html>
