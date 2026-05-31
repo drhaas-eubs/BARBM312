@@ -1,424 +1,622 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>BARBM312 · The Council of Giants</title>
-<link rel="stylesheet" href="styles.css">
-<script src="protect.js" defer></script>
 <style>
-  /* --- Council of Giants page-specific styles (self-contained, reuses site vars) --- */
-  .g-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:18px;margin-top:8px}
-  .giant{text-align:left;background:#1a1a1a;color:#fff;border:1px solid #2a2a2a;border-radius:14px;
-    padding:22px 20px 18px;display:flex;flex-direction:column;gap:8px;cursor:pointer;font:inherit;
-    transition:transform .15s ease,border-color .15s ease,box-shadow .15s ease;position:relative;overflow:hidden}
-  .giant:hover{transform:translateY(-3px);border-color:#9e1b32;box-shadow:0 10px 30px rgba(0,0,0,.35)}
-  .giant:focus-visible{outline:2px solid #9e1b32;outline-offset:2px}
-  .giant .mono{width:46px;height:46px;border-radius:50%;background:#9e1b32;color:#fff;display:flex;
-    align-items:center;justify-content:center;font-weight:700;letter-spacing:.5px;font-size:15px;margin-bottom:4px}
-  .giant .g-name{font-weight:700;font-size:17px;line-height:1.25}
-  .giant .g-fw{color:#d4566b;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600}
-  .giant .g-quote{color:#bdbdbd;font-style:italic;font-size:14px;line-height:1.4;margin-top:2px}
-  .giant .g-cta{margin-top:auto;padding-top:10px;color:#e08a98;font-size:12.5px;font-weight:600;letter-spacing:.02em;opacity:0;transition:opacity .15s ease}
-  .giant:hover .g-cta,.giant:focus-visible .g-cta{opacity:1}
-  /* viewer overlay */
-  .pv{position:fixed;inset:0;background:rgba(10,10,12,.86);display:none;z-index:9999;
-    padding:24px;box-sizing:border-box;flex-direction:column}
-  .pv.open{display:flex}
-  .pv-bar{display:flex;align-items:center;gap:14px;color:#fff;padding:6px 4px 12px}
-  .pv-bar .pv-title{font-weight:700;font-size:16px}
-  .pv-bar .pv-sub{color:#bdbdbd;font-size:13px}
-  .pv-bar .pv-spacer{flex:1}
-  .pv-bar button,.pv-bar a{background:#9e1b32;color:#fff;border:0;border-radius:8px;
-    padding:8px 14px;font:inherit;font-weight:600;font-size:13px;cursor:pointer;text-decoration:none}
-  .pv-bar .pv-close{background:#2a2a2a}
-  .pv-frame-wrap{flex:1;border-radius:10px;overflow:hidden;background:#fff;min-height:0}
-  .pv-frame-wrap iframe{width:100%;height:100%;border:0}
-  @media(max-width:640px){
-    .pv{padding:10px}
-    .pv-bar{flex-wrap:wrap;gap:8px}
-  }
+:root{ --ink:#14223d; --ink2:#46546e; --line:#e3e7ef; --bg:#f3f5f9; --card:#ffffff;
+       --crimson:#9e1b32; --navy:#14223d; }
+*{box-sizing:border-box}
+/* copy / selection deterrents (identical to unit pages) */
+html,body{ -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; user-select:none; }
+img,svg{ -webkit-user-drag:none; user-drag:none; }
+input,textarea{ -webkit-user-select:text; user-select:text; }
+@media print{
+  body * { visibility:hidden !important; }
+  #noprint-notice { visibility:visible !important; position:fixed; inset:0; display:flex !important;
+    align-items:center; justify-content:center; text-align:center; padding:40px;
+    font-family:Arial,Helvetica,sans-serif; color:#14223d; font-size:18px; }
+}
+#noprint-notice{ display:none; }
+body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.topband{background:#11203b;color:#cdd6e6;font-size:13px;padding:9px 22px}
+.topband a{color:#9fd3c0;text-decoration:none;font-weight:bold}
+.crimsonbar{background:var(--crimson);color:#fff;font-size:11.5px;letter-spacing:.04em;padding:5px 22px}
+.hero{background:#14223d;color:#fff;padding:30px 22px 26px}
+.hero .kick{color:#e0a23c;font-weight:bold;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.hero h1{font-size:30px;margin:8px 0 6px;font-weight:bold;letter-spacing:-.01em}
+.hero h1 em{color:#e0a23c;font-style:italic}
+.hero p{margin:0;color:#aebbd2;max-width:820px;font-size:14.5px;line-height:1.5}
+.hero .cred{color:#7f8ca8;font-size:12px;font-style:italic;margin-top:10px}
+.stats{display:flex;gap:38px;margin-top:20px;flex-wrap:wrap}
+.stat b{display:block;color:#3ec79a;font-size:30px;line-height:1}
+.stat span{color:#8493ad;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.navwrap{max-width:1180px;margin:16px auto 0;padding:0 22px;display:flex;gap:8px;flex-wrap:wrap}
+.navpill{background:#fff;border:1px solid var(--line);border-radius:20px;padding:6px 13px;font-size:12.5px;font-weight:bold;color:var(--ink2);text-decoration:none}
+.navpill:hover{border-color:var(--crimson);color:var(--crimson)}
+.intro{max-width:1180px;margin:16px auto 0;padding:0 22px;color:var(--ink2);font-size:14px;line-height:1.55}
+.wrap{max-width:1180px;margin:0 auto;padding:14px 22px 60px}
+.setblock{margin-top:26px;scroll-margin-top:14px}
+.sethead{display:flex;align-items:center;gap:10px;margin:0 0 12px;font-size:16px;font-weight:bold;color:var(--navy)}
+.dot{width:11px;height:11px;border-radius:50%;flex:none}
+.chip{background:#e9edf4;color:#56627c;font-size:11px;font-weight:bold;padding:3px 9px;border-radius:20px;letter-spacing:.02em}
+.ggrid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+@media(max-width:1000px){.ggrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.ggrid{grid-template-columns:1fr}}
+.gcard{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;
+      transition:transform .12s ease,box-shadow .12s ease;display:flex;flex-direction:column}
+.gcard:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(20,34,61,.12)}
+.gtop{height:4px}
+.gbody{padding:16px 14px 15px;flex:1;display:flex;flex-direction:column;gap:7px}
+.gmono{width:44px;height:44px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:15px;letter-spacing:.5px}
+.gcard h3{margin:2px 0 0;font-size:15px;font-weight:bold;color:var(--navy);line-height:1.25}
+.gfw{color:var(--crimson);font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:bold}
+.gquote{margin:0;color:var(--ink2);font-size:13px;font-style:italic;line-height:1.4;flex:1}
+.gbadge{display:inline-block;margin-top:6px;color:#fff;font-size:11px;font-weight:bold;padding:4px 10px;border-radius:6px;align-self:flex-start}
+.footer{background:#11203b;color:#9fb0cb;text-align:center;font-size:12.5px;padding:18px;line-height:1.6}
+.footer b{color:#fff}
+/* PDF.js viewer (identical to unit pages) */
+.pv{position:fixed;inset:0;background:#14223d;display:none;flex-direction:column;z-index:60}
+.pv.open{display:flex}
+.pvbar{display:flex;align-items:center;gap:14px;padding:10px 16px;color:#fff;flex-wrap:wrap}
+.pvbar .ti{font-weight:bold;font-size:14px}.pvbar .ti small{display:block;color:#9fb0cb;font-weight:normal;font-size:11px}
+.pvbar .sp{flex:1}
+.pvbar button{background:#1f3158;color:#fff;border:none;border-radius:8px;padding:7px 12px;cursor:pointer;font-size:14px}
+.pv-search{display:flex;align-items:center;gap:4px;background:#1f3158;border-radius:20px;padding:4px 8px}
+.pv-search .pv-mag{color:#9fb0cb;font-size:15px}
+.pv-search input{background:transparent;border:none;outline:none;color:#fff;font-size:13px;font-family:inherit;width:150px}
+.pv-search input::placeholder{color:#7f8ca8}
+.pv-search button{background:#2a4170;color:#fff;border:none;border-radius:6px;width:24px;height:24px;cursor:pointer;font-size:13px;padding:0}
+.pv-search button:hover{background:#34508a}
+.pv-search #pv-qcount{color:#9fb0cb;font-size:11px;min-width:34px;text-align:center}
+.pv-stage{flex:1;overflow:auto;display:flex;justify-content:center;align-items:flex-start;padding:22px}
+.pv-canvaswrap{position:relative;box-shadow:0 8px 30px rgba(0,0,0,.4);background:#fff}
+.pv-canvaswrap canvas{display:block}
+.pv-textlayer{position:absolute;inset:0;overflow:hidden;opacity:.25;line-height:1}
+.pv-textlayer span{position:absolute;white-space:pre;color:transparent;transform-origin:0 0}
+.pv-textlayer .pv-hl{background:#ffd54a;color:transparent;border-radius:2px}
+.pv-textlayer .pv-hl-current{background:#ff9800}
 </style>
 </head>
 <body>
-  <div class="topbar"><div class="wrap">
-    <div class="tb-left"><span class="code">BARBM312</span> &nbsp;<span class="nm">The Council of Giants</span></div>
-    <a class="back" href="index.html">‹ Course Overview</a>
-  </div></div>
-  <div class="copybar"><div class="wrap">© Dr. Hildegard Haas 2026 · EU Business School · BARBM312 AI in Investment and Business Growth</div></div>
-
-  <header class="hero"><div class="wrap">
-    <div class="eyebrow">BARBM312 · Framework Author Slibrary</div>
-    <h1 class="serif">The <em>Council</em> of Giants</h1>
-    <p class="sub">"If I have seen further, it is by standing on the shoulders of giants." The thinkers behind every framework in the course — run your challenge through their lenses.</p>
-  </div></header>
-
-  <div class="wrap">
-    <div class="stats">
-      <div class="stat"><div class="num">32+</div><div class="lbl">Giants</div></div>
-      <div class="stat"><div class="num">7</div><div class="lbl">Units</div></div>
-      <div class="stat"><div class="num">140</div><div class="lbl">Frameworks</div></div>
-      <div class="stat"><div class="num">5</div><div class="lbl">Lenses / unit</div></div>
+<div id="noprint-notice">© 2026 Dr. Hildegard Haas · EU Business School — this material is not available for printing.</div>
+<div class="topband"><a href="index.html">‹ Back to Course Overview</a></div>
+<div class="crimsonbar">© Dr. Hildegard Haas 2026 · EU Business School · BARBM312 AI in Investment and Business Growth</div>
+<header class="hero">
+  <div class="kick">BARBM312 · Framework Author Slibrary</div>
+  <h1>The <em>Council</em> of Giants</h1>
+  <p>"If I have seen further, it is by standing on the shoulders of giants." The thinkers behind every framework in the course — run your challenge through their lenses.</p>
+  <div class="cred">Select any thinker to open their profile sheet · © 2026 Dr. Hildegard Haas</div>
+  <div class="stats">
+    <div class="stat"><b>32</b><span>Giants</span></div>
+    <div class="stat"><b>7</b><span>Units</span></div>
+    <div class="stat"><b>140</b><span>Frameworks</span></div>
+    <div class="stat"><b>5</b><span>Lenses / unit</span></div>
+  </div>
+</header>
+<div class="navwrap"><a class="navpill" href="#unit1">Unit 1</a> <a class="navpill" href="#unit2">Unit 2</a> <a class="navpill" href="#unit3">Unit 3</a> <a class="navpill" href="#unit4">Unit 4</a> <a class="navpill" href="#unit5">Unit 5</a> <a class="navpill" href="#unit6">Unit 6</a> <a class="navpill" href="#unit7">Unit 7</a></div>
+<div class="intro">Each unit summons a panel of five. They are simulations of public logic, not the people themselves — an echo, not a conversation. Use them to find friction and better distinctions, never as a substitute for your own judgment. <b>Click any card to open that thinker's profile sheet.</b></div>
+<div class="wrap">
+  <a id="unit1"></a>  <div class="setblock">
+    <div class="sethead"><span class="dot" style="background:#2f4b8f"></span>Unit 1 — AI, Data &amp; Strategic Business Growth <span class="chip">5 thinkers</span></div>
+    <div class="ggrid">
+      <div class="gcard" data-slug="russell-ackoff" data-name="Russell Ackoff" data-fw="DIKW Pyramid" style="--accent:#2f4b8f">
+        <div class="gtop" style="background:#2f4b8f"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#2f4b8f">RA</div>
+          <h3>Russell Ackoff</h3>
+          <div class="gfw">DIKW Pyramid</div>
+          <p class="gquote">&ldquo;A wealth of data creates a poverty of attention.&rdquo;</p>
+          <span class="gbadge" style="background:#2f4b8f">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="john-boyd" data-name="John Boyd" data-fw="OODA Loop" style="--accent:#2f4b8f">
+        <div class="gtop" style="background:#2f4b8f"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#2f4b8f">JB</div>
+          <h3>John Boyd</h3>
+          <div class="gfw">OODA Loop</div>
+          <p class="gquote">&ldquo;Whoever can handle the quickest rate of change survives.&rdquo;</p>
+          <span class="gbadge" style="background:#2f4b8f">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="clayton-christensen" data-name="Clayton Christensen" data-fw="Jobs To Be Done" style="--accent:#2f4b8f">
+        <div class="gtop" style="background:#2f4b8f"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#2f4b8f">CC</div>
+          <h3>Clayton Christensen</h3>
+          <div class="gfw">Jobs To Be Done</div>
+          <p class="gquote">&ldquo;Customers hire products to do a job.&rdquo;</p>
+          <span class="gbadge" style="background:#2f4b8f">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="jan-carlzon" data-name="Jan Carlzon" data-fw="Moments of Truth" style="--accent:#2f4b8f">
+        <div class="gtop" style="background:#2f4b8f"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#2f4b8f">JC</div>
+          <h3>Jan Carlzon</h3>
+          <div class="gfw">Moments of Truth</div>
+          <p class="gquote">&ldquo;15 seconds decides the whole relationship.&rdquo;</p>
+          <span class="gbadge" style="background:#2f4b8f">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="w-chan-kim-and-r-mauborgne" data-name="W. Chan Kim &amp; R. Mauborgne" data-fw="Blue Ocean Strategy" style="--accent:#2f4b8f">
+        <div class="gtop" style="background:#2f4b8f"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#2f4b8f">WC</div>
+          <h3>W. Chan Kim &amp; R. Mauborgne</h3>
+          <div class="gfw">Blue Ocean Strategy</div>
+          <p class="gquote">&ldquo;Make the competition irrelevant.&rdquo;</p>
+          <span class="gbadge" style="background:#2f4b8f">View profile sheet</span>
+        </div>
+      </div>
     </div>
   </div>
-
-  <section><div class="wrap">
-    <p class="sec-sub">Each unit summons a panel of five. They are simulations of public logic, not the people themselves — an echo, not a conversation. Use them to find friction and better distinctions, never as a substitute for your own judgment. <strong>Click any card to open that thinker's full profile sheet.</strong></p>
-    <div class="pillrow">
-<a class="pill" href="#unit1">Unit 1 · Data, Growth &amp; CX</a>
-<a class="pill" href="#unit2">Unit 2 · AI Benefits</a>
-<a class="pill" href="#unit3">Unit 3 · AI Costs</a>
-<a class="pill" href="#unit4">Unit 4 · IP &amp; Value</a>
-<a class="pill" href="#unit5">Unit 5 · Agility &amp; Disruption</a>
-<a class="pill" href="#unit6">Unit 6 · Investment AI</a>
-<a class="pill" href="#unit7">Unit 7 · Unicorns &amp; Scaling</a>
-    </div>
-  </div></section>
-
-  <section id="unit1" class="u-sec">
-    <div class="wrap">
-      <div class="sec-head"><span class="kicker">Unit 1 · Guided Discovery</span><h2 class="serif">AI, Data &amp; Strategic Business Growth</h2></div>
-      <p class="sec-sub">The thinkers anchoring this unit's Slibrary. Convene them before you decide.</p>
-      <div class="g-grid">
-      <button class="giant" data-slug="russell-ackoff" data-name="Russell Ackoff" data-fw="DIKW Pyramid" onclick="openGiant(this)">
-        <span class="mono">RA</span>
-        <span class="g-name">Russell Ackoff</span>
-        <span class="g-fw">DIKW Pyramid</span>
-        <span class="g-quote">&ldquo;A wealth of data creates a poverty of attention.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="john-boyd" data-name="John Boyd" data-fw="OODA Loop" onclick="openGiant(this)">
-        <span class="mono">JB</span>
-        <span class="g-name">John Boyd</span>
-        <span class="g-fw">OODA Loop</span>
-        <span class="g-quote">&ldquo;Whoever can handle the quickest rate of change survives.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="clayton-christensen" data-name="Clayton Christensen" data-fw="Jobs To Be Done" onclick="openGiant(this)">
-        <span class="mono">CC</span>
-        <span class="g-name">Clayton Christensen</span>
-        <span class="g-fw">Jobs To Be Done</span>
-        <span class="g-quote">&ldquo;Customers hire products to do a job.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="jan-carlzon" data-name="Jan Carlzon" data-fw="Moments of Truth" onclick="openGiant(this)">
-        <span class="mono">JC</span>
-        <span class="g-name">Jan Carlzon</span>
-        <span class="g-fw">Moments of Truth</span>
-        <span class="g-quote">&ldquo;15 seconds decides the whole relationship.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="w-chan-kim-and-r-mauborgne" data-name="W. Chan Kim &amp; R. Mauborgne" data-fw="Blue Ocean Strategy" onclick="openGiant(this)">
-        <span class="mono">WC</span>
-        <span class="g-name">W. Chan Kim &amp; R. Mauborgne</span>
-        <span class="g-fw">Blue Ocean Strategy</span>
-        <span class="g-quote">&ldquo;Make the competition irrelevant.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
+  <a id="unit2"></a>  <div class="setblock">
+    <div class="sethead"><span class="dot" style="background:#9e1b32"></span>Unit 2 — The Economics of AI Adoption — Benefits <span class="chip">5 thinkers</span></div>
+    <div class="ggrid">
+      <div class="gcard" data-slug="erik-brynjolfsson" data-name="Erik Brynjolfsson" data-fw="Productivity J-Curve" style="--accent:#9e1b32">
+        <div class="gtop" style="background:#9e1b32"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#9e1b32">EB</div>
+          <h3>Erik Brynjolfsson</h3>
+          <div class="gfw">Productivity J-Curve</div>
+          <p class="gquote">&ldquo;The benefits lag the investment by years.&rdquo;</p>
+          <span class="gbadge" style="background:#9e1b32">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="robert-solow" data-name="Robert Solow" data-fw="Productivity Paradox" style="--accent:#9e1b32">
+        <div class="gtop" style="background:#9e1b32"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#9e1b32">RS</div>
+          <h3>Robert Solow</h3>
+          <div class="gfw">Productivity Paradox</div>
+          <p class="gquote">&ldquo;Computers everywhere except the productivity statistics.&rdquo;</p>
+          <span class="gbadge" style="background:#9e1b32">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="everett-rogers" data-name="Everett Rogers" data-fw="Diffusion of Innovations" style="--accent:#9e1b32">
+        <div class="gtop" style="background:#9e1b32"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#9e1b32">ER</div>
+          <h3>Everett Rogers</h3>
+          <div class="gfw">Diffusion of Innovations</div>
+          <p class="gquote">&ldquo;Adoption is a social process, not a switch.&rdquo;</p>
+          <span class="gbadge" style="background:#9e1b32">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="eliyahu-goldratt" data-name="Eliyahu Goldratt" data-fw="Theory of Constraints" style="--accent:#9e1b32">
+        <div class="gtop" style="background:#9e1b32"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#9e1b32">EG</div>
+          <h3>Eliyahu Goldratt</h3>
+          <div class="gfw">Theory of Constraints</div>
+          <p class="gquote">&ldquo;An hour saved off a non-bottleneck is a mirage.&rdquo;</p>
+          <span class="gbadge" style="background:#9e1b32">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="dave-mcclure" data-name="Dave McClure" data-fw="Pirate Metrics" style="--accent:#9e1b32">
+        <div class="gtop" style="background:#9e1b32"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#9e1b32">DM</div>
+          <h3>Dave McClure</h3>
+          <div class="gfw">Pirate Metrics</div>
+          <p class="gquote">&ldquo;Measure the funnel, not the vanity.&rdquo;</p>
+          <span class="gbadge" style="background:#9e1b32">View profile sheet</span>
+        </div>
       </div>
     </div>
-  </section>
-  <section id="unit2" class="u-sec">
-    <div class="wrap">
-      <div class="sec-head"><span class="kicker">Unit 2 · Live Data Lab</span><h2 class="serif">The Economics of AI Adoption — Benefits</h2></div>
-      <p class="sec-sub">The thinkers anchoring this unit's Slibrary. Convene them before you decide.</p>
-      <div class="g-grid">
-      <button class="giant" data-slug="erik-brynjolfsson" data-name="Erik Brynjolfsson" data-fw="Productivity J-Curve" onclick="openGiant(this)">
-        <span class="mono">EB</span>
-        <span class="g-name">Erik Brynjolfsson</span>
-        <span class="g-fw">Productivity J-Curve</span>
-        <span class="g-quote">&ldquo;The benefits lag the investment by years.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="robert-solow" data-name="Robert Solow" data-fw="Productivity Paradox" onclick="openGiant(this)">
-        <span class="mono">RS</span>
-        <span class="g-name">Robert Solow</span>
-        <span class="g-fw">Productivity Paradox</span>
-        <span class="g-quote">&ldquo;Computers everywhere except the productivity statistics.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="everett-rogers" data-name="Everett Rogers" data-fw="Diffusion of Innovations" onclick="openGiant(this)">
-        <span class="mono">ER</span>
-        <span class="g-name">Everett Rogers</span>
-        <span class="g-fw">Diffusion of Innovations</span>
-        <span class="g-quote">&ldquo;Adoption is a social process, not a switch.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="eliyahu-goldratt" data-name="Eliyahu Goldratt" data-fw="Theory of Constraints" onclick="openGiant(this)">
-        <span class="mono">EG</span>
-        <span class="g-name">Eliyahu Goldratt</span>
-        <span class="g-fw">Theory of Constraints</span>
-        <span class="g-quote">&ldquo;An hour saved off a non-bottleneck is a mirage.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="dave-mcclure" data-name="Dave McClure" data-fw="Pirate Metrics" onclick="openGiant(this)">
-        <span class="mono">DM</span>
-        <span class="g-name">Dave McClure</span>
-        <span class="g-fw">Pirate Metrics</span>
-        <span class="g-quote">&ldquo;Measure the funnel, not the vanity.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      </div>
-    </div>
-  </section>
-  <section id="unit3" class="u-sec">
-    <div class="wrap">
-      <div class="sec-head"><span class="kicker">Unit 3 · Mini-Hackathon</span><h2 class="serif">The Economics of AI Adoption — Costs</h2></div>
-      <p class="sec-sub">The thinkers anchoring this unit's Slibrary. Convene them before you decide.</p>
-      <div class="g-grid">
-      <button class="giant" data-slug="nassim-nicholas-taleb" data-name="Nassim Nicholas Taleb" data-fw="Black Swan / Tail Risk" onclick="openGiant(this)">
-        <span class="mono">NN</span>
-        <span class="g-name">Nassim Nicholas Taleb</span>
-        <span class="g-fw">Black Swan / Tail Risk</span>
-        <span class="g-quote">&ldquo;It is the rare event that ruins you.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="cathy-oneil" data-name="Cathy O'Neil" data-fw="Algorithmic Bias Audit" onclick="openGiant(this)">
-        <span class="mono">CO</span>
-        <span class="g-name">Cathy O'Neil</span>
-        <span class="g-fw">Algorithmic Bias Audit</span>
-        <span class="g-quote">&ldquo;Models are opinions embedded in maths.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="andrew-ng" data-name="Andrew Ng" data-fw="MLOps &amp; Data-Centric AI" onclick="openGiant(this)">
-        <span class="mono">AN</span>
-        <span class="g-name">Andrew Ng</span>
-        <span class="g-fw">MLOps &amp; Data-Centric AI</span>
-        <span class="g-quote">&ldquo;It's not the model, it's the data and the plumbing.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="roy-schwartz-et-al" data-name="Roy Schwartz et al." data-fw="Green AI vs. Red AI" onclick="openGiant(this)">
-        <span class="mono">RS</span>
-        <span class="g-name">Roy Schwartz et al.</span>
-        <span class="g-fw">Green AI vs. Red AI</span>
-        <span class="g-quote">&ldquo;Efficiency must be a first-class metric.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="jb-quinn" data-name="J.B. Quinn" data-fw="Strategic Outsourcing" onclick="openGiant(this)">
-        <span class="mono">JQ</span>
-        <span class="g-name">J.B. Quinn</span>
-        <span class="g-fw">Strategic Outsourcing</span>
-        <span class="g-quote">&ldquo;Own the core, rent the rest.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      </div>
-    </div>
-  </section>
-  <section id="unit4" class="u-sec">
-    <div class="wrap">
-      <div class="sec-head"><span class="kicker">Unit 4 · Moot Court</span><h2 class="serif">IP &amp; Value Creation through AI</h2></div>
-      <p class="sec-sub">The thinkers anchoring this unit's Slibrary. Convene them before you decide.</p>
-      <div class="g-grid">
-      <button class="giant" data-slug="jyh-an-lee-et-al" data-name="Jyh-An Lee et al." data-fw="Authorship Decision Tree" onclick="openGiant(this)">
-        <span class="mono">JL</span>
-        <span class="g-name">Jyh-An Lee et al.</span>
-        <span class="g-fw">Authorship Decision Tree</span>
-        <span class="g-quote">&ldquo;Authorship requires a human spark.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="hamilton-helmer" data-name="Hamilton Helmer" data-fw="7 Powers" onclick="openGiant(this)">
-        <span class="mono">HH</span>
-        <span class="g-name">Hamilton Helmer</span>
-        <span class="g-fw">7 Powers</span>
-        <span class="g-quote">&ldquo;Power is the potential to earn persistent returns.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="peter-thiel" data-name="Peter Thiel" data-fw="Differentiation &amp; Monopoly" onclick="openGiant(this)">
-        <span class="mono">PT</span>
-        <span class="g-name">Peter Thiel</span>
-        <span class="g-fw">Differentiation &amp; Monopoly</span>
-        <span class="g-quote">&ldquo;Is your product better — or different?&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="lawrence-lessig" data-name="Lawrence Lessig" data-fw="Code &amp; IP / Licensing" onclick="openGiant(this)">
-        <span class="mono">LL</span>
-        <span class="g-name">Lawrence Lessig</span>
-        <span class="g-fw">Code &amp; IP / Licensing</span>
-        <span class="g-quote">&ldquo;Code is law; licences are choices.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="andrei-hagiu-and-julian-wright" data-name="Andrei Hagiu &amp; Julian Wright" data-fw="Data Network Effects" onclick="openGiant(this)">
-        <span class="mono">AH</span>
-        <span class="g-name">Andrei Hagiu &amp; Julian Wright</span>
-        <span class="g-fw">Data Network Effects</span>
-        <span class="g-quote">&ldquo;Data advantage must compound to matter.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      </div>
-    </div>
-  </section>
-  <section id="unit5" class="u-sec">
-    <div class="wrap">
-      <div class="sec-head"><span class="kicker">Unit 5 · Role Play</span><h2 class="serif">Agility, Disruption &amp; Rebranding in the Age of AI</h2></div>
-      <p class="sec-sub">The thinkers anchoring this unit's Slibrary. Convene them before you decide.</p>
-      <div class="g-grid">
-      <button class="giant" data-slug="john-boyd" data-name="John Boyd" data-fw="OODA Loop" onclick="openGiant(this)">
-        <span class="mono">JB</span>
-        <span class="g-name">John Boyd</span>
-        <span class="g-fw">OODA Loop</span>
-        <span class="g-quote">&ldquo;Speed of re-decision wins.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="clayton-christensen" data-name="Clayton Christensen" data-fw="Innovator's Dilemma" onclick="openGiant(this)">
-        <span class="mono">CC</span>
-        <span class="g-name">Clayton Christensen</span>
-        <span class="g-fw">Innovator's Dilemma</span>
-        <span class="g-quote">&ldquo;Disruption starts at the bottom.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="dave-snowden" data-name="Dave Snowden" data-fw="Cynefin" onclick="openGiant(this)">
-        <span class="mono">DS</span>
-        <span class="g-name">Dave Snowden</span>
-        <span class="g-fw">Cynefin</span>
-        <span class="g-quote">&ldquo;Match the response to the kind of problem.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="john-kotter" data-name="John Kotter" data-fw="Leading Change" onclick="openGiant(this)">
-        <span class="mono">JK</span>
-        <span class="g-name">John Kotter</span>
-        <span class="g-fw">Leading Change</span>
-        <span class="g-quote">&ldquo;Most change efforts fail for lack of urgency.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="donald-miller" data-name="Donald Miller" data-fw="StoryBrand" onclick="openGiant(this)">
-        <span class="mono">DM</span>
-        <span class="g-name">Donald Miller</span>
-        <span class="g-fw">StoryBrand</span>
-        <span class="g-quote">&ldquo;The customer is the hero, not the brand.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      </div>
-    </div>
-  </section>
-  <section id="unit6" class="u-sec">
-    <div class="wrap">
-      <div class="sec-head"><span class="kicker">Unit 6 · Live Data Lab</span><h2 class="serif">Investment Strategies in the AI Era</h2></div>
-      <p class="sec-sub">The thinkers anchoring this unit's Slibrary. Convene them before you decide.</p>
-      <div class="g-grid">
-      <button class="giant" data-slug="harry-markowitz" data-name="Harry Markowitz" data-fw="Modern Portfolio Theory" onclick="openGiant(this)">
-        <span class="mono">HM</span>
-        <span class="g-name">Harry Markowitz</span>
-        <span class="g-fw">Modern Portfolio Theory</span>
-        <span class="g-quote">&ldquo;Diversification is the only free lunch.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="fischer-black-and-robert-litterman" data-name="Fischer Black &amp; Robert Litterman" data-fw="Bayesian Allocation" onclick="openGiant(this)">
-        <span class="mono">FB</span>
-        <span class="g-name">Fischer Black &amp; Robert Litterman</span>
-        <span class="g-fw">Bayesian Allocation</span>
-        <span class="g-quote">&ldquo;Start from the market, then add your views.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="eugene-fama-and-kenneth-french" data-name="Eugene Fama &amp; Kenneth French" data-fw="Multi-Factor Pricing" onclick="openGiant(this)">
-        <span class="mono">EF</span>
-        <span class="g-name">Eugene Fama &amp; Kenneth French</span>
-        <span class="g-fw">Multi-Factor Pricing</span>
-        <span class="g-quote">&ldquo;Returns have more than one source.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="marcos-lopez-de-prado" data-name="Marcos López de Prado" data-fw="Financial ML" onclick="openGiant(this)">
-        <span class="mono">ML</span>
-        <span class="g-name">Marcos López de Prado</span>
-        <span class="g-fw">Financial ML</span>
-        <span class="g-quote">&ldquo;Most backtests are false discoveries.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="agrawal-gans-and-goldfarb" data-name="Agrawal, Gans &amp; Goldfarb" data-fw="Prediction Machines" onclick="openGiant(this)">
-        <span class="mono">AG</span>
-        <span class="g-name">Agrawal, Gans &amp; Goldfarb</span>
-        <span class="g-fw">Prediction Machines</span>
-        <span class="g-quote">&ldquo;AI lowers the cost of prediction.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      </div>
-    </div>
-  </section>
-  <section id="unit7" class="u-sec">
-    <div class="wrap">
-      <div class="sec-head"><span class="kicker">Unit 7 · Business Challenge · Capstone</span><h2 class="serif">Innovative AI Enterprises — From Unicorns to Industry Leaders</h2></div>
-      <p class="sec-sub">The thinkers anchoring this unit's Slibrary. Convene them before you decide.</p>
-      <div class="g-grid">
-      <button class="giant" data-slug="peter-thiel" data-name="Peter Thiel" data-fw="Zero to One / Monopoly" onclick="openGiant(this)">
-        <span class="mono">PT</span>
-        <span class="g-name">Peter Thiel</span>
-        <span class="g-fw">Zero to One / Monopoly</span>
-        <span class="g-quote">&ldquo;Competition is for losers.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="reid-hoffman" data-name="Reid Hoffman" data-fw="Blitzscaling" onclick="openGiant(this)">
-        <span class="mono">RH</span>
-        <span class="g-name">Reid Hoffman</span>
-        <span class="g-fw">Blitzscaling</span>
-        <span class="g-quote">&ldquo;Prioritise speed over efficiency to win.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="geoffrey-moore" data-name="Geoffrey Moore" data-fw="Crossing the Chasm" onclick="openGiant(this)">
-        <span class="mono">GM</span>
-        <span class="g-name">Geoffrey Moore</span>
-        <span class="g-fw">Crossing the Chasm</span>
-        <span class="g-quote">&ldquo;Win the beachhead before the mainstream.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="sangeet-choudary" data-name="Sangeet Choudary" data-fw="Platform Revolution" onclick="openGiant(this)">
-        <span class="mono">SC</span>
-        <span class="g-name">Sangeet Choudary</span>
-        <span class="g-fw">Platform Revolution</span>
-        <span class="g-quote">&ldquo;Platforms beat pipes.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      <button class="giant" data-slug="sara-blakely" data-name="Sara Blakely" data-fw="Resilient Builder" onclick="openGiant(this)">
-        <span class="mono">SB</span>
-        <span class="g-name">Sara Blakely</span>
-        <span class="g-fw">Resilient Builder</span>
-        <span class="g-quote">&ldquo;Failure is the best classroom.&rdquo;</span>
-        <span class="g-cta">View profile sheet →</span>
-      </button>
-      </div>
-    </div>
-  </section>
-
-  <footer><div class="wrap">
-    <div><strong>© Dr. Hildegard Haas 2026</strong> · BARBM312 AI in Investment and Business Growth · EU Business School</div>
-    <div>Applying <span class="acc">Thumbnail Thinking</span> &amp; the <span class="acc">Council of Giants</span> (JD Meier) · Core message via <span class="acc">Bostelaar</span></div>
-  </div></footer>
-
-  <!-- PDF viewer overlay -->
-  <div class="pv" id="pv" role="dialog" aria-modal="true" aria-label="Profile sheet viewer">
-    <div class="pv-bar">
-      <div>
-        <div class="pv-title" id="pv-title">Profile</div>
-        <div class="pv-sub" id="pv-sub"></div>
-      </div>
-      <div class="pv-spacer"></div>
-      <a id="pv-open" target="_blank" rel="noopener">Open in new tab</a>
-      <button class="pv-close" id="pv-close" onclick="closeGiant()">Close ✕</button>
-    </div>
-    <div class="pv-frame-wrap"><iframe id="pv-frame" title="Council of Giants profile sheet"></iframe></div>
   </div>
+  <a id="unit3"></a>  <div class="setblock">
+    <div class="sethead"><span class="dot" style="background:#c4761b"></span>Unit 3 — The Economics of AI Adoption — Costs <span class="chip">5 thinkers</span></div>
+    <div class="ggrid">
+      <div class="gcard" data-slug="nassim-nicholas-taleb" data-name="Nassim Nicholas Taleb" data-fw="Black Swan / Tail Risk" style="--accent:#c4761b">
+        <div class="gtop" style="background:#c4761b"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#c4761b">NN</div>
+          <h3>Nassim Nicholas Taleb</h3>
+          <div class="gfw">Black Swan / Tail Risk</div>
+          <p class="gquote">&ldquo;It is the rare event that ruins you.&rdquo;</p>
+          <span class="gbadge" style="background:#c4761b">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="cathy-oneil" data-name="Cathy O'Neil" data-fw="Algorithmic Bias Audit" style="--accent:#c4761b">
+        <div class="gtop" style="background:#c4761b"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#c4761b">CO</div>
+          <h3>Cathy O'Neil</h3>
+          <div class="gfw">Algorithmic Bias Audit</div>
+          <p class="gquote">&ldquo;Models are opinions embedded in maths.&rdquo;</p>
+          <span class="gbadge" style="background:#c4761b">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="andrew-ng" data-name="Andrew Ng" data-fw="MLOps &amp; Data-Centric AI" style="--accent:#c4761b">
+        <div class="gtop" style="background:#c4761b"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#c4761b">AN</div>
+          <h3>Andrew Ng</h3>
+          <div class="gfw">MLOps &amp; Data-Centric AI</div>
+          <p class="gquote">&ldquo;It's not the model, it's the data and the plumbing.&rdquo;</p>
+          <span class="gbadge" style="background:#c4761b">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="roy-schwartz-et-al" data-name="Roy Schwartz et al." data-fw="Green AI vs. Red AI" style="--accent:#c4761b">
+        <div class="gtop" style="background:#c4761b"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#c4761b">RS</div>
+          <h3>Roy Schwartz et al.</h3>
+          <div class="gfw">Green AI vs. Red AI</div>
+          <p class="gquote">&ldquo;Efficiency must be a first-class metric.&rdquo;</p>
+          <span class="gbadge" style="background:#c4761b">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="jb-quinn" data-name="J.B. Quinn" data-fw="Strategic Outsourcing" style="--accent:#c4761b">
+        <div class="gtop" style="background:#c4761b"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#c4761b">JQ</div>
+          <h3>J.B. Quinn</h3>
+          <div class="gfw">Strategic Outsourcing</div>
+          <p class="gquote">&ldquo;Own the core, rent the rest.&rdquo;</p>
+          <span class="gbadge" style="background:#c4761b">View profile sheet</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a id="unit4"></a>  <div class="setblock">
+    <div class="sethead"><span class="dot" style="background:#1f7a52"></span>Unit 4 — IP &amp; Value Creation through AI <span class="chip">5 thinkers</span></div>
+    <div class="ggrid">
+      <div class="gcard" data-slug="jyh-an-lee-et-al" data-name="Jyh-An Lee et al." data-fw="Authorship Decision Tree" style="--accent:#1f7a52">
+        <div class="gtop" style="background:#1f7a52"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#1f7a52">JL</div>
+          <h3>Jyh-An Lee et al.</h3>
+          <div class="gfw">Authorship Decision Tree</div>
+          <p class="gquote">&ldquo;Authorship requires a human spark.&rdquo;</p>
+          <span class="gbadge" style="background:#1f7a52">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="hamilton-helmer" data-name="Hamilton Helmer" data-fw="7 Powers" style="--accent:#1f7a52">
+        <div class="gtop" style="background:#1f7a52"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#1f7a52">HH</div>
+          <h3>Hamilton Helmer</h3>
+          <div class="gfw">7 Powers</div>
+          <p class="gquote">&ldquo;Power is the potential to earn persistent returns.&rdquo;</p>
+          <span class="gbadge" style="background:#1f7a52">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="peter-thiel" data-name="Peter Thiel" data-fw="Differentiation &amp; Monopoly" style="--accent:#1f7a52">
+        <div class="gtop" style="background:#1f7a52"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#1f7a52">PT</div>
+          <h3>Peter Thiel</h3>
+          <div class="gfw">Differentiation &amp; Monopoly</div>
+          <p class="gquote">&ldquo;Is your product better — or different?&rdquo;</p>
+          <span class="gbadge" style="background:#1f7a52">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="lawrence-lessig" data-name="Lawrence Lessig" data-fw="Code &amp; IP / Licensing" style="--accent:#1f7a52">
+        <div class="gtop" style="background:#1f7a52"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#1f7a52">LL</div>
+          <h3>Lawrence Lessig</h3>
+          <div class="gfw">Code &amp; IP / Licensing</div>
+          <p class="gquote">&ldquo;Code is law; licences are choices.&rdquo;</p>
+          <span class="gbadge" style="background:#1f7a52">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="andrei-hagiu-and-julian-wright" data-name="Andrei Hagiu &amp; Julian Wright" data-fw="Data Network Effects" style="--accent:#1f7a52">
+        <div class="gtop" style="background:#1f7a52"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#1f7a52">AH</div>
+          <h3>Andrei Hagiu &amp; Julian Wright</h3>
+          <div class="gfw">Data Network Effects</div>
+          <p class="gquote">&ldquo;Data advantage must compound to matter.&rdquo;</p>
+          <span class="gbadge" style="background:#1f7a52">View profile sheet</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a id="unit5"></a>  <div class="setblock">
+    <div class="sethead"><span class="dot" style="background:#5b3a8f"></span>Unit 5 — Agility, Disruption &amp; Rebranding in the Age of AI <span class="chip">5 thinkers</span></div>
+    <div class="ggrid">
+      <div class="gcard" data-slug="john-boyd" data-name="John Boyd" data-fw="OODA Loop" style="--accent:#5b3a8f">
+        <div class="gtop" style="background:#5b3a8f"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#5b3a8f">JB</div>
+          <h3>John Boyd</h3>
+          <div class="gfw">OODA Loop</div>
+          <p class="gquote">&ldquo;Speed of re-decision wins.&rdquo;</p>
+          <span class="gbadge" style="background:#5b3a8f">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="clayton-christensen" data-name="Clayton Christensen" data-fw="Innovator's Dilemma" style="--accent:#5b3a8f">
+        <div class="gtop" style="background:#5b3a8f"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#5b3a8f">CC</div>
+          <h3>Clayton Christensen</h3>
+          <div class="gfw">Innovator's Dilemma</div>
+          <p class="gquote">&ldquo;Disruption starts at the bottom.&rdquo;</p>
+          <span class="gbadge" style="background:#5b3a8f">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="dave-snowden" data-name="Dave Snowden" data-fw="Cynefin" style="--accent:#5b3a8f">
+        <div class="gtop" style="background:#5b3a8f"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#5b3a8f">DS</div>
+          <h3>Dave Snowden</h3>
+          <div class="gfw">Cynefin</div>
+          <p class="gquote">&ldquo;Match the response to the kind of problem.&rdquo;</p>
+          <span class="gbadge" style="background:#5b3a8f">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="john-kotter" data-name="John Kotter" data-fw="Leading Change" style="--accent:#5b3a8f">
+        <div class="gtop" style="background:#5b3a8f"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#5b3a8f">JK</div>
+          <h3>John Kotter</h3>
+          <div class="gfw">Leading Change</div>
+          <p class="gquote">&ldquo;Most change efforts fail for lack of urgency.&rdquo;</p>
+          <span class="gbadge" style="background:#5b3a8f">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="donald-miller" data-name="Donald Miller" data-fw="StoryBrand" style="--accent:#5b3a8f">
+        <div class="gtop" style="background:#5b3a8f"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#5b3a8f">DM</div>
+          <h3>Donald Miller</h3>
+          <div class="gfw">StoryBrand</div>
+          <p class="gquote">&ldquo;The customer is the hero, not the brand.&rdquo;</p>
+          <span class="gbadge" style="background:#5b3a8f">View profile sheet</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a id="unit6"></a>  <div class="setblock">
+    <div class="sethead"><span class="dot" style="background:#0f6e8c"></span>Unit 6 — Investment Strategies in the AI Era <span class="chip">5 thinkers</span></div>
+    <div class="ggrid">
+      <div class="gcard" data-slug="harry-markowitz" data-name="Harry Markowitz" data-fw="Modern Portfolio Theory" style="--accent:#0f6e8c">
+        <div class="gtop" style="background:#0f6e8c"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#0f6e8c">HM</div>
+          <h3>Harry Markowitz</h3>
+          <div class="gfw">Modern Portfolio Theory</div>
+          <p class="gquote">&ldquo;Diversification is the only free lunch.&rdquo;</p>
+          <span class="gbadge" style="background:#0f6e8c">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="fischer-black-and-robert-litterman" data-name="Fischer Black &amp; Robert Litterman" data-fw="Bayesian Allocation" style="--accent:#0f6e8c">
+        <div class="gtop" style="background:#0f6e8c"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#0f6e8c">FB</div>
+          <h3>Fischer Black &amp; Robert Litterman</h3>
+          <div class="gfw">Bayesian Allocation</div>
+          <p class="gquote">&ldquo;Start from the market, then add your views.&rdquo;</p>
+          <span class="gbadge" style="background:#0f6e8c">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="eugene-fama-and-kenneth-french" data-name="Eugene Fama &amp; Kenneth French" data-fw="Multi-Factor Pricing" style="--accent:#0f6e8c">
+        <div class="gtop" style="background:#0f6e8c"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#0f6e8c">EF</div>
+          <h3>Eugene Fama &amp; Kenneth French</h3>
+          <div class="gfw">Multi-Factor Pricing</div>
+          <p class="gquote">&ldquo;Returns have more than one source.&rdquo;</p>
+          <span class="gbadge" style="background:#0f6e8c">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="marcos-lopez-de-prado" data-name="Marcos López de Prado" data-fw="Financial ML" style="--accent:#0f6e8c">
+        <div class="gtop" style="background:#0f6e8c"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#0f6e8c">ML</div>
+          <h3>Marcos López de Prado</h3>
+          <div class="gfw">Financial ML</div>
+          <p class="gquote">&ldquo;Most backtests are false discoveries.&rdquo;</p>
+          <span class="gbadge" style="background:#0f6e8c">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="agrawal-gans-and-goldfarb" data-name="Agrawal, Gans &amp; Goldfarb" data-fw="Prediction Machines" style="--accent:#0f6e8c">
+        <div class="gtop" style="background:#0f6e8c"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#0f6e8c">AG</div>
+          <h3>Agrawal, Gans &amp; Goldfarb</h3>
+          <div class="gfw">Prediction Machines</div>
+          <p class="gquote">&ldquo;AI lowers the cost of prediction.&rdquo;</p>
+          <span class="gbadge" style="background:#0f6e8c">View profile sheet</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a id="unit7"></a>  <div class="setblock">
+    <div class="sethead"><span class="dot" style="background:#9e1b32"></span>Unit 7 — Innovative AI Enterprises — From Unicorns to Industry Leaders <span class="chip">5 thinkers</span></div>
+    <div class="ggrid">
+      <div class="gcard" data-slug="peter-thiel" data-name="Peter Thiel" data-fw="Zero to One / Monopoly" style="--accent:#9e1b32">
+        <div class="gtop" style="background:#9e1b32"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#9e1b32">PT</div>
+          <h3>Peter Thiel</h3>
+          <div class="gfw">Zero to One / Monopoly</div>
+          <p class="gquote">&ldquo;Competition is for losers.&rdquo;</p>
+          <span class="gbadge" style="background:#9e1b32">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="reid-hoffman" data-name="Reid Hoffman" data-fw="Blitzscaling" style="--accent:#9e1b32">
+        <div class="gtop" style="background:#9e1b32"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#9e1b32">RH</div>
+          <h3>Reid Hoffman</h3>
+          <div class="gfw">Blitzscaling</div>
+          <p class="gquote">&ldquo;Prioritise speed over efficiency to win.&rdquo;</p>
+          <span class="gbadge" style="background:#9e1b32">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="geoffrey-moore" data-name="Geoffrey Moore" data-fw="Crossing the Chasm" style="--accent:#9e1b32">
+        <div class="gtop" style="background:#9e1b32"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#9e1b32">GM</div>
+          <h3>Geoffrey Moore</h3>
+          <div class="gfw">Crossing the Chasm</div>
+          <p class="gquote">&ldquo;Win the beachhead before the mainstream.&rdquo;</p>
+          <span class="gbadge" style="background:#9e1b32">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="sangeet-choudary" data-name="Sangeet Choudary" data-fw="Platform Revolution" style="--accent:#9e1b32">
+        <div class="gtop" style="background:#9e1b32"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#9e1b32">SC</div>
+          <h3>Sangeet Choudary</h3>
+          <div class="gfw">Platform Revolution</div>
+          <p class="gquote">&ldquo;Platforms beat pipes.&rdquo;</p>
+          <span class="gbadge" style="background:#9e1b32">View profile sheet</span>
+        </div>
+      </div>
+      <div class="gcard" data-slug="sara-blakely" data-name="Sara Blakely" data-fw="Resilient Builder" style="--accent:#9e1b32">
+        <div class="gtop" style="background:#9e1b32"></div>
+        <div class="gbody">
+          <div class="gmono" style="background:#9e1b32">SB</div>
+          <h3>Sara Blakely</h3>
+          <div class="gfw">Resilient Builder</div>
+          <p class="gquote">&ldquo;Failure is the best classroom.&rdquo;</p>
+          <span class="gbadge" style="background:#9e1b32">View profile sheet</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer"><b>BARBM312</b> · AI in Investment and Business Growth · © 2026 Dr. Hildegard Haas · EU Business School<br/>
+Applying JD Meier's <b>Thumbnail Thinking</b> &amp; the <b>Council of Giants</b> · core message via Bostelaar</div>
+
+<!-- pdf viewer (PDF.js) -->
+<div class="pv" id="pv">
+  <div class="pvbar">
+    <div class="ti" id="pv-title">Profile Sheet<small id="pv-sub"></small></div>
+    <div class="pv-search">
+      <span class="pv-mag">⌕</span>
+      <input id="pv-q" type="text" placeholder="Search PDF…" autocomplete="off"/>
+      <span id="pv-qcount"></span>
+      <button id="pv-prev" title="Previous match">‹</button>
+      <button id="pv-next" title="Next match">›</button>
+      <button id="pv-qclear" title="Clear">×</button>
+    </div>
+    <div class="sp"></div>
+    <button id="pv-zout" title="Zoom out">−</button>
+    <button id="pv-zin" title="Zoom in">+</button>
+    <button id="pv-open" title="Open in new tab">↗</button>
+    <button id="pv-close" title="Close">✕</button>
+  </div>
+  <div class="pv-stage" id="pv-stage">
+    <div class="pv-canvaswrap" id="pv-canvaswrap">
+      <canvas id="pv-canvas"></canvas>
+      <div class="pv-textlayer" id="pv-textlayer"></div>
+    </div>
+  </div>
+</div>
 
 <script>
-  var GIANTS_DIR = "giants/";
-  var pv = document.getElementById('pv');
-  var pvf = document.getElementById('pv-frame');
-  function openGiant(btn){
-    var slug = btn.getAttribute('data-slug');
-    var name = btn.getAttribute('data-name');
-    var fw   = btn.getAttribute('data-fw');
-    var url  = GIANTS_DIR + slug + '.pdf';
-    document.getElementById('pv-title').textContent = name;
+const GIANTS_DIR = "giants/";
+const pv=document.getElementById('pv');
+let current=null;
+document.querySelectorAll('.gcard').forEach(c=>{
+  c.addEventListener('click',()=>{
+    const slug=c.getAttribute('data-slug');
+    const name=c.getAttribute('data-name');
+    const fw=c.getAttribute('data-fw');
+    const url=GIANTS_DIR+slug+'.pdf';
+    current={url,name,fw};
+    document.getElementById('pv-title').firstChild.textContent = name;
     document.getElementById('pv-sub').textContent = fw + ' · Council of Giants · Profile sheet';
-    pvf.src = url;
-    document.getElementById('pv-open').setAttribute('href', url);
+    document.getElementById('pv-open').onclick=()=>window.open(url,'_blank');
     pv.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeGiant(){
-    pv.classList.remove('open');
-    pvf.src = 'about:blank';
-    document.body.style.overflow = '';
-  }
-  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeGiant(); });
-  pv.addEventListener('click', function(e){ if(e.target === pv) closeGiant(); });
+    if(window.PDFViewer) window.PDFViewer.load(url);
+  });
+});
+document.getElementById('pv-close').addEventListener('click',()=>{ pv.classList.remove('open'); if(window.PDFViewer) window.PDFViewer.clear(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ pv.classList.remove('open'); } });
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('copy',e=>e.preventDefault());
+document.addEventListener('cut',e=>e.preventDefault());
+document.addEventListener('dragstart',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{
+  const k=e.key.toLowerCase();
+  if((e.ctrlKey||e.metaKey)&&(k==='p'||k==='s'||k==='u'||k==='c')){ e.preventDefault(); }
+});
 </script>
-</body>
-</html>
+<script type="module">
+import * as pdfjsLib from './pdfjs/pdf.min.mjs';
+pdfjsLib.GlobalWorkerOptions.workerSrc = './pdfjs/pdf.worker.min.mjs';
+const canvas=document.getElementById('pv-canvas'), ctx=canvas.getContext('2d');
+const tlayer=document.getElementById('pv-textlayer'), wrap=document.getElementById('pv-canvaswrap');
+const qbox=document.getElementById('pv-q'), qcount=document.getElementById('pv-qcount');
+let pdfDoc=null, pageObj=null, scale=1.35, baseViewport=null, textItems=[], matches=[], curMatch=-1, fullText='', spanMap=[];
+async function render(){
+  if(!pageObj) return;
+  const vp=pageObj.getViewport({scale});
+  baseViewport=vp;
+  canvas.width=vp.width; canvas.height=vp.height;
+  wrap.style.width=vp.width+'px'; wrap.style.height=vp.height+'px';
+  await pageObj.render({canvasContext:ctx, viewport:vp}).promise;
+  await buildTextLayer(vp);
+  applySearch();
+}
+async function buildTextLayer(vp){
+  tlayer.innerHTML=''; textItems=[]; fullText=''; spanMap=[];
+  const tc=await pageObj.getTextContent();
+  tc.items.forEach(it=>{
+    if(it.str===undefined) return;
+    const t=pdfjsLib.Util.transform(vp.transform, it.transform);
+    const span=document.createElement('span');
+    span.textContent=it.str;
+    const fs=Math.hypot(t[2],t[3]);
+    span.style.left=t[4]+'px'; span.style.top=(t[5]-fs)+'px';
+    span.style.fontSize=fs+'px';
+    tlayer.appendChild(span);
+    const start=fullText.length;
+    fullText += it.str.toLowerCase();
+    textItems.push({span});
+    spanMap.push({span, start, end:fullText.length});
+    if(it.hasEOL){ fullText+=' '; }
+  });
+}
+function applySearch(){
+  const q=qbox.value.trim().toLowerCase();
+  matches=[]; curMatch=-1;
+  textItems.forEach(ti=>{ ti.span.classList.remove('pv-hl','pv-hl-current'); });
+  if(q){
+    let idx=fullText.indexOf(q);
+    while(idx!==-1){
+      const mStart=idx, mEnd=idx+q.length;
+      const spans=spanMap.filter(s=> s.start < mEnd && s.end > mStart).map(s=>s.span);
+      if(spans.length){ matches.push(spans); spans.forEach(sp=>sp.classList.add('pv-hl')); }
+      idx=fullText.indexOf(q, idx+Math.max(1,q.length));
+    }
+    if(matches.length){ curMatch=0; focusMatch(); }
+  }
+  qcount.textContent = q ? (matches.length? (curMatch+1)+'/'+matches.length : '0/0') : '';
+}
+function focusMatch(){
+  document.querySelectorAll('.pv-hl-current').forEach(s=>s.classList.remove('pv-hl-current'));
+  if(curMatch>=0&&matches[curMatch]){ const grp=matches[curMatch]; grp.forEach(s=>s.classList.add('pv-hl-current')); grp[0].scrollIntoView({block:'center',inline:'center'}); }
+  qcount.textContent = matches.length? (curMatch+1)+'/'+matches.length : '0/0';
+}
+qbox.addEventListener('input',applySearch);
+document.getElementById('pv-next').addEventListener('click',()=>{ if(matches.length){ curMatch=(curMatch+1)%matches.length; focusMatch(); }});
+document.getElementById('pv-prev').addEventListener('click',()=>{ if(matches.length){ curMatch=(curMatch-1+matches.length)%matches.length; focusMatch(); }});
+document.getElementById('pv-qclear').addEventListener('click',()=>{ qbox.value=''; applySearch(); qbox.focus(); });
+document.getElementById('pv-zin').addEventListener('click',()=>{ scale=Math.min(scale+0.2,3); render(); });
+document.getElementById('pv-zout').addEventListener('click',()=>{ scale=Math.max(scale-0.2,0.6); render(); });
+window.PDFViewer={
+  async load(url){
+    qbox.value=''; qcount.textContent=''; scale=1.35;
+    try{
+      pdfDoc=await pdfjsLib.getDocument(url).promise;
+      pageObj=await pdfDoc.getPage(1);
+      await render();
+    }catch(e){ console.error('PDF load failed',e); }
+  },
+  clear(){ ctx&&ctx.clearRect(0,0,canvas.width,canvas.height); tlayer.innerHTML=''; pdfDoc=null; pageObj=null; }
+};
+</script>
+</body></html>
