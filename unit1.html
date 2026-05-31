@@ -1,110 +1,385 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>BARBM312 Unit 1 — AI, Data &amp; Strategic Business Growth</title>
-<link rel="stylesheet" href="styles.css">
-<script src="protect.js" defer></script>
+<style>
+:root{ --ink:#14223d; --ink2:#46546e; --line:#e3e7ef; --bg:#f3f5f9; --card:#ffffff;
+       --crimson:#9e1b32; --navy:#14223d; }
+*{box-sizing:border-box}
+/* copy / selection deterrents */
+html,body{ -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; user-select:none; }
+img,svg{ -webkit-user-drag:none; user-drag:none; pointer-events:auto; }
+/* allow selection only inside form inputs (search box) */
+input,textarea{ -webkit-user-select:text; user-select:text; }
+/* print deterrent: hide everything, show a notice */
+@media print{
+  body * { visibility:hidden !important; }
+  #noprint-notice { visibility:visible !important; position:fixed; inset:0; display:flex !important;
+    align-items:center; justify-content:center; text-align:center; padding:40px;
+    font-family:Arial,Helvetica,sans-serif; color:#14223d; font-size:18px; }
+}
+#noprint-notice{ display:none; }
+body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.topband{background:#11203b;color:#cdd6e6;font-size:13px;padding:9px 22px}
+.topband a{color:#9fd3c0;text-decoration:none;font-weight:bold}
+.crimsonbar{background:var(--crimson);color:#fff;font-size:11.5px;letter-spacing:.04em;padding:5px 22px}
+.hero{background:#14223d;color:#fff;padding:30px 22px 26px}
+.hero .kick{color:#e0a23c;font-weight:bold;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.hero h1{font-size:30px;margin:8px 0 6px;font-weight:bold;letter-spacing:-.01em}
+.hero p{margin:0;color:#aebbd2;max-width:760px;font-size:14.5px;line-height:1.5}
+.hero .cred{color:#7f8ca8;font-size:12px;font-style:italic;margin-top:10px}
+.stats{display:flex;gap:38px;margin-top:20px;flex-wrap:wrap}
+.stat b{display:block;color:#3ec79a;font-size:30px;line-height:1}
+.stat span{color:#8493ad;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.core{max-width:1180px;margin:18px auto 0;padding:0 22px}
+.corebox{background:#fff;border:1px solid var(--line);border-left:4px solid var(--crimson);border-radius:10px;padding:14px 18px}
+.corebox .lab{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--crimson);font-weight:bold}
+.corebox p{margin:6px 0 0;font-size:15px;font-weight:bold;color:var(--navy)}
+.wrap{max-width:1180px;margin:0 auto;padding:14px 22px 60px}
+.setblock{margin-top:26px}
+.sethead{display:flex;align-items:center;gap:10px;margin:0 0 12px;font-size:16px;font-weight:bold;color:var(--navy)}
+.dot{width:11px;height:11px;border-radius:50%}
+.chip{background:#e9edf4;color:#56627c;font-size:11px;font-weight:bold;padding:3px 9px;border-radius:20px;letter-spacing:.02em}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+@media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;
+      transition:transform .12s ease,box-shadow .12s ease;display:flex;flex-direction:column}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(20,34,61,.12)}
+.card .top{height:4px}
+.card .fig{height:104px;display:flex;align-items:center;justify-content:center;background:#fafbfd}
+.card .fig svg{width:78px;height:62px}
+.card .body{padding:12px 13px 14px;flex:1;display:flex;flex-direction:column}
+.card h3{margin:0 0 5px;font-size:14px;font-weight:bold;color:var(--navy);line-height:1.25}
+.card .sub{margin:0;font-size:12px;color:var(--ink2);line-height:1.4;flex:1}
+.card .badge{display:inline-block;margin-top:11px;color:#fff;font-size:11px;font-weight:bold;padding:4px 10px;border-radius:6px;align-self:flex-start}
+/* popup */
+.scrim{position:fixed;inset:0;background:rgba(16,28,52,.55);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+.scrim.open{display:flex}
+.modal{background:#fff;border-radius:16px;max-width:560px;width:100%;max-height:88vh;overflow:auto;padding:26px 28px 24px;position:relative;box-shadow:0 24px 60px rgba(10,18,38,.4)}
+.modal .x{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;border:none;background:#eef1f6;color:#56627c;font-size:16px;cursor:pointer}
+.modal .ek{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#8493ad;font-weight:bold}
+.modal h2{margin:5px 0 12px;font-size:22px;color:var(--navy)}
+.modal .def{color:var(--crimson);font-weight:bold;font-size:14.5px;line-height:1.5;border-left:3px solid var(--crimson);padding-left:12px;margin-bottom:12px}
+.modal .subline{color:var(--ink2);font-size:13.5px;margin:0 0 14px}
+.modal .figwrap{background:#f7f9fc;border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;justify-content:center;margin-bottom:14px}
+.modal .figwrap svg{width:150px;height:96px}
+.modal ul{list-style:none;margin:0 0 14px;padding:0}
+.modal li{display:flex;gap:9px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink)}
+.modal li:before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:var(--crimson);margin-top:6px}
+.modal .refbox{background:#f4f7f5;border-left:3px solid #1f7a52;border-radius:0 8px 8px 0;padding:11px 14px;margin-bottom:18px}
+.modal .refbox .rk{color:#1f7a52;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:bold;margin-bottom:4px}
+.modal .refbox p{margin:0;font-size:12.5px;color:#3a4a3f;line-height:1.45}
+.modal .viewbtn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#1f9d6b;color:#fff;border:none;border-radius:24px;padding:12px;font-size:14px;font-weight:bold;cursor:pointer}
+.modal .viewbtn:hover{background:#198256}
+/* pdf viewer */
+.pv{position:fixed;inset:0;background:#14223d;display:none;flex-direction:column;z-index:60}
+.pv.open{display:flex}
+.pvbar{display:flex;align-items:center;gap:14px;padding:10px 16px;color:#fff;flex-wrap:wrap}
+.pvbar .ti{font-weight:bold;font-size:14px}.pvbar .ti small{display:block;color:#9fb0cb;font-weight:normal;font-size:11px}
+.pvbar .sp{flex:1}
+.pvbar button{background:#1f3158;color:#fff;border:none;border-radius:8px;padding:7px 12px;cursor:pointer;font-size:14px}
+.pv iframe{flex:1;border:none;background:#fff;width:100%}
+.footer{background:#11203b;color:#9fb0cb;text-align:center;font-size:12.5px;padding:18px;line-height:1.6}
+.footer b{color:#fff}
+/* gallery wall search */
+.searchwrap{max-width:1180px;margin:18px auto 0;padding:0 22px}
+.searchbar{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:30px;padding:10px 18px;box-shadow:0 2px 10px rgba(20,34,61,.05)}
+.searchbar .mag{color:#8493ad;font-size:20px}
+.searchbar input{flex:1;border:none;outline:none;font-size:15px;font-family:inherit;color:var(--ink);background:transparent}
+.searchbar #clear{border:none;background:#eef1f6;color:#56627c;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:16px}
+.count{color:#8493ad;font-size:12.5px;margin:9px 4px 0;letter-spacing:.02em}
+.wallgrid{margin-top:16px}
+.empty{display:none;text-align:center;color:#8493ad;font-size:15px;padding:50px 0}
+</style>
 </head>
 <body>
-<div class="topbar"><div class="wrap">
-    <div class="tb-left"><span class="code">BARBM312</span> &nbsp;<span class="nm">Unit 1</span></div>
-    <a class="back" href="index.html">‹ Course Overview</a>
-  </div></div>
-  <div class="copybar"><div class="wrap">© Dr. Hildegard Haas 2026 · EU Business School · BARBM312 AI in Investment and Business Growth</div></div>
-<header class="hero"><div class="wrap">
-  <div class="eyebrow">BARBM312 · Unit 1 · Guided Discovery</div>
-  <h1 class="serif">AI, Data &amp; Strategic Business Growth</h1>
-  <p class="sub">Select any framework to explore it. Data, insight and decision-making; customer engagement, experience and personalisation; embedded vs. AI-native products; using AI to spot new market opportunities.</p>
-</div></header>
-
-<div class="wrap"><div class="stats">
-  <div class="stat"><div class="num">4</div><div class="lbl">Slibraries</div></div>
-  <div class="stat"><div class="num">20</div><div class="lbl">Frameworks</div></div>
-  <div class="stat"><div class="num">5</div><div class="lbl">Giants</div></div>
-  <div class="stat"><div class="num">1</div><div class="lbl">Unit</div></div>
-</div></div>
-
-<section><div class="wrap">
-  <div class="sec-head"><span class="kicker">Core message · Bostelaar</span></div>
-  <div class="core">
-    <div class="lab">The one thing to remember</div>
-    <div class="msg">"Data is only an asset when it becomes a decision — AI turns customer signals into growth."</div>
-    <div class="wyw">
-      <div class="b why"><div class="h">Why it matters</div>Most firms drown in data yet starve for insight. Growth comes from converting signals into decisions customers can feel.</div>
-      <div class="b what"><div class="h">What it covers</div>Decision pipelines, engagement loops, personalisation, embedded vs. AI-native product choices, and opportunity sensing.</div>
-    </div>
-    <div class="spectrum">
-      <div class="ends"><span>Convince · inspire</span><span>Clarify · instruct</span></div>
-      <div class="track"><div class="dot" style="left:35%"></div></div>
-      <div class="note"><strong>Message strategy:</strong> Early unit, mixed audience awareness → lean motivational/Convince to build belief, then clarify the mechanics.</div>
-    </div>
+<div id="noprint-notice">© 2026 Dr. Hildegard Haas · EU Business School — this material is not available for printing.</div>
+<div class="topband"><a href="index.html">‹ Back to Course Overview</a></div>
+<div class="crimsonbar">© Dr. Hildegard Haas 2026 · EU Business School · BARBM312 AI in Investment and Business Growth</div>
+<header class="hero">
+  <div class="kick">BARBM312 · Unit 1 · Guided Discovery</div>
+  <h1>AI, Data &amp; Strategic Business Growth</h1>
+  <p>Data, insight and decision-making; customer engagement, experience and personalisation; embedded vs. AI-native products; using AI to spot new market opportunities.</p>
+  <div class="cred">Select any framework to explore it in detail · © 2026 Dr. Hildegard Haas</div>
+  <div class="stats">
+    <div class="stat"><b>4</b><span>Slibraries</span></div>
+    <div class="stat"><b>20</b><span>Frameworks</span></div>
+    <div class="stat"><b>Unit 1</b><span>of 7</span></div>
   </div>
-</div></section>
+</header>
+<div class="core"><div class="corebox"><div class="lab">Core message · Bostelaar</div><p>“Data is only an asset when it becomes a decision — AI turns customer signals into growth.”</p></div></div>
+<div class="wrap"><div class="setblock">
+      <div class="sethead"><span class="dot" style="background:#2f4b8f"></span>Set 1 — Data to Decision <span class="chip">5 frameworks</span></div>
+      <div class="grid"><div class="card" data-fw="{&quot;title&quot;:&quot;DIKW Pyramid&quot;,&quot;sub&quot;:&quot;Data → Information → Knowledge → Wisdom&quot;,&quot;slib&quot;:1,&quot;page&quot;:4,&quot;def&quot;:&quot;A hierarchy that orders Data, Information, Knowledge and Wisdom — each layer adds context and judgement to the one below, ending in the ability to act well.&quot;,&quot;bullets&quot;:[&quot;Data → raw signals with no context&quot;,&quot;Information → data organised and related&quot;,&quot;Knowledge → patterns applied to decisions&quot;,&quot;Wisdom → judgement about what to do&quot;],&quot;ref&quot;:&quot;Ackoff, R.L. (1989) 'From data to wisdom', Journal of Applied Systems Analysis, 16, pp. 3–9.&quot;,&quot;setName&quot;:&quot;Data to Decision&quot;}" style="--accent:#2f4b8f;--accent-fill:#e7ecf7">
+        <div class="top" style="background:#2f4b8f"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><polygon points="100,18 168,112 32,112" fill="none" stroke="var(--accent)" stroke-width="2.2"/><line x1="58" y1="88" x2="142" y2="88" stroke="var(--accent)" stroke-width="1.4" opacity=".55"/><line x1="72" y1="64" x2="128" y2="64" stroke="var(--accent)" stroke-width="1.4" opacity=".55"/><line x1="86" y1="40" x2="114" y2="40" stroke="var(--accent)" stroke-width="1.4" opacity=".55"/></svg></div>
+        <div class="body">
+          <h3>DIKW Pyramid</h3>
+          <p class="sub">Data → Information → Knowledge → Wisdom</p>
+          <span class="badge" style="background:#2f4b8f">Slibrary 1</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;OODA Loop&quot;,&quot;sub&quot;:&quot;Observe → Orient → Decide → Act, at AI speed&quot;,&quot;slib&quot;:1,&quot;page&quot;:5,&quot;def&quot;:&quot;A decision cycle — Observe, Orient, Decide, Act — that prizes speed of re-decision over perfect planning; whoever loops fastest controls the tempo.&quot;,&quot;bullets&quot;:[&quot;Observe → gather fresh signals&quot;,&quot;Orient → interpret against context&quot;,&quot;Decide → choose a course of action&quot;,&quot;Act → execute, then observe again&quot;],&quot;ref&quot;:&quot;Boyd, J. (1986) 'Patterns of Conflict' (unpublished briefing). Washington, DC: USAF.&quot;,&quot;setName&quot;:&quot;Data to Decision&quot;}" style="--accent:#2f4b8f;--accent-fill:#e7ecf7">
+        <div class="top" style="background:#2f4b8f"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>OODA Loop</h3>
+          <p class="sub">Observe → Orient → Decide → Act, at AI speed</p>
+          <span class="badge" style="background:#2f4b8f">Slibrary 1</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Decision-Intelligence Stack&quot;,&quot;sub&quot;:&quot;Signals, models, judgment, action layered for growth&quot;,&quot;slib&quot;:1,&quot;page&quot;:6,&quot;def&quot;:&quot;A layered model that turns raw signals into action — stacking data capture, modelling, human judgement and execution so that growth decisions are made deliberately, not by reflex.&quot;,&quot;bullets&quot;:[&quot;Signals layer → what the world is telling you&quot;,&quot;Models layer → patterns and predictions&quot;,&quot;Judgement layer → human framing and values&quot;,&quot;Action layer → the decision actually taken&quot;],&quot;ref&quot;:&quot;Pratt, L. (2019) Link: How Decision Intelligence Connects Data, Actions, and Outcomes. Bingley: Emerald.&quot;,&quot;setName&quot;:&quot;Data to Decision&quot;}" style="--accent:#2f4b8f;--accent-fill:#e7ecf7">
+        <div class="top" style="background:#2f4b8f"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><polygon points="100,18 168,112 32,112" fill="none" stroke="var(--accent)" stroke-width="2.2"/><line x1="58" y1="88" x2="142" y2="88" stroke="var(--accent)" stroke-width="1.4" opacity=".55"/><line x1="72" y1="64" x2="128" y2="64" stroke="var(--accent)" stroke-width="1.4" opacity=".55"/><line x1="86" y1="40" x2="114" y2="40" stroke="var(--accent)" stroke-width="1.4" opacity=".55"/></svg></div>
+        <div class="body">
+          <h3>Decision-Intelligence Stack</h3>
+          <p class="sub">Signals, models, judgment, action layered for growth</p>
+          <span class="badge" style="background:#2f4b8f">Slibrary 1</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Data Value Chain&quot;,&quot;sub&quot;:&quot;Capture → store → process → analyse → act&quot;,&quot;slib&quot;:1,&quot;page&quot;:7,&quot;def&quot;:&quot;A sequence — capture, store, process, analyse, act — that shows where data acquires value, and where most of it leaks away before any decision is made.&quot;,&quot;bullets&quot;:[&quot;Capture → collect the right signals&quot;,&quot;Store → make data retrievable and governed&quot;,&quot;Process &amp; analyse → turn it into insight&quot;,&quot;Act → close the loop with a decision&quot;],&quot;ref&quot;:&quot;Miller, H.G. and Mork, P. (2013) 'From data to decisions: a value chain for big data', IT Professional, 15(1), pp. 57–59.&quot;,&quot;setName&quot;:&quot;Data to Decision&quot;}" style="--accent:#2f4b8f;--accent-fill:#e7ecf7">
+        <div class="top" style="background:#2f4b8f"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><g fill="var(--accent-fill)" stroke="var(--accent)" stroke-width="1.8"><rect x="20" y="52" width="34" height="26" rx="3"/><rect x="83" y="52" width="34" height="26" rx="3"/><rect x="146" y="52" width="34" height="26" rx="3"/></g><g stroke="var(--accent)" stroke-width="2" fill="none"><path d="M56 65 h25 M75 60 l8 5 -8 5"/><path d="M119 65 h25 M138 60 l8 5 -8 5"/></g></svg></div>
+        <div class="body">
+          <h3>Data Value Chain</h3>
+          <p class="sub">Capture → store → process → analyse → act</p>
+          <span class="badge" style="background:#2f4b8f">Slibrary 1</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Insight-to-Action Gap&quot;,&quot;sub&quot;:&quot;Why analysis rarely changes behaviour&quot;,&quot;slib&quot;:1,&quot;page&quot;:8,&quot;def&quot;:&quot;The recurring failure mode in which analysis is produced but never changes behaviour — the gap between knowing and doing that destroys most analytics ROI.&quot;,&quot;bullets&quot;:[&quot;Insight is necessary but not sufficient&quot;,&quot;Organisational friction blocks action&quot;,&quot;Ownership and incentives close the gap&quot;,&quot;Measure decisions changed, not reports run&quot;],&quot;ref&quot;:&quot;Pfeffer, J. and Sutton, R.I. (2000) The Knowing-Doing Gap. Boston: Harvard Business School Press.&quot;,&quot;setName&quot;:&quot;Data to Decision&quot;}" style="--accent:#2f4b8f;--accent-fill:#e7ecf7">
+        <div class="top" style="background:#2f4b8f"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Insight-to-Action Gap</h3>
+          <p class="sub">Why analysis rarely changes behaviour</p>
+          <span class="badge" style="background:#2f4b8f">Slibrary 1</span>
+        </div>
+      </div></div>
+    </div><div class="setblock">
+      <div class="sethead"><span class="dot" style="background:#9e1b32"></span>Set 2 — Customer Engagement &amp; CX <span class="chip">5 frameworks</span></div>
+      <div class="grid"><div class="card" data-fw="{&quot;title&quot;:&quot;Customer Journey Map&quot;,&quot;sub&quot;:&quot;End-to-end touchpoints from awareness to advocacy&quot;,&quot;slib&quot;:2,&quot;page&quot;:9,&quot;def&quot;:&quot;A visual of every touchpoint a customer has with a firm, from first awareness to advocacy, used to find friction and moments where AI can lift experience.&quot;,&quot;bullets&quot;:[&quot;Maps stages from awareness to advocacy&quot;,&quot;Surfaces pain points and drop-offs&quot;,&quot;Aligns teams around the customer's view&quot;,&quot;Targets where personalisation pays off&quot;],&quot;ref&quot;:&quot;Lemon, K.N. and Verhoef, P.C. (2016) 'Understanding customer experience throughout the customer journey', Journal of Marketing, 80(6), pp. 69–96.&quot;,&quot;setName&quot;:&quot;Customer Engagement &amp; CX&quot;}" style="--accent:#9e1b32;--accent-fill:#f7e7ea">
+        <div class="top" style="background:#9e1b32"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><rect x="40" y="20" width="120" height="92" fill="none" stroke="var(--accent)" stroke-width="2"/><line x1="100" y1="20" x2="100" y2="112" stroke="var(--accent)" stroke-width="1.4"/><line x1="40" y1="66" x2="160" y2="66" stroke="var(--accent)" stroke-width="1.4"/><rect x="103" y="23" width="54" height="40" fill="var(--accent-fill)"/></svg></div>
+        <div class="body">
+          <h3>Customer Journey Map</h3>
+          <p class="sub">End-to-end touchpoints from awareness to advocacy</p>
+          <span class="badge" style="background:#9e1b32">Slibrary 2</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Moments of Truth&quot;,&quot;sub&quot;:&quot;Carlzon's high-stakes service encounters&quot;,&quot;slib&quot;:2,&quot;page&quot;:10,&quot;def&quot;:&quot;The brief, high-stakes encounters in which a customer forms a lasting judgement of a brand — Carlzon's idea that service is won or lost in seconds.&quot;,&quot;bullets&quot;:[&quot;Each contact is a 'moment of truth'&quot;,&quot;Small interactions shape the whole relationship&quot;,&quot;Empower front-line staff to get them right&quot;,&quot;AI must protect, not erode, these moments&quot;],&quot;ref&quot;:&quot;Carlzon, J. (1987) Moments of Truth. New York: Harper &amp; Row.&quot;,&quot;setName&quot;:&quot;Customer Engagement &amp; CX&quot;}" style="--accent:#9e1b32;--accent-fill:#f7e7ea">
+        <div class="top" style="background:#9e1b32"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Moments of Truth</h3>
+          <p class="sub">Carlzon's high-stakes service encounters</p>
+          <span class="badge" style="background:#9e1b32">Slibrary 2</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Engagement Flywheel&quot;,&quot;sub&quot;:&quot;Attract → engage → delight → repeat&quot;,&quot;slib&quot;:2,&quot;page&quot;:11,&quot;def&quot;:&quot;A self-reinforcing loop — attract, engage, delight, repeat — in which satisfied customers feed the next cycle of acquisition, replacing the linear funnel.&quot;,&quot;bullets&quot;:[&quot;Attract → earn attention&quot;,&quot;Engage → deliver value&quot;,&quot;Delight → exceed expectation&quot;,&quot;Repeat → advocates drive new attraction&quot;],&quot;ref&quot;:&quot;Halligan, B. and Shah, D. (2018) The Flywheel. Cambridge, MA: HubSpot.&quot;,&quot;setName&quot;:&quot;Customer Engagement &amp; CX&quot;}" style="--accent:#9e1b32;--accent-fill:#f7e7ea">
+        <div class="top" style="background:#9e1b32"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Engagement Flywheel</h3>
+          <p class="sub">Attract → engage → delight → repeat</p>
+          <span class="badge" style="background:#9e1b32">Slibrary 2</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Personalisation Ladder&quot;,&quot;sub&quot;:&quot;Segment → recommend → predict → 1-to-1&quot;,&quot;slib&quot;:2,&quot;page&quot;:12,&quot;def&quot;:&quot;A maturity ladder from broad segmentation up to one-to-one prediction, describing how AI deepens personalisation as data and capability grow.&quot;,&quot;bullets&quot;:[&quot;Segment → group by shared traits&quot;,&quot;Recommend → suggest from behaviour&quot;,&quot;Predict → anticipate next need&quot;,&quot;1-to-1 → individualised experience&quot;],&quot;ref&quot;:&quot;MIT (2024) The Connected Customer Report. Cambridge, MA: MIT.&quot;,&quot;setName&quot;:&quot;Customer Engagement &amp; CX&quot;}" style="--accent:#9e1b32;--accent-fill:#f7e7ea">
+        <div class="top" style="background:#9e1b32"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><g fill="var(--accent-fill)" stroke="var(--accent)" stroke-width="1.8"><rect x="28" y="92" width="34" height="22"/><rect x="62" y="74" width="34" height="40"/><rect x="96" y="56" width="34" height="58"/><rect x="130" y="36" width="34" height="78"/></g></svg></div>
+        <div class="body">
+          <h3>Personalisation Ladder</h3>
+          <p class="sub">Segment → recommend → predict → 1-to-1</p>
+          <span class="badge" style="background:#9e1b32">Slibrary 2</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Jobs To Be Done&quot;,&quot;sub&quot;:&quot;What the customer hires the product to do&quot;,&quot;slib&quot;:2,&quot;page&quot;:13,&quot;def&quot;:&quot;A lens that defines products by the 'job' a customer hires them to do, shifting focus from features to the progress the customer is trying to make.&quot;,&quot;bullets&quot;:[&quot;Customers 'hire' products for a job&quot;,&quot;Focus on progress, not demographics&quot;,&quot;Reveals true competitors and substitutes&quot;,&quot;Guides where AI adds real value&quot;],&quot;ref&quot;:&quot;Christensen, C.M. et al. (2016) 'Know your customers' jobs to be done', Harvard Business Review, September.&quot;,&quot;setName&quot;:&quot;Customer Engagement &amp; CX&quot;}" style="--accent:#9e1b32;--accent-fill:#f7e7ea">
+        <div class="top" style="background:#9e1b32"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Jobs To Be Done</h3>
+          <p class="sub">What the customer hires the product to do</p>
+          <span class="badge" style="background:#9e1b32">Slibrary 2</span>
+        </div>
+      </div></div>
+    </div><div class="setblock">
+      <div class="sethead"><span class="dot" style="background:#c4761b"></span>Set 3 — Product Architecture <span class="chip">5 frameworks</span></div>
+      <div class="grid"><div class="card" data-fw="{&quot;title&quot;:&quot;Embedded vs. AI-Native 2×2&quot;,&quot;sub&quot;:&quot;Bolt-on intelligence vs. built-in intelligence&quot;,&quot;slib&quot;:3,&quot;page&quot;:14,&quot;def&quot;:&quot;A matrix distinguishing products that bolt AI onto existing offerings from those built around intelligence from the ground up — a key strategic product choice.&quot;,&quot;bullets&quot;:[&quot;Embedded → AI added to a legacy core&quot;,&quot;AI-native → intelligence is the product&quot;,&quot;Different cost, moat and speed profiles&quot;,&quot;Determines defensibility and re-architecture need&quot;],&quot;ref&quot;:&quot;Iansiti, M. and Lakhani, K.R. (2020) Competing in the Age of AI. Boston: Harvard Business Review Press.&quot;,&quot;setName&quot;:&quot;Product Architecture&quot;}" style="--accent:#c4761b;--accent-fill:#f9efe1">
+        <div class="top" style="background:#c4761b"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><rect x="40" y="20" width="120" height="92" fill="none" stroke="var(--accent)" stroke-width="2"/><line x1="100" y1="20" x2="100" y2="112" stroke="var(--accent)" stroke-width="1.4"/><line x1="40" y1="66" x2="160" y2="66" stroke="var(--accent)" stroke-width="1.4"/><rect x="103" y="23" width="54" height="40" fill="var(--accent-fill)"/></svg></div>
+        <div class="body">
+          <h3>Embedded vs. AI-Native 2×2</h3>
+          <p class="sub">Bolt-on intelligence vs. built-in intelligence</p>
+          <span class="badge" style="background:#c4761b">Slibrary 3</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Build · Buy · Partner&quot;,&quot;sub&quot;:&quot;Sourcing the intelligence layer&quot;,&quot;slib&quot;:3,&quot;page&quot;:15,&quot;def&quot;:&quot;A sourcing framework for the intelligence layer of a product — deciding whether to build capability in-house, buy it, or partner for it.&quot;,&quot;bullets&quot;:[&quot;Build → control and differentiation&quot;,&quot;Buy → speed and lower upfront cost&quot;,&quot;Partner → shared risk and capability&quot;,&quot;Choice driven by strategic value and skill&quot;],&quot;ref&quot;:&quot;Pisano, G.P. (2019) Creative Construction. New York: PublicAffairs.&quot;,&quot;setName&quot;:&quot;Product Architecture&quot;}" style="--accent:#c4761b;--accent-fill:#f9efe1">
+        <div class="top" style="background:#c4761b"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><rect x="40" y="20" width="120" height="92" fill="none" stroke="var(--accent)" stroke-width="2"/><line x1="100" y1="20" x2="100" y2="112" stroke="var(--accent)" stroke-width="1.4"/><line x1="40" y1="66" x2="160" y2="66" stroke="var(--accent)" stroke-width="1.4"/><rect x="103" y="23" width="54" height="40" fill="var(--accent-fill)"/></svg></div>
+        <div class="body">
+          <h3>Build · Buy · Partner</h3>
+          <p class="sub">Sourcing the intelligence layer</p>
+          <span class="badge" style="background:#c4761b">Slibrary 3</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Legacy Modernisation Curve&quot;,&quot;sub&quot;:&quot;Optimise old systems vs. rebuild&quot;,&quot;slib&quot;:3,&quot;page&quot;:16,&quot;def&quot;:&quot;A curve describing the trade-off between optimising existing systems and rebuilding them, mapping when incremental improvement stops paying off.&quot;,&quot;bullets&quot;:[&quot;Optimise → cheap, bounded gains&quot;,&quot;Modernise → re-platform for flexibility&quot;,&quot;Rebuild → high cost, high ceiling&quot;,&quot;Inflection point guides the decision&quot;],&quot;ref&quot;:&quot;Fowler, M. (2018) Refactoring. 2nd edn. Boston: Addison-Wesley.&quot;,&quot;setName&quot;:&quot;Product Architecture&quot;}" style="--accent:#c4761b;--accent-fill:#f9efe1">
+        <div class="top" style="background:#c4761b"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><path d="M24 108 C 70 106, 78 30, 176 24" fill="none" stroke="var(--accent)" stroke-width="2.6"/><line x1="24" y1="114" x2="180" y2="114" stroke="var(--accent)" stroke-width="1" opacity=".4"/><line x1="24" y1="114" x2="24" y2="18" stroke="var(--accent)" stroke-width="1" opacity=".4"/></svg></div>
+        <div class="body">
+          <h3>Legacy Modernisation Curve</h3>
+          <p class="sub">Optimise old systems vs. rebuild</p>
+          <span class="badge" style="background:#c4761b">Slibrary 3</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Value Proposition Canvas&quot;,&quot;sub&quot;:&quot;Gains, pains, jobs vs. products &amp; services&quot;,&quot;slib&quot;:3,&quot;page&quot;:17,&quot;def&quot;:&quot;A tool that aligns customer jobs, pains and gains with a product's features, pain-relievers and gain-creators to test fit before building.&quot;,&quot;bullets&quot;:[&quot;Customer side → jobs, pains, gains&quot;,&quot;Product side → features, relievers, creators&quot;,&quot;Fit is the goal, not feature count&quot;,&quot;Validates AI features against real need&quot;],&quot;ref&quot;:&quot;Osterwalder, A. et al. (2014) Value Proposition Design. Hoboken: Wiley.&quot;,&quot;setName&quot;:&quot;Product Architecture&quot;}" style="--accent:#c4761b;--accent-fill:#f9efe1">
+        <div class="top" style="background:#c4761b"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><rect x="40" y="20" width="120" height="92" fill="none" stroke="var(--accent)" stroke-width="2"/><line x1="100" y1="20" x2="100" y2="112" stroke="var(--accent)" stroke-width="1.4"/><line x1="40" y1="66" x2="160" y2="66" stroke="var(--accent)" stroke-width="1.4"/><rect x="103" y="23" width="54" height="40" fill="var(--accent-fill)"/></svg></div>
+        <div class="body">
+          <h3>Value Proposition Canvas</h3>
+          <p class="sub">Gains, pains, jobs vs. products &amp; services</p>
+          <span class="badge" style="background:#c4761b">Slibrary 3</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Data Network Effects&quot;,&quot;sub&quot;:&quot;More use → more data → better product&quot;,&quot;slib&quot;:3,&quot;page&quot;:18,&quot;def&quot;:&quot;The dynamic in which more usage generates more data, which improves the product, which attracts more usage — a compounding, defensible advantage.&quot;,&quot;bullets&quot;:[&quot;Use generates proprietary data&quot;,&quot;Data improves the product&quot;,&quot;Better product attracts more use&quot;,&quot;Advantage compounds and defends a moat&quot;],&quot;ref&quot;:&quot;Hagiu, A. and Wright, J. (2020) 'When data creates competitive advantage', Harvard Business Review, January–February.&quot;,&quot;setName&quot;:&quot;Product Architecture&quot;}" style="--accent:#c4761b;--accent-fill:#f9efe1">
+        <div class="top" style="background:#c4761b"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><g fill="var(--accent-fill)" stroke="var(--accent)" stroke-width="1.8"><rect x="20" y="52" width="34" height="26" rx="3"/><rect x="83" y="52" width="34" height="26" rx="3"/><rect x="146" y="52" width="34" height="26" rx="3"/></g><g stroke="var(--accent)" stroke-width="2" fill="none"><path d="M56 65 h25 M75 60 l8 5 -8 5"/><path d="M119 65 h25 M138 60 l8 5 -8 5"/></g></svg></div>
+        <div class="body">
+          <h3>Data Network Effects</h3>
+          <p class="sub">More use → more data → better product</p>
+          <span class="badge" style="background:#c4761b">Slibrary 3</span>
+        </div>
+      </div></div>
+    </div><div class="setblock">
+      <div class="sethead"><span class="dot" style="background:#1f7a52"></span>Set 4 — Opportunity Sensing <span class="chip">5 frameworks</span></div>
+      <div class="grid"><div class="card" data-fw="{&quot;title&quot;:&quot;White-Space Map&quot;,&quot;sub&quot;:&quot;Unmet needs between existing offers&quot;,&quot;slib&quot;:4,&quot;page&quot;:19,&quot;def&quot;:&quot;A map of unmet needs lying between existing offerings, used to locate growth opportunities that incumbents have overlooked.&quot;,&quot;bullets&quot;:[&quot;Plots existing offers and their gaps&quot;,&quot;Reveals unserved or underserved needs&quot;,&quot;Targets defensible entry points&quot;,&quot;AI can surface white space from data&quot;],&quot;ref&quot;:&quot;Johnson, M.W. (2010) Seizing the White Space. Boston: Harvard Business Press.&quot;,&quot;setName&quot;:&quot;Opportunity Sensing&quot;}" style="--accent:#1f7a52;--accent-fill:#e4f2ec">
+        <div class="top" style="background:#1f7a52"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><rect x="40" y="20" width="120" height="92" fill="none" stroke="var(--accent)" stroke-width="2"/><line x1="100" y1="20" x2="100" y2="112" stroke="var(--accent)" stroke-width="1.4"/><line x1="40" y1="66" x2="160" y2="66" stroke="var(--accent)" stroke-width="1.4"/><rect x="103" y="23" width="54" height="40" fill="var(--accent-fill)"/></svg></div>
+        <div class="body">
+          <h3>White-Space Map</h3>
+          <p class="sub">Unmet needs between existing offers</p>
+          <span class="badge" style="background:#1f7a52">Slibrary 4</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Demand-Signal Radar&quot;,&quot;sub&quot;:&quot;Reading emerging consumer needs from data&quot;,&quot;slib&quot;:4,&quot;page&quot;:20,&quot;def&quot;:&quot;A scanning approach that reads emerging consumer needs from behavioural and market data before they become obvious to competitors.&quot;,&quot;bullets&quot;:[&quot;Continuously scans weak demand signals&quot;,&quot;Distinguishes noise from emerging need&quot;,&quot;Feeds opportunity pipelines early&quot;,&quot;AI amplifies the signal-detection range&quot;],&quot;ref&quot;:&quot;Day, G.S. and Schoemaker, P.J.H. (2006) Peripheral Vision. Boston: Harvard Business School Press.&quot;,&quot;setName&quot;:&quot;Opportunity Sensing&quot;}" style="--accent:#1f7a52;--accent-fill:#e4f2ec">
+        <div class="top" style="background:#1f7a52"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Demand-Signal Radar</h3>
+          <p class="sub">Reading emerging consumer needs from data</p>
+          <span class="badge" style="background:#1f7a52">Slibrary 4</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Blue Ocean Strategy Canvas&quot;,&quot;sub&quot;:&quot;Create uncontested market space&quot;,&quot;slib&quot;:4,&quot;page&quot;:21,&quot;def&quot;:&quot;A strategy tool for creating uncontested market space by changing the factors an industry competes on, rather than out-competing rivals on the same terms.&quot;,&quot;bullets&quot;:[&quot;Eliminate–reduce–raise–create grid&quot;,&quot;Make the competition irrelevant&quot;,&quot;Shift the value curve, not just price&quot;,&quot;Open new demand instead of fighting for it&quot;],&quot;ref&quot;:&quot;Kim, W.C. and Mauborgne, R. (2005) Blue Ocean Strategy. Boston: Harvard Business School Press.&quot;,&quot;setName&quot;:&quot;Opportunity Sensing&quot;}" style="--accent:#1f7a52;--accent-fill:#e4f2ec">
+        <div class="top" style="background:#1f7a52"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Blue Ocean Strategy Canvas</h3>
+          <p class="sub">Create uncontested market space</p>
+          <span class="badge" style="background:#1f7a52">Slibrary 4</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Trend → Opportunity Funnel&quot;,&quot;sub&quot;:&quot;From weak signal to validated bet&quot;,&quot;slib&quot;:4,&quot;page&quot;:22,&quot;def&quot;:&quot;A funnel that filters weak trend signals down to a small number of validated bets, imposing discipline between sensing and committing.&quot;,&quot;bullets&quot;:[&quot;Many signals enter the wide end&quot;,&quot;Filters: relevance, size, fit, timing&quot;,&quot;Few validated opportunities emerge&quot;,&quot;Prevents chasing every shiny trend&quot;],&quot;ref&quot;:&quot;Vejlgaard, H. (2008) Anatomy of a Trend. New York: McGraw-Hill.&quot;,&quot;setName&quot;:&quot;Opportunity Sensing&quot;}" style="--accent:#1f7a52;--accent-fill:#e4f2ec">
+        <div class="top" style="background:#1f7a52"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><polygon points="34,24 166,24 120,82 120,112 80,112 80,82" fill="var(--accent-fill)" stroke="var(--accent)" stroke-width="2"/><line x1="56" y1="46" x2="144" y2="46" stroke="var(--accent)" stroke-width="1.2" opacity=".5"/></svg></div>
+        <div class="body">
+          <h3>Trend → Opportunity Funnel</h3>
+          <p class="sub">From weak signal to validated bet</p>
+          <span class="badge" style="background:#1f7a52">Slibrary 4</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Three Horizons&quot;,&quot;sub&quot;:&quot;Core, emerging and future growth horizons&quot;,&quot;slib&quot;:4,&quot;page&quot;:23,&quot;def&quot;:&quot;A model for managing growth across three time horizons at once — defending the core, building emerging businesses, and seeding future options.&quot;,&quot;bullets&quot;:[&quot;Horizon 1 → defend and extend the core&quot;,&quot;Horizon 2 → build emerging businesses&quot;,&quot;Horizon 3 → create viable future options&quot;,&quot;Balance investment across all three&quot;],&quot;ref&quot;:&quot;Baghai, M., Coley, S. and White, D. (1999) The Alchemy of Growth. Reading, MA: Perseus.&quot;,&quot;setName&quot;:&quot;Opportunity Sensing&quot;}" style="--accent:#1f7a52;--accent-fill:#e4f2ec">
+        <div class="top" style="background:#1f7a52"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Three Horizons</h3>
+          <p class="sub">Core, emerging and future growth horizons</p>
+          <span class="badge" style="background:#1f7a52">Slibrary 4</span>
+        </div>
+      </div></div>
+    </div></div>
 
-<section style="padding-top:8px"><div class="wrap">
-  <div class="sec-head"><span class="kicker">Framework Gallery · Thumbnail Thinking</span><h2 class="serif">The Slibrary</h2></div>
-  <p class="sec-sub">Each card is a single-visual framework — a thumbnail you can recall under pressure. Build the catalogue; think in pictures.</p>
-  <div class="setblock"><div class="setname">Set 1 — Data to Decision · 5 frameworks</div><div class="thumbs"><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><polygon points="60,12 100,68 20,68" fill="none" stroke="var(--ink)" stroke-width="2.4"/><line x1="38" y1="49" x2="82" y2="49" stroke="var(--accent)" stroke-width="2.4"/><line x1="48" y1="31" x2="72" y2="31" stroke="var(--teal)" stroke-width="2.4"/></svg></div><div class="meta">
-        <div class="t">DIKW Pyramid</div><div class="d">Data → Information → Knowledge → Wisdom</div>
-        <div class="s">Set 1</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><circle cx="60" cy="40" r="26" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-dasharray="4 5"/><polygon points="86,40 78,34 78,46" fill="var(--accent)"/><circle cx="60" cy="40" r="6" fill="var(--teal)"/></svg></div><div class="meta">
-        <div class="t">OODA Loop</div><div class="d">Observe → Orient → Decide → Act, at AI speed</div>
-        <div class="s">Set 1</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><rect x="26" y="12" width="68" height="56" fill="none" stroke="var(--ink)" stroke-width="2.4"/><line x1="60" y1="12" x2="60" y2="68" stroke="var(--ink)" stroke-width="2"/><line x1="26" y1="40" x2="94" y2="40" stroke="var(--ink)" stroke-width="2"/><rect x="62" y="14" width="30" height="24" fill="var(--accent)" opacity=".7"/></svg></div><div class="meta">
-        <div class="t">Decision-Intelligence Stack</div><div class="d">Signals, models, judgment, action layered for growth</div>
-        <div class="s">Set 1</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><line x1="22" y1="66" x2="100" y2="66" stroke="var(--ink)" stroke-width="2"/><rect x="30" y="46" width="12" height="20" fill="var(--teal)"/><rect x="50" y="34" width="12" height="32" fill="var(--accent)"/><rect x="70" y="22" width="12" height="44" fill="var(--ink)"/></svg></div><div class="meta">
-        <div class="t">Data Value Chain</div><div class="d">Capture → store → process → analyse → act</div>
-        <div class="s">Set 1</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><polygon points="28,16 92,16 70,46 70,66 50,66 50,46" fill="none" stroke="var(--ink)" stroke-width="2.4"/><line x1="36" y1="26" x2="84" y2="26" stroke="var(--accent)" stroke-width="2.4"/></svg></div><div class="meta">
-        <div class="t">Insight-to-Action Gap</div><div class="d">Why analysis rarely changes behaviour</div>
-        <div class="s">Set 1</div></div></div></div></div><div class="setblock"><div class="setname">Set 2 — Customer Engagement &amp; CX · 5 frameworks</div><div class="thumbs"><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><path d="M22,64 C46,64 50,18 98,16" fill="none" stroke="var(--accent)" stroke-width="2.8"/><path d="M22,64 C56,64 60,40 98,40" fill="none" stroke="var(--teal)" stroke-width="2.2" stroke-dasharray="4 4"/></svg></div><div class="meta">
-        <div class="t">Customer Journey Map</div><div class="d">End-to-end touchpoints from awareness to advocacy</div>
-        <div class="s">Set 2</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><rect x="34" y="16" width="52" height="11" fill="none" stroke="var(--ink)" stroke-width="2"/><rect x="34" y="32" width="52" height="11" fill="var(--teal)" opacity=".55"/><rect x="34" y="48" width="52" height="11" fill="none" stroke="var(--ink)" stroke-width="2"/><rect x="34" y="48" width="20" height="11" fill="var(--accent)"/></svg></div><div class="meta">
-        <div class="t">Moments of Truth</div><div class="d">Carlzon's high-stakes service encounters</div>
-        <div class="s">Set 2</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><circle cx="60" cy="40" r="22" fill="none" stroke="var(--ink)" stroke-width="2.4"/><circle cx="60" cy="18" r="4" fill="var(--accent)"/><circle cx="79" cy="51" r="4" fill="var(--teal)"/><circle cx="41" cy="51" r="4" fill="var(--ink)"/></svg></div><div class="meta">
-        <div class="t">Engagement Flywheel</div><div class="d">Attract → engage → delight → repeat</div>
-        <div class="s">Set 2</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><circle cx="34" cy="26" r="6" fill="var(--teal)"/><circle cx="86" cy="22" r="6" fill="var(--accent)"/><circle cx="60" cy="58" r="6" fill="var(--ink)"/><line x1="34" y1="26" x2="60" y2="58" stroke="var(--muted)" stroke-width="1.8"/><line x1="86" y1="22" x2="60" y2="58" stroke="var(--muted)" stroke-width="1.8"/><line x1="34" y1="26" x2="86" y2="22" stroke="var(--muted)" stroke-width="1.8" stroke-dasharray="3 3"/></svg></div><div class="meta">
-        <div class="t">Personalisation Ladder</div><div class="d">Segment → recommend → predict → 1-to-1</div>
-        <div class="s">Set 2</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><rect x="24" y="16" width="72" height="48" fill="none" stroke="var(--ink)" stroke-width="2.4"/><line x1="48" y1="16" x2="48" y2="64" stroke="var(--muted)" stroke-width="1.6"/><line x1="72" y1="16" x2="72" y2="64" stroke="var(--muted)" stroke-width="1.6"/><line x1="24" y1="40" x2="96" y2="40" stroke="var(--muted)" stroke-width="1.6"/><rect x="24" y="16" width="24" height="24" fill="var(--accent)" opacity=".5"/></svg></div><div class="meta">
-        <div class="t">Jobs To Be Done</div><div class="d">What the customer hires the product to do</div>
-        <div class="s">Set 2</div></div></div></div></div><div class="setblock"><div class="setname">Set 3 — Product Architecture · 5 frameworks</div><div class="thumbs"><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><circle cx="60" cy="40" r="24" fill="none" stroke="var(--muted)" stroke-width="1.4"/><circle cx="60" cy="40" r="14" fill="none" stroke="var(--muted)" stroke-width="1.4"/><polygon points="60,20 78,46 44,52" fill="var(--accent)" opacity=".55" stroke="var(--accent)" stroke-width="1.6"/></svg></div><div class="meta">
-        <div class="t">Embedded vs. AI-Native 2×2</div><div class="d">Bolt-on intelligence vs. built-in intelligence</div>
-        <div class="s">Set 3</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><line x1="24" y1="66" x2="24" y2="14" stroke="var(--ink)" stroke-width="2"/><line x1="24" y1="66" x2="100" y2="66" stroke="var(--ink)" stroke-width="2"/><path d="M28,60 Q40,24 96,20" fill="none" stroke="var(--accent)" stroke-width="2.8"/><circle cx="60" cy="33" r="4" fill="var(--teal)"/></svg></div><div class="meta">
-        <div class="t">Build · Buy · Partner</div><div class="d">Sourcing the intelligence layer</div>
-        <div class="s">Set 3</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><polygon points="60,12 100,68 20,68" fill="none" stroke="var(--ink)" stroke-width="2.4"/><line x1="38" y1="49" x2="82" y2="49" stroke="var(--accent)" stroke-width="2.4"/><line x1="48" y1="31" x2="72" y2="31" stroke="var(--teal)" stroke-width="2.4"/></svg></div><div class="meta">
-        <div class="t">Legacy Modernisation Curve</div><div class="d">Optimise old systems vs. rebuild</div>
-        <div class="s">Set 3</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><circle cx="60" cy="40" r="26" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-dasharray="4 5"/><polygon points="86,40 78,34 78,46" fill="var(--accent)"/><circle cx="60" cy="40" r="6" fill="var(--teal)"/></svg></div><div class="meta">
-        <div class="t">Value Proposition Canvas</div><div class="d">Gains, pains, jobs vs. products &amp; services</div>
-        <div class="s">Set 3</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><rect x="26" y="12" width="68" height="56" fill="none" stroke="var(--ink)" stroke-width="2.4"/><line x1="60" y1="12" x2="60" y2="68" stroke="var(--ink)" stroke-width="2"/><line x1="26" y1="40" x2="94" y2="40" stroke="var(--ink)" stroke-width="2"/><rect x="62" y="14" width="30" height="24" fill="var(--accent)" opacity=".7"/></svg></div><div class="meta">
-        <div class="t">Data Network Effects</div><div class="d">More use → more data → better product</div>
-        <div class="s">Set 3</div></div></div></div></div><div class="setblock"><div class="setname">Set 4 — Opportunity Sensing · 5 frameworks</div><div class="thumbs"><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><line x1="22" y1="66" x2="100" y2="66" stroke="var(--ink)" stroke-width="2"/><rect x="30" y="46" width="12" height="20" fill="var(--teal)"/><rect x="50" y="34" width="12" height="32" fill="var(--accent)"/><rect x="70" y="22" width="12" height="44" fill="var(--ink)"/></svg></div><div class="meta">
-        <div class="t">White-Space Map</div><div class="d">Unmet needs between existing offers</div>
-        <div class="s">Set 4</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><polygon points="28,16 92,16 70,46 70,66 50,66 50,46" fill="none" stroke="var(--ink)" stroke-width="2.4"/><line x1="36" y1="26" x2="84" y2="26" stroke="var(--accent)" stroke-width="2.4"/></svg></div><div class="meta">
-        <div class="t">Demand-Signal Radar</div><div class="d">Reading emerging consumer needs from data</div>
-        <div class="s">Set 4</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><path d="M22,64 C46,64 50,18 98,16" fill="none" stroke="var(--accent)" stroke-width="2.8"/><path d="M22,64 C56,64 60,40 98,40" fill="none" stroke="var(--teal)" stroke-width="2.2" stroke-dasharray="4 4"/></svg></div><div class="meta">
-        <div class="t">Blue Ocean Strategy Canvas</div><div class="d">Create uncontested market space</div>
-        <div class="s">Set 4</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><rect x="34" y="16" width="52" height="11" fill="none" stroke="var(--ink)" stroke-width="2"/><rect x="34" y="32" width="52" height="11" fill="var(--teal)" opacity=".55"/><rect x="34" y="48" width="52" height="11" fill="none" stroke="var(--ink)" stroke-width="2"/><rect x="34" y="48" width="20" height="11" fill="var(--accent)"/></svg></div><div class="meta">
-        <div class="t">Trend → Opportunity Funnel</div><div class="d">From weak signal to validated bet</div>
-        <div class="s">Set 4</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><circle cx="60" cy="40" r="22" fill="none" stroke="var(--ink)" stroke-width="2.4"/><circle cx="60" cy="18" r="4" fill="var(--accent)"/><circle cx="79" cy="51" r="4" fill="var(--teal)"/><circle cx="41" cy="51" r="4" fill="var(--ink)"/></svg></div><div class="meta">
-        <div class="t">Three Horizons</div><div class="d">Core, emerging and future growth horizons</div>
-        <div class="s">Set 4</div></div></div></div></div>
-</div></section>
+<div class="footer"><b>BARBM312</b> · AI in Investment and Business Growth · © 2026 Dr. Hildegard Haas · EU Business School<br/>
+Applying JD Meier’s <b>Thumbnail Thinking</b> &amp; the <b>Council of Giants</b> · core message via Bostelaar</div>
 
-<section style="padding-top:0"><div class="wrap">
-  <div class="sec-head"><span class="kicker">Council of Giants</span><h2 class="serif">The minds behind Unit 1</h2></div>
-  <p class="sec-sub">Run your Unit 1 challenge through these five lenses before you decide.</p>
-  <div class="giants">
-    <div class="giant"><div class="av">RA</div>
-      <div class="gn">Russell Ackoff</div><div class="gr">DIKW Pyramid</div><div class="gl">"A wealth of data creates a poverty of attention."</div></div><div class="giant"><div class="av">JB</div>
-      <div class="gn">John Boyd</div><div class="gr">OODA Loop</div><div class="gl">"Whoever can handle the quickest rate of change survives."</div></div><div class="giant"><div class="av">CC</div>
-      <div class="gn">Clayton Christensen</div><div class="gr">Jobs To Be Done</div><div class="gl">"Customers hire products to do a job."</div></div><div class="giant"><div class="av">JC</div>
-      <div class="gn">Jan Carlzon</div><div class="gr">Moments of Truth</div><div class="gl">"15 seconds decides the whole relationship."</div></div><div class="giant"><div class="av">WC</div>
-      <div class="gn">W. Chan Kim &amp; R. Mauborgne</div><div class="gr">Blue Ocean Strategy</div><div class="gl">"Make the competition irrelevant."</div></div>
+<!-- popup -->
+<div class="scrim" id="scrim">
+  <div class="modal" id="modal">
+    <button class="x" id="xbtn" aria-label="Close">×</button>
+    <div class="ek" id="m-ek"></div>
+    <h2 id="m-title"></h2>
+    <div class="def" id="m-def"></div>
+    <p class="subline" id="m-sub"></p>
+    <div class="figwrap" id="m-fig"></div>
+    <ul id="m-bullets"></ul>
+    <div class="refbox"><div class="rk">Reference</div><p id="m-ref"></p></div>
+    <button class="viewbtn" id="m-view">📄 View Full A4 Reference Sheet</button>
   </div>
-  <p class="sec-sub" style="margin-top:18px"><a href="slibrary.html#unit1" style="color:var(--accent-2);font-weight:600">See all Giants across the course →</a></p>
-</div></section>
+</div>
+<!-- pdf viewer -->
+<div class="pv" id="pv">
+  <div class="pvbar">
+    <div class="ti" id="pv-title">Framework Sheet<small id="pv-sub"></small></div>
+    <div class="sp"></div>
+    <button id="pv-open">Open in new tab ↗</button>
+    <button id="pv-close">✕ Close</button>
+  </div>
+  <iframe id="pv-frame" title="Framework Sheet Library"></iframe>
+</div>
+<script>
+const PDF = "BARBM312_Framework_Sheet_Library.pdf";
+const ACC = '#9e1b32', FILL='#f7e7ea';
+function classify(title, sub){
+  const s=(title+' '+sub).toLowerCase();
+  if(/pyramid|stack|tier|ladder|iceberg/.test(s)){ if(/iceberg/.test(s))return'iceberg'; if(/ladder|staircase|maturity|stages/.test(s))return'stairs'; return'pyramid'; }
+  if(/loop|cycle|flywheel|ooda|crisp|continuous|funnel|pipeline/.test(s)){ if(/funnel/.test(s))return'funnel'; return'loop'; }
+  if(/s-curve|j-curve|curve|diffusion|trajector|frontier|adoption/.test(s))return'scurve';
+  if(/2×2|2x2|matrix|grid|quadrant|vs\.|versus|build · buy|map\b/.test(s))return'matrix';
+  if(/journey|flow|chain|funnel|→|sequence|path|waterfall/.test(s))return'flow';
+  if(/high performer|bars|benefit|ratio|metric|rule of 40/.test(s))return'bars';
+  if(/network|effect|node|platform/.test(s))return'network';
+  return'loop';
+}
+const GLY={
+  pyramid:()=>'<svg viewBox="0 0 200 130"><polygon points="100,18 168,112 32,112" fill="none" stroke="'+ACC+'" stroke-width="2.2"/><line x1="58" y1="88" x2="142" y2="88" stroke="'+ACC+'" stroke-width="1.4" opacity=".55"/><line x1="72" y1="64" x2="128" y2="64" stroke="'+ACC+'" stroke-width="1.4" opacity=".55"/><line x1="86" y1="40" x2="114" y2="40" stroke="'+ACC+'" stroke-width="1.4" opacity=".55"/></svg>',
+  stairs:()=>'<svg viewBox="0 0 200 130"><g fill="'+FILL+'" stroke="'+ACC+'" stroke-width="1.8"><rect x="28" y="92" width="34" height="22"/><rect x="62" y="74" width="34" height="40"/><rect x="96" y="56" width="34" height="58"/><rect x="130" y="36" width="34" height="78"/></g></svg>',
+  iceberg:()=>'<svg viewBox="0 0 200 130"><line x1="20" y1="58" x2="180" y2="58" stroke="'+ACC+'" stroke-width="1" opacity=".5" stroke-dasharray="4 4"/><polygon points="100,20 128,58 72,58" fill="'+FILL+'" stroke="'+ACC+'" stroke-width="2"/><polygon points="72,58 128,58 150,112 50,112" fill="'+FILL+'" stroke="'+ACC+'" stroke-width="1.6" opacity=".55"/></svg>',
+  loop:()=>'<svg viewBox="0 0 200 130"><circle cx="100" cy="65" r="42" fill="none" stroke="'+ACC+'" stroke-width="2.2"/><g fill="'+ACC+'"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g></svg>',
+  funnel:()=>'<svg viewBox="0 0 200 130"><polygon points="34,24 166,24 120,82 120,112 80,112 80,82" fill="'+FILL+'" stroke="'+ACC+'" stroke-width="2"/><line x1="56" y1="46" x2="144" y2="46" stroke="'+ACC+'" stroke-width="1.2" opacity=".5"/></svg>',
+  scurve:()=>'<svg viewBox="0 0 200 130"><path d="M24 108 C 70 106, 78 30, 176 24" fill="none" stroke="'+ACC+'" stroke-width="2.6"/><line x1="24" y1="114" x2="180" y2="114" stroke="'+ACC+'" stroke-width="1" opacity=".4"/><line x1="24" y1="114" x2="24" y2="18" stroke="'+ACC+'" stroke-width="1" opacity=".4"/></svg>',
+  matrix:()=>'<svg viewBox="0 0 200 130"><rect x="40" y="20" width="120" height="92" fill="none" stroke="'+ACC+'" stroke-width="2"/><line x1="100" y1="20" x2="100" y2="112" stroke="'+ACC+'" stroke-width="1.4"/><line x1="40" y1="66" x2="160" y2="66" stroke="'+ACC+'" stroke-width="1.4"/><rect x="103" y="23" width="54" height="40" fill="'+FILL+'"/></svg>',
+  flow:()=>'<svg viewBox="0 0 200 130"><g fill="'+FILL+'" stroke="'+ACC+'" stroke-width="1.8"><rect x="20" y="52" width="34" height="26" rx="3"/><rect x="83" y="52" width="34" height="26" rx="3"/><rect x="146" y="52" width="34" height="26" rx="3"/></g><g stroke="'+ACC+'" stroke-width="2" fill="none"><path d="M56 65 h25 M75 60 l8 5 -8 5"/><path d="M119 65 h25 M138 60 l8 5 -8 5"/></g></svg>',
+  bars:()=>'<svg viewBox="0 0 200 130"><g fill="'+FILL+'" stroke="'+ACC+'" stroke-width="1.8"><rect x="36" y="78" width="26" height="34"/><rect x="74" y="58" width="26" height="54"/><rect x="112" y="40" width="26" height="72"/><rect x="150" y="24" width="26" height="88"/></g></svg>',
+  network:()=>'<svg viewBox="0 0 200 130"><g stroke="'+ACC+'" stroke-width="1.5" opacity=".7"><line x1="100" y1="65" x2="48" y2="34"/><line x1="100" y1="65" x2="152" y2="34"/><line x1="100" y1="65" x2="48" y2="96"/><line x1="100" y1="65" x2="152" y2="96"/></g><g fill="'+ACC+'"><circle cx="100" cy="65" r="8"/><circle cx="48" cy="34" r="5"/><circle cx="152" cy="34" r="5"/><circle cx="48" cy="96" r="5"/><circle cx="152" cy="96" r="5"/></g></svg>',
+};
+function DIAG(title,sub){ return GLY[classify(title,sub)](); }
+const scrim=document.getElementById('scrim'), modal=document.getElementById('modal');
+const pv=document.getElementById('pv'), pvf=document.getElementById('pv-frame');
+let current=null;
+function openModal(d){
+  current=d;
+  document.getElementById('m-ek').textContent = 'Slibrary '+d.slib+' — '+d.setName;
+  document.getElementById('m-title').textContent = d.title;
+  document.getElementById('m-def').textContent = d.def;
+  document.getElementById('m-sub').textContent = d.sub;
+  document.getElementById('m-fig').innerHTML = DIAG(d.title, d.sub);
+  document.getElementById('m-bullets').innerHTML = d.bullets.map(b=>'<li>'+esc(b)+'</li>').join('');
+  document.getElementById('m-ref').textContent = d.ref;
+  scrim.classList.add('open');
+}
+function closeModal(){ scrim.classList.remove('open'); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+document.querySelectorAll('.card').forEach(c=>{
+  c.addEventListener('click',()=>openModal(JSON.parse(c.getAttribute('data-fw'))));
+});
+document.getElementById('xbtn').addEventListener('click',closeModal);
+scrim.addEventListener('click',e=>{ if(e.target===scrim) closeModal(); });
+document.getElementById('m-view').addEventListener('click',()=>{
+  if(!current) return;
+  const url = PDF + '#page=' + current.page;
+  document.getElementById('pv-title').firstChild.textContent = current.title;
+  document.getElementById('pv-sub').textContent = 'Slibrary '+current.slib+' · Page '+current.page+' of the Framework Sheet Library';
+  pvf.src = url;
+  document.getElementById('pv-open').onclick=()=>window.open(url,'_blank');
+  pv.classList.add('open');
+});
+document.getElementById('pv-close').addEventListener('click',()=>{ pv.classList.remove('open'); pvf.src='about:blank'; });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModal(); pv.classList.remove('open'); } });
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('copy',e=>e.preventDefault());
+document.addEventListener('cut',e=>e.preventDefault());
+document.addEventListener('dragstart',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{
+  const k=e.key.toLowerCase();
+  if((e.ctrlKey||e.metaKey)&&(k==='p'||k==='s'||k==='u'||k==='c')){ e.preventDefault(); }
+});
 
-<footer><div class="wrap">
-  <div><strong>© Dr. Hildegard Haas 2026</strong> · BARBM312 AI in Investment and Business Growth · EU Business School</div>
-  <div>Applying <span class="acc">Thumbnail Thinking</span> & the <span class="acc">Council of Giants</span> (JD Meier) · Core message via <span class="acc">Bostelaar</span></div>
-</div></footer>
+</script>
 </body></html>

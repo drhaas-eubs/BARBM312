@@ -1,110 +1,385 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>BARBM312 Unit 4 — IP &amp; Value Creation through AI</title>
-<link rel="stylesheet" href="styles.css">
-<script src="protect.js" defer></script>
+<style>
+:root{ --ink:#14223d; --ink2:#46546e; --line:#e3e7ef; --bg:#f3f5f9; --card:#ffffff;
+       --crimson:#9e1b32; --navy:#14223d; }
+*{box-sizing:border-box}
+/* copy / selection deterrents */
+html,body{ -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; user-select:none; }
+img,svg{ -webkit-user-drag:none; user-drag:none; pointer-events:auto; }
+/* allow selection only inside form inputs (search box) */
+input,textarea{ -webkit-user-select:text; user-select:text; }
+/* print deterrent: hide everything, show a notice */
+@media print{
+  body * { visibility:hidden !important; }
+  #noprint-notice { visibility:visible !important; position:fixed; inset:0; display:flex !important;
+    align-items:center; justify-content:center; text-align:center; padding:40px;
+    font-family:Arial,Helvetica,sans-serif; color:#14223d; font-size:18px; }
+}
+#noprint-notice{ display:none; }
+body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.topband{background:#11203b;color:#cdd6e6;font-size:13px;padding:9px 22px}
+.topband a{color:#9fd3c0;text-decoration:none;font-weight:bold}
+.crimsonbar{background:var(--crimson);color:#fff;font-size:11.5px;letter-spacing:.04em;padding:5px 22px}
+.hero{background:#14223d;color:#fff;padding:30px 22px 26px}
+.hero .kick{color:#e0a23c;font-weight:bold;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.hero h1{font-size:30px;margin:8px 0 6px;font-weight:bold;letter-spacing:-.01em}
+.hero p{margin:0;color:#aebbd2;max-width:760px;font-size:14.5px;line-height:1.5}
+.hero .cred{color:#7f8ca8;font-size:12px;font-style:italic;margin-top:10px}
+.stats{display:flex;gap:38px;margin-top:20px;flex-wrap:wrap}
+.stat b{display:block;color:#3ec79a;font-size:30px;line-height:1}
+.stat span{color:#8493ad;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.core{max-width:1180px;margin:18px auto 0;padding:0 22px}
+.corebox{background:#fff;border:1px solid var(--line);border-left:4px solid var(--crimson);border-radius:10px;padding:14px 18px}
+.corebox .lab{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--crimson);font-weight:bold}
+.corebox p{margin:6px 0 0;font-size:15px;font-weight:bold;color:var(--navy)}
+.wrap{max-width:1180px;margin:0 auto;padding:14px 22px 60px}
+.setblock{margin-top:26px}
+.sethead{display:flex;align-items:center;gap:10px;margin:0 0 12px;font-size:16px;font-weight:bold;color:var(--navy)}
+.dot{width:11px;height:11px;border-radius:50%}
+.chip{background:#e9edf4;color:#56627c;font-size:11px;font-weight:bold;padding:3px 9px;border-radius:20px;letter-spacing:.02em}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+@media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;
+      transition:transform .12s ease,box-shadow .12s ease;display:flex;flex-direction:column}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(20,34,61,.12)}
+.card .top{height:4px}
+.card .fig{height:104px;display:flex;align-items:center;justify-content:center;background:#fafbfd}
+.card .fig svg{width:78px;height:62px}
+.card .body{padding:12px 13px 14px;flex:1;display:flex;flex-direction:column}
+.card h3{margin:0 0 5px;font-size:14px;font-weight:bold;color:var(--navy);line-height:1.25}
+.card .sub{margin:0;font-size:12px;color:var(--ink2);line-height:1.4;flex:1}
+.card .badge{display:inline-block;margin-top:11px;color:#fff;font-size:11px;font-weight:bold;padding:4px 10px;border-radius:6px;align-self:flex-start}
+/* popup */
+.scrim{position:fixed;inset:0;background:rgba(16,28,52,.55);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+.scrim.open{display:flex}
+.modal{background:#fff;border-radius:16px;max-width:560px;width:100%;max-height:88vh;overflow:auto;padding:26px 28px 24px;position:relative;box-shadow:0 24px 60px rgba(10,18,38,.4)}
+.modal .x{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;border:none;background:#eef1f6;color:#56627c;font-size:16px;cursor:pointer}
+.modal .ek{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#8493ad;font-weight:bold}
+.modal h2{margin:5px 0 12px;font-size:22px;color:var(--navy)}
+.modal .def{color:var(--crimson);font-weight:bold;font-size:14.5px;line-height:1.5;border-left:3px solid var(--crimson);padding-left:12px;margin-bottom:12px}
+.modal .subline{color:var(--ink2);font-size:13.5px;margin:0 0 14px}
+.modal .figwrap{background:#f7f9fc;border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;justify-content:center;margin-bottom:14px}
+.modal .figwrap svg{width:150px;height:96px}
+.modal ul{list-style:none;margin:0 0 14px;padding:0}
+.modal li{display:flex;gap:9px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink)}
+.modal li:before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:var(--crimson);margin-top:6px}
+.modal .refbox{background:#f4f7f5;border-left:3px solid #1f7a52;border-radius:0 8px 8px 0;padding:11px 14px;margin-bottom:18px}
+.modal .refbox .rk{color:#1f7a52;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:bold;margin-bottom:4px}
+.modal .refbox p{margin:0;font-size:12.5px;color:#3a4a3f;line-height:1.45}
+.modal .viewbtn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#1f9d6b;color:#fff;border:none;border-radius:24px;padding:12px;font-size:14px;font-weight:bold;cursor:pointer}
+.modal .viewbtn:hover{background:#198256}
+/* pdf viewer */
+.pv{position:fixed;inset:0;background:#14223d;display:none;flex-direction:column;z-index:60}
+.pv.open{display:flex}
+.pvbar{display:flex;align-items:center;gap:14px;padding:10px 16px;color:#fff;flex-wrap:wrap}
+.pvbar .ti{font-weight:bold;font-size:14px}.pvbar .ti small{display:block;color:#9fb0cb;font-weight:normal;font-size:11px}
+.pvbar .sp{flex:1}
+.pvbar button{background:#1f3158;color:#fff;border:none;border-radius:8px;padding:7px 12px;cursor:pointer;font-size:14px}
+.pv iframe{flex:1;border:none;background:#fff;width:100%}
+.footer{background:#11203b;color:#9fb0cb;text-align:center;font-size:12.5px;padding:18px;line-height:1.6}
+.footer b{color:#fff}
+/* gallery wall search */
+.searchwrap{max-width:1180px;margin:18px auto 0;padding:0 22px}
+.searchbar{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:30px;padding:10px 18px;box-shadow:0 2px 10px rgba(20,34,61,.05)}
+.searchbar .mag{color:#8493ad;font-size:20px}
+.searchbar input{flex:1;border:none;outline:none;font-size:15px;font-family:inherit;color:var(--ink);background:transparent}
+.searchbar #clear{border:none;background:#eef1f6;color:#56627c;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:16px}
+.count{color:#8493ad;font-size:12.5px;margin:9px 4px 0;letter-spacing:.02em}
+.wallgrid{margin-top:16px}
+.empty{display:none;text-align:center;color:#8493ad;font-size:15px;padding:50px 0}
+</style>
 </head>
 <body>
-<div class="topbar"><div class="wrap">
-    <div class="tb-left"><span class="code">BARBM312</span> &nbsp;<span class="nm">Unit 4</span></div>
-    <a class="back" href="index.html">‹ Course Overview</a>
-  </div></div>
-  <div class="copybar"><div class="wrap">© Dr. Hildegard Haas 2026 · EU Business School · BARBM312 AI in Investment and Business Growth</div></div>
-<header class="hero"><div class="wrap">
-  <div class="eyebrow">BARBM312 · Unit 4 · Moot Court</div>
-  <h1 class="serif">IP &amp; Value Creation through AI</h1>
-  <p class="sub">Select any framework to explore it. IP in the age of AI — patent, copyright, trademark; LLM wrappers vs. defensible innovation; data as IP; AI-generated content &amp; code rights; patenting and safeguarding AI.</p>
-</div></header>
-
-<div class="wrap"><div class="stats">
-  <div class="stat"><div class="num">4</div><div class="lbl">Slibraries</div></div>
-  <div class="stat"><div class="num">20</div><div class="lbl">Frameworks</div></div>
-  <div class="stat"><div class="num">5</div><div class="lbl">Giants</div></div>
-  <div class="stat"><div class="num">4</div><div class="lbl">Unit</div></div>
-</div></div>
-
-<section><div class="wrap">
-  <div class="sec-head"><span class="kicker">Core message · Bostelaar</span></div>
-  <div class="core">
-    <div class="lab">The one thing to remember</div>
-    <div class="msg">"A wrapper is a feature, not a moat — durable AI value is owned data, defensible IP and switching cost."</div>
-    <div class="wyw">
-      <div class="b why"><div class="h">Why it matters</div>Investors fund moats, not demos. Students must tell a defensible asset from a thin layer over someone else's model.</div>
-      <div class="b what"><div class="h">What it covers</div>IP categories under AI, wrapper vs. moat, data as IP, authorship &amp; licensing, and safeguarding innovation.</div>
-    </div>
-    <div class="spectrum">
-      <div class="ends"><span>Convince · inspire</span><span>Clarify · instruct</span></div>
-      <div class="track"><div class="dot" style="left:55%"></div></div>
-      <div class="note"><strong>Message strategy:</strong> Mixed legal/strategy content → balance: convince why moats matter, clarify the legal mechanics.</div>
-    </div>
+<div id="noprint-notice">© 2026 Dr. Hildegard Haas · EU Business School — this material is not available for printing.</div>
+<div class="topband"><a href="index.html">‹ Back to Course Overview</a></div>
+<div class="crimsonbar">© Dr. Hildegard Haas 2026 · EU Business School · BARBM312 AI in Investment and Business Growth</div>
+<header class="hero">
+  <div class="kick">BARBM312 · Unit 4 · Moot Court</div>
+  <h1>IP &amp; Value Creation through AI</h1>
+  <p>IP in the age of AI — patent, copyright, trademark; LLM wrappers vs. defensible innovation; data as IP; AI-generated content &amp; code rights; patenting and safeguarding AI.</p>
+  <div class="cred">Select any framework to explore it in detail · © 2026 Dr. Hildegard Haas</div>
+  <div class="stats">
+    <div class="stat"><b>4</b><span>Slibraries</span></div>
+    <div class="stat"><b>20</b><span>Frameworks</span></div>
+    <div class="stat"><b>Unit 4</b><span>of 7</span></div>
   </div>
-</div></section>
+</header>
+<div class="core"><div class="corebox"><div class="lab">Core message · Bostelaar</div><p>“A wrapper is not a moat — value is defended by IP, data and switching costs, not by a clever prompt.”</p></div></div>
+<div class="wrap"><div class="setblock">
+      <div class="sethead"><span class="dot" style="background:#2f4b8f"></span>Set 13 — The Four IP Regimes <span class="chip">5 frameworks</span></div>
+      <div class="grid"><div class="card" data-fw="{&quot;title&quot;:&quot;Four IP Regimes&quot;,&quot;sub&quot;:&quot;Patent · copyright · trademark · trade secret&quot;,&quot;slib&quot;:13,&quot;page&quot;:64,&quot;def&quot;:&quot;The four legal regimes protecting intellectual property — patent, copyright, trademark and trade secret — each with different scope, duration and disclosure trade-offs.&quot;,&quot;bullets&quot;:[&quot;Patent → novel inventions, disclosed&quot;,&quot;Copyright → original expression&quot;,&quot;Trademark → brand identifiers&quot;,&quot;Trade secret → guarded, undisclosed value&quot;],&quot;ref&quot;:&quot;WIPO (2004) WIPO Intellectual Property Handbook. 2nd edn. Geneva: World Intellectual Property Organization.&quot;,&quot;setName&quot;:&quot;The Four IP Regimes&quot;}" style="--accent:#2f4b8f;--accent-fill:#e7ecf7">
+        <div class="top" style="background:#2f4b8f"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Four IP Regimes</h3>
+          <p class="sub">Patent · copyright · trademark · trade secret</p>
+          <span class="badge" style="background:#2f4b8f">Slibrary 13</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Patent vs. Trade Secret 2×2&quot;,&quot;sub&quot;:&quot;Disclose and protect vs. keep and guard&quot;,&quot;slib&quot;:13,&quot;page&quot;:65,&quot;def&quot;:&quot;Patent vs. Trade Secret 2×2 — Disclose and protect vs. keep and guard. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: disclose and protect vs. keep and guard&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;The Four IP Regimes&quot;}" style="--accent:#2f4b8f;--accent-fill:#e7ecf7">
+        <div class="top" style="background:#2f4b8f"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><rect x="40" y="20" width="120" height="92" fill="none" stroke="var(--accent)" stroke-width="2"/><line x1="100" y1="20" x2="100" y2="112" stroke="var(--accent)" stroke-width="1.4"/><line x1="40" y1="66" x2="160" y2="66" stroke="var(--accent)" stroke-width="1.4"/><rect x="103" y="23" width="54" height="40" fill="var(--accent-fill)"/></svg></div>
+        <div class="body">
+          <h3>Patent vs. Trade Secret 2×2</h3>
+          <p class="sub">Disclose and protect vs. keep and guard</p>
+          <span class="badge" style="background:#2f4b8f">Slibrary 13</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;IP Portfolio Map&quot;,&quot;sub&quot;:&quot;Layering protections around an asset&quot;,&quot;slib&quot;:13,&quot;page&quot;:66,&quot;def&quot;:&quot;IP Portfolio Map — Layering protections around an asset. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: layering protections around an asset&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;The Four IP Regimes&quot;}" style="--accent:#2f4b8f;--accent-fill:#e7ecf7">
+        <div class="top" style="background:#2f4b8f"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><rect x="40" y="20" width="120" height="92" fill="none" stroke="var(--accent)" stroke-width="2"/><line x1="100" y1="20" x2="100" y2="112" stroke="var(--accent)" stroke-width="1.4"/><line x1="40" y1="66" x2="160" y2="66" stroke="var(--accent)" stroke-width="1.4"/><rect x="103" y="23" width="54" height="40" fill="var(--accent-fill)"/></svg></div>
+        <div class="body">
+          <h3>IP Portfolio Map</h3>
+          <p class="sub">Layering protections around an asset</p>
+          <span class="badge" style="background:#2f4b8f">Slibrary 13</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Freedom-to-Operate Check&quot;,&quot;sub&quot;:&quot;Can you ship without infringing?&quot;,&quot;slib&quot;:13,&quot;page&quot;:67,&quot;def&quot;:&quot;Freedom-to-Operate Check — Can you ship without infringing?. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: can you ship without infringing?&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;The Four IP Regimes&quot;}" style="--accent:#2f4b8f;--accent-fill:#e7ecf7">
+        <div class="top" style="background:#2f4b8f"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Freedom-to-Operate Check</h3>
+          <p class="sub">Can you ship without infringing?</p>
+          <span class="badge" style="background:#2f4b8f">Slibrary 13</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;IP Value Ladder&quot;,&quot;sub&quot;:&quot;From idea to enforceable, licensable right&quot;,&quot;slib&quot;:13,&quot;page&quot;:68,&quot;def&quot;:&quot;IP Value Ladder — From idea to enforceable, licensable right. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: from idea to enforceable, licensable right&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;The Four IP Regimes&quot;}" style="--accent:#2f4b8f;--accent-fill:#e7ecf7">
+        <div class="top" style="background:#2f4b8f"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><g fill="var(--accent-fill)" stroke="var(--accent)" stroke-width="1.8"><rect x="28" y="92" width="34" height="22"/><rect x="62" y="74" width="34" height="40"/><rect x="96" y="56" width="34" height="58"/><rect x="130" y="36" width="34" height="78"/></g></svg></div>
+        <div class="body">
+          <h3>IP Value Ladder</h3>
+          <p class="sub">From idea to enforceable, licensable right</p>
+          <span class="badge" style="background:#2f4b8f">Slibrary 13</span>
+        </div>
+      </div></div>
+    </div><div class="setblock">
+      <div class="sethead"><span class="dot" style="background:#9e1b32"></span>Set 14 — Moats &amp; Defensibility <span class="chip">5 frameworks</span></div>
+      <div class="grid"><div class="card" data-fw="{&quot;title&quot;:&quot;Wrapper vs. Moat&quot;,&quot;sub&quot;:&quot;Thin LLM layer vs. defensible innovation&quot;,&quot;slib&quot;:14,&quot;page&quot;:69,&quot;def&quot;:&quot;A distinction between thin applications that merely wrap a foundation model and businesses with genuine, defensible innovation around data, IP or switching costs.&quot;,&quot;bullets&quot;:[&quot;Wrapper → easily replicated prompt layer&quot;,&quot;Moat → defensible, compounding advantage&quot;,&quot;Ask what survives if the model is copied&quot;,&quot;Defensibility, not novelty, is the test&quot;],&quot;ref&quot;:&quot;Helmer, H. (2016) 7 Powers: The Foundations of Business Strategy. Menlo Park: Deep Strategy.&quot;,&quot;setName&quot;:&quot;Moats &amp; Defensibility&quot;}" style="--accent:#9e1b32;--accent-fill:#f7e7ea">
+        <div class="top" style="background:#9e1b32"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><rect x="40" y="20" width="120" height="92" fill="none" stroke="var(--accent)" stroke-width="2"/><line x1="100" y1="20" x2="100" y2="112" stroke="var(--accent)" stroke-width="1.4"/><line x1="40" y1="66" x2="160" y2="66" stroke="var(--accent)" stroke-width="1.4"/><rect x="103" y="23" width="54" height="40" fill="var(--accent-fill)"/></svg></div>
+        <div class="body">
+          <h3>Wrapper vs. Moat</h3>
+          <p class="sub">Thin LLM layer vs. defensible innovation</p>
+          <span class="badge" style="background:#9e1b32">Slibrary 14</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;7 Powers&quot;,&quot;sub&quot;:&quot;Helmer's seven sources of durable advantage&quot;,&quot;slib&quot;:14,&quot;page&quot;:70,&quot;def&quot;:&quot;Helmer's framework of seven sources of durable competitive advantage — scale economies, network economies, counter-positioning, switching costs, branding, cornered resource and process power.&quot;,&quot;bullets&quot;:[&quot;Power = persistent differential returns&quot;,&quot;Seven distinct, testable sources&quot;,&quot;Timing matters as much as type&quot;,&quot;Frames where an AI moat can come from&quot;],&quot;ref&quot;:&quot;Helmer, H. (2016) 7 Powers: The Foundations of Business Strategy. Menlo Park: Deep Strategy.&quot;,&quot;setName&quot;:&quot;Moats &amp; Defensibility&quot;}" style="--accent:#9e1b32;--accent-fill:#f7e7ea">
+        <div class="top" style="background:#9e1b32"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>7 Powers</h3>
+          <p class="sub">Helmer's seven sources of durable advantage</p>
+          <span class="badge" style="background:#9e1b32">Slibrary 14</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Differentiation &amp; Monopoly&quot;,&quot;sub&quot;:&quot;Thiel — better, or genuinely different?&quot;,&quot;slib&quot;:14,&quot;page&quot;:71,&quot;def&quot;:&quot;Differentiation &amp; Monopoly — Thiel — better, or genuinely different?. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: thiel — better, or genuinely different?&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;Moats &amp; Defensibility&quot;}" style="--accent:#9e1b32;--accent-fill:#f7e7ea">
+        <div class="top" style="background:#9e1b32"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Differentiation &amp; Monopoly</h3>
+          <p class="sub">Thiel — better, or genuinely different?</p>
+          <span class="badge" style="background:#9e1b32">Slibrary 14</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Data Network Effects (IP)&quot;,&quot;sub&quot;:&quot;Compounding data advantage as a moat&quot;,&quot;slib&quot;:14,&quot;page&quot;:72,&quot;def&quot;:&quot;Data Network Effects (IP) — Compounding data advantage as a moat. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: compounding data advantage as a moat&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;Moats &amp; Defensibility&quot;}" style="--accent:#9e1b32;--accent-fill:#f7e7ea">
+        <div class="top" style="background:#9e1b32"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><g stroke="var(--accent)" stroke-width="1.5" opacity=".7"><line x1="100" y1="65" x2="48" y2="34"/><line x1="100" y1="65" x2="152" y2="34"/><line x1="100" y1="65" x2="48" y2="96"/><line x1="100" y1="65" x2="152" y2="96"/></g><g fill="var(--accent)"><circle cx="100" cy="65" r="8"/><circle cx="48" cy="34" r="5"/><circle cx="152" cy="34" r="5"/><circle cx="48" cy="96" r="5"/><circle cx="152" cy="96" r="5"/></g></svg></div>
+        <div class="body">
+          <h3>Data Network Effects (IP)</h3>
+          <p class="sub">Compounding data advantage as a moat</p>
+          <span class="badge" style="background:#9e1b32">Slibrary 14</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Switching-Cost Map&quot;,&quot;sub&quot;:&quot;What locks a customer in&quot;,&quot;slib&quot;:14,&quot;page&quot;:73,&quot;def&quot;:&quot;Switching-Cost Map — What locks a customer in. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: what locks a customer in&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;Moats &amp; Defensibility&quot;}" style="--accent:#9e1b32;--accent-fill:#f7e7ea">
+        <div class="top" style="background:#9e1b32"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><rect x="40" y="20" width="120" height="92" fill="none" stroke="var(--accent)" stroke-width="2"/><line x1="100" y1="20" x2="100" y2="112" stroke="var(--accent)" stroke-width="1.4"/><line x1="40" y1="66" x2="160" y2="66" stroke="var(--accent)" stroke-width="1.4"/><rect x="103" y="23" width="54" height="40" fill="var(--accent-fill)"/></svg></div>
+        <div class="body">
+          <h3>Switching-Cost Map</h3>
+          <p class="sub">What locks a customer in</p>
+          <span class="badge" style="background:#9e1b32">Slibrary 14</span>
+        </div>
+      </div></div>
+    </div><div class="setblock">
+      <div class="sethead"><span class="dot" style="background:#c4761b"></span>Set 15 — Data as IP <span class="chip">5 frameworks</span></div>
+      <div class="grid"><div class="card" data-fw="{&quot;title&quot;:&quot;Data as Strategic Asset&quot;,&quot;sub&quot;:&quot;Treating datasets as ownable value&quot;,&quot;slib&quot;:15,&quot;page&quot;:74,&quot;def&quot;:&quot;Data as Strategic Asset — Treating datasets as ownable value. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: treating datasets as ownable value&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;Data as IP&quot;}" style="--accent:#c4761b;--accent-fill:#f9efe1">
+        <div class="top" style="background:#c4761b"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Data as Strategic Asset</h3>
+          <p class="sub">Treating datasets as ownable value</p>
+          <span class="badge" style="background:#c4761b">Slibrary 15</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Data Rights Stack&quot;,&quot;sub&quot;:&quot;Ownership, licence, consent layers&quot;,&quot;slib&quot;:15,&quot;page&quot;:75,&quot;def&quot;:&quot;Data Rights Stack — Ownership, licence, consent layers. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: ownership, licence, consent layers&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;Data as IP&quot;}" style="--accent:#c4761b;--accent-fill:#f9efe1">
+        <div class="top" style="background:#c4761b"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><polygon points="100,18 168,112 32,112" fill="none" stroke="var(--accent)" stroke-width="2.2"/><line x1="58" y1="88" x2="142" y2="88" stroke="var(--accent)" stroke-width="1.4" opacity=".55"/><line x1="72" y1="64" x2="128" y2="64" stroke="var(--accent)" stroke-width="1.4" opacity=".55"/><line x1="86" y1="40" x2="114" y2="40" stroke="var(--accent)" stroke-width="1.4" opacity=".55"/></svg></div>
+        <div class="body">
+          <h3>Data Rights Stack</h3>
+          <p class="sub">Ownership, licence, consent layers</p>
+          <span class="badge" style="background:#c4761b">Slibrary 15</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Proprietary Data Flywheel&quot;,&quot;sub&quot;:&quot;Use generates data generates advantage&quot;,&quot;slib&quot;:15,&quot;page&quot;:76,&quot;def&quot;:&quot;Proprietary Data Flywheel — Use generates data generates advantage. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: use generates data generates advantage&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;Data as IP&quot;}" style="--accent:#c4761b;--accent-fill:#f9efe1">
+        <div class="top" style="background:#c4761b"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Proprietary Data Flywheel</h3>
+          <p class="sub">Use generates data generates advantage</p>
+          <span class="badge" style="background:#c4761b">Slibrary 15</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Data Moat Audit&quot;,&quot;sub&quot;:&quot;Is your data actually defensible?&quot;,&quot;slib&quot;:15,&quot;page&quot;:77,&quot;def&quot;:&quot;Data Moat Audit — Is your data actually defensible?. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: is your data actually defensible?&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;Data as IP&quot;}" style="--accent:#c4761b;--accent-fill:#f9efe1">
+        <div class="top" style="background:#c4761b"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Data Moat Audit</h3>
+          <p class="sub">Is your data actually defensible?</p>
+          <span class="badge" style="background:#c4761b">Slibrary 15</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Training-Data Provenance&quot;,&quot;sub&quot;:&quot;Where the data came from, and the risk&quot;,&quot;slib&quot;:15,&quot;page&quot;:78,&quot;def&quot;:&quot;Training-Data Provenance — Where the data came from, and the risk. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: where the data came from, and the risk&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;Data as IP&quot;}" style="--accent:#c4761b;--accent-fill:#f9efe1">
+        <div class="top" style="background:#c4761b"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Training-Data Provenance</h3>
+          <p class="sub">Where the data came from, and the risk</p>
+          <span class="badge" style="background:#c4761b">Slibrary 15</span>
+        </div>
+      </div></div>
+    </div><div class="setblock">
+      <div class="sethead"><span class="dot" style="background:#1f7a52"></span>Set 16 — AI-Generated Rights <span class="chip">5 frameworks</span></div>
+      <div class="grid"><div class="card" data-fw="{&quot;title&quot;:&quot;Authorship Decision Tree&quot;,&quot;sub&quot;:&quot;Does the output have a human author?&quot;,&quot;slib&quot;:16,&quot;page&quot;:79,&quot;def&quot;:&quot;A decision tree for determining whether AI-assisted output has a human author capable of holding copyright, turning on the degree of human creative contribution.&quot;,&quot;bullets&quot;:[&quot;Tests for a human creative 'spark'&quot;,&quot;Pure machine output may lack authorship&quot;,&quot;Human direction can establish rights&quot;,&quot;Guides safe use of generative tools&quot;],&quot;ref&quot;:&quot;Lee, J.-A. et al. (eds.) (2021) Artificial Intelligence and Intellectual Property. Oxford: Oxford University Press.&quot;,&quot;setName&quot;:&quot;AI-Generated Rights&quot;}" style="--accent:#1f7a52;--accent-fill:#e4f2ec">
+        <div class="top" style="background:#1f7a52"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Authorship Decision Tree</h3>
+          <p class="sub">Does the output have a human author?</p>
+          <span class="badge" style="background:#1f7a52">Slibrary 16</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Human-Spark Test&quot;,&quot;sub&quot;:&quot;The creative contribution that earns rights&quot;,&quot;slib&quot;:16,&quot;page&quot;:80,&quot;def&quot;:&quot;Human-Spark Test — The creative contribution that earns rights. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: the creative contribution that earns rights&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;AI-Generated Rights&quot;}" style="--accent:#1f7a52;--accent-fill:#e4f2ec">
+        <div class="top" style="background:#1f7a52"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Human-Spark Test</h3>
+          <p class="sub">The creative contribution that earns rights</p>
+          <span class="badge" style="background:#1f7a52">Slibrary 16</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Open-Source Compliance Ladder&quot;,&quot;sub&quot;:&quot;Obligations by licence type&quot;,&quot;slib&quot;:16,&quot;page&quot;:81,&quot;def&quot;:&quot;Open-Source Compliance Ladder — Obligations by licence type. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: obligations by licence type&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;AI-Generated Rights&quot;}" style="--accent:#1f7a52;--accent-fill:#e4f2ec">
+        <div class="top" style="background:#1f7a52"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><g fill="var(--accent-fill)" stroke="var(--accent)" stroke-width="1.8"><rect x="28" y="92" width="34" height="22"/><rect x="62" y="74" width="34" height="40"/><rect x="96" y="56" width="34" height="58"/><rect x="130" y="36" width="34" height="78"/></g></svg></div>
+        <div class="body">
+          <h3>Open-Source Compliance Ladder</h3>
+          <p class="sub">Obligations by licence type</p>
+          <span class="badge" style="background:#1f7a52">Slibrary 16</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;AI Output Ownership Flow&quot;,&quot;sub&quot;:&quot;Who owns model-generated code/content&quot;,&quot;slib&quot;:16,&quot;page&quot;:82,&quot;def&quot;:&quot;AI Output Ownership Flow — Who owns model-generated code/content. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: who owns model-generated code/content&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;AI-Generated Rights&quot;}" style="--accent:#1f7a52;--accent-fill:#e4f2ec">
+        <div class="top" style="background:#1f7a52"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><g fill="var(--accent-fill)" stroke="var(--accent)" stroke-width="1.8"><rect x="20" y="52" width="34" height="26" rx="3"/><rect x="83" y="52" width="34" height="26" rx="3"/><rect x="146" y="52" width="34" height="26" rx="3"/></g><g stroke="var(--accent)" stroke-width="2" fill="none"><path d="M56 65 h25 M75 60 l8 5 -8 5"/><path d="M119 65 h25 M138 60 l8 5 -8 5"/></g></svg></div>
+        <div class="body">
+          <h3>AI Output Ownership Flow</h3>
+          <p class="sub">Who owns model-generated code/content</p>
+          <span class="badge" style="background:#1f7a52">Slibrary 16</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Responsible-AI Scorecard&quot;,&quot;sub&quot;:&quot;Governance against the EU AI Act&quot;,&quot;slib&quot;:16,&quot;page&quot;:83,&quot;def&quot;:&quot;A governance scorecard that assesses an AI system against responsibility criteria — fairness, transparency, accountability and EU AI Act obligations.&quot;,&quot;bullets&quot;:[&quot;Scores fairness and transparency&quot;,&quot;Maps obligations to risk tier&quot;,&quot;Creates an audit trail&quot;,&quot;Aligns deployment with the EU AI Act&quot;],&quot;ref&quot;:&quot;European Parliament and Council (2024) Regulation (EU) 2024/1689 on Artificial Intelligence. Official Journal of the EU, L series.&quot;,&quot;setName&quot;:&quot;AI-Generated Rights&quot;}" style="--accent:#1f7a52;--accent-fill:#e4f2ec">
+        <div class="top" style="background:#1f7a52"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Responsible-AI Scorecard</h3>
+          <p class="sub">Governance against the EU AI Act</p>
+          <span class="badge" style="background:#1f7a52">Slibrary 16</span>
+        </div>
+      </div></div>
+    </div></div>
 
-<section style="padding-top:8px"><div class="wrap">
-  <div class="sec-head"><span class="kicker">Framework Gallery · Thumbnail Thinking</span><h2 class="serif">The Slibrary</h2></div>
-  <p class="sec-sub">Each card is a single-visual framework — a thumbnail you can recall under pressure. Build the catalogue; think in pictures.</p>
-  <div class="setblock"><div class="setname">Set 13 — IP in the Age of AI · 5 frameworks</div><div class="thumbs"><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><polygon points="60,12 100,68 20,68" fill="none" stroke="var(--ink)" stroke-width="2.4"/><line x1="38" y1="49" x2="82" y2="49" stroke="var(--accent)" stroke-width="2.4"/><line x1="48" y1="31" x2="72" y2="31" stroke="var(--teal)" stroke-width="2.4"/></svg></div><div class="meta">
-        <div class="t">IP Quadrant</div><div class="d">Patent · copyright · trademark · trade secret</div>
-        <div class="s">Set 13</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><circle cx="60" cy="40" r="26" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-dasharray="4 5"/><polygon points="86,40 78,34 78,46" fill="var(--accent)"/><circle cx="60" cy="40" r="6" fill="var(--teal)"/></svg></div><div class="meta">
-        <div class="t">Authorship Decision Tree</div><div class="d">Human, machine or joint authorship?</div>
-        <div class="s">Set 13</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><rect x="26" y="12" width="68" height="56" fill="none" stroke="var(--ink)" stroke-width="2.4"/><line x1="60" y1="12" x2="60" y2="68" stroke="var(--ink)" stroke-width="2"/><line x1="26" y1="40" x2="94" y2="40" stroke="var(--ink)" stroke-width="2"/><rect x="62" y="14" width="30" height="24" fill="var(--accent)" opacity=".7"/></svg></div><div class="meta">
-        <div class="t">Patentability Funnel</div><div class="d">Novel · non-obvious · useful filter</div>
-        <div class="s">Set 13</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><line x1="22" y1="66" x2="100" y2="66" stroke="var(--ink)" stroke-width="2"/><rect x="30" y="46" width="12" height="20" fill="var(--teal)"/><rect x="50" y="34" width="12" height="32" fill="var(--accent)"/><rect x="70" y="22" width="12" height="44" fill="var(--ink)"/></svg></div><div class="meta">
-        <div class="t">Inventorship Test</div><div class="d">Can an AI be named an inventor?</div>
-        <div class="s">Set 13</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><polygon points="28,16 92,16 70,46 70,66 50,66 50,46" fill="none" stroke="var(--ink)" stroke-width="2.4"/><line x1="36" y1="26" x2="84" y2="26" stroke="var(--accent)" stroke-width="2.4"/></svg></div><div class="meta">
-        <div class="t">Trademark Distinctiveness Spectrum</div><div class="d">Generic → fanciful marks</div>
-        <div class="s">Set 13</div></div></div></div></div><div class="setblock"><div class="setname">Set 14 — Moat vs. Wrapper · 5 frameworks</div><div class="thumbs"><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><path d="M22,64 C46,64 50,18 98,16" fill="none" stroke="var(--accent)" stroke-width="2.8"/><path d="M22,64 C56,64 60,40 98,40" fill="none" stroke="var(--teal)" stroke-width="2.2" stroke-dasharray="4 4"/></svg></div><div class="meta">
-        <div class="t">Wrapper vs. Moat Ladder</div><div class="d">Thin layer to defensible system</div>
-        <div class="s">Set 14</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><rect x="34" y="16" width="52" height="11" fill="none" stroke="var(--ink)" stroke-width="2"/><rect x="34" y="32" width="52" height="11" fill="var(--teal)" opacity=".55"/><rect x="34" y="48" width="52" height="11" fill="none" stroke="var(--ink)" stroke-width="2"/><rect x="34" y="48" width="20" height="11" fill="var(--accent)"/></svg></div><div class="meta">
-        <div class="t">7 Powers</div><div class="d">Hamilton Helmer's durable advantages</div>
-        <div class="s">Set 14</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><circle cx="60" cy="40" r="22" fill="none" stroke="var(--ink)" stroke-width="2.4"/><circle cx="60" cy="18" r="4" fill="var(--accent)"/><circle cx="79" cy="51" r="4" fill="var(--teal)"/><circle cx="41" cy="51" r="4" fill="var(--ink)"/></svg></div><div class="meta">
-        <div class="t">Defensibility Matrix</div><div class="d">Differentiation × switching cost</div>
-        <div class="s">Set 14</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><circle cx="34" cy="26" r="6" fill="var(--teal)"/><circle cx="86" cy="22" r="6" fill="var(--accent)"/><circle cx="60" cy="58" r="6" fill="var(--ink)"/><line x1="34" y1="26" x2="60" y2="58" stroke="var(--muted)" stroke-width="1.8"/><line x1="86" y1="22" x2="60" y2="58" stroke="var(--muted)" stroke-width="1.8"/><line x1="34" y1="26" x2="86" y2="22" stroke="var(--muted)" stroke-width="1.8" stroke-dasharray="3 3"/></svg></div><div class="meta">
-        <div class="t">Proprietary Data Flywheel</div><div class="d">Data advantage that compounds</div>
-        <div class="s">Set 14</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><rect x="24" y="16" width="72" height="48" fill="none" stroke="var(--ink)" stroke-width="2.4"/><line x1="48" y1="16" x2="48" y2="64" stroke="var(--muted)" stroke-width="1.6"/><line x1="72" y1="16" x2="72" y2="64" stroke="var(--muted)" stroke-width="1.6"/><line x1="24" y1="40" x2="96" y2="40" stroke="var(--muted)" stroke-width="1.6"/><rect x="24" y="16" width="24" height="24" fill="var(--accent)" opacity=".5"/></svg></div><div class="meta">
-        <div class="t">Value Capture Map</div><div class="d">Where margin actually accrues</div>
-        <div class="s">Set 14</div></div></div></div></div><div class="setblock"><div class="setname">Set 15 — Data as IP · 5 frameworks</div><div class="thumbs"><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><circle cx="60" cy="40" r="24" fill="none" stroke="var(--muted)" stroke-width="1.4"/><circle cx="60" cy="40" r="14" fill="none" stroke="var(--muted)" stroke-width="1.4"/><polygon points="60,20 78,46 44,52" fill="var(--accent)" opacity=".55" stroke="var(--accent)" stroke-width="1.6"/></svg></div><div class="meta">
-        <div class="t">Data Asset Classification</div><div class="d">Owned · licensed · public · derived</div>
-        <div class="s">Set 15</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><line x1="24" y1="66" x2="24" y2="14" stroke="var(--ink)" stroke-width="2"/><line x1="24" y1="66" x2="100" y2="66" stroke="var(--ink)" stroke-width="2"/><path d="M28,60 Q40,24 96,20" fill="none" stroke="var(--accent)" stroke-width="2.8"/><circle cx="60" cy="33" r="4" fill="var(--teal)"/></svg></div><div class="meta">
-        <div class="t">Data Rights Stack</div><div class="d">Collection → use → licensing rights</div>
-        <div class="s">Set 15</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><polygon points="60,12 100,68 20,68" fill="none" stroke="var(--ink)" stroke-width="2.4"/><line x1="38" y1="49" x2="82" y2="49" stroke="var(--accent)" stroke-width="2.4"/><line x1="48" y1="31" x2="72" y2="31" stroke="var(--teal)" stroke-width="2.4"/></svg></div><div class="meta">
-        <div class="t">Data Moat Strength</div><div class="d">Uniqueness × scale × freshness</div>
-        <div class="s">Set 15</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><circle cx="60" cy="40" r="26" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-dasharray="4 5"/><polygon points="86,40 78,34 78,46" fill="var(--accent)"/><circle cx="60" cy="40" r="6" fill="var(--teal)"/></svg></div><div class="meta">
-        <div class="t">Privacy-Value Frontier</div><div class="d">Compliance limits on data value</div>
-        <div class="s">Set 15</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><rect x="26" y="12" width="68" height="56" fill="none" stroke="var(--ink)" stroke-width="2.4"/><line x1="60" y1="12" x2="60" y2="68" stroke="var(--ink)" stroke-width="2"/><line x1="26" y1="40" x2="94" y2="40" stroke="var(--ink)" stroke-width="2"/><rect x="62" y="14" width="30" height="24" fill="var(--accent)" opacity=".7"/></svg></div><div class="meta">
-        <div class="t">Synthetic Data Trade-off</div><div class="d">Cheap data vs. real-world fidelity</div>
-        <div class="s">Set 15</div></div></div></div></div><div class="setblock"><div class="setname">Set 16 — Safeguarding Innovation · 5 frameworks</div><div class="thumbs"><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><line x1="22" y1="66" x2="100" y2="66" stroke="var(--ink)" stroke-width="2"/><rect x="30" y="46" width="12" height="20" fill="var(--teal)"/><rect x="50" y="34" width="12" height="32" fill="var(--accent)"/><rect x="70" y="22" width="12" height="44" fill="var(--ink)"/></svg></div><div class="meta">
-        <div class="t">IP Protection Portfolio</div><div class="d">Layered patent + secret + brand defence</div>
-        <div class="s">Set 16</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><polygon points="28,16 92,16 70,46 70,66 50,66 50,46" fill="none" stroke="var(--ink)" stroke-width="2.4"/><line x1="36" y1="26" x2="84" y2="26" stroke="var(--accent)" stroke-width="2.4"/></svg></div><div class="meta">
-        <div class="t">Licensing Models Map</div><div class="d">Open · permissive · restrictive · proprietary</div>
-        <div class="s">Set 16</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><path d="M22,64 C46,64 50,18 98,16" fill="none" stroke="var(--accent)" stroke-width="2.8"/><path d="M22,64 C56,64 60,40 98,40" fill="none" stroke="var(--teal)" stroke-width="2.2" stroke-dasharray="4 4"/></svg></div><div class="meta">
-        <div class="t">Freedom-to-Operate Check</div><div class="d">Are you infringing someone else?</div>
-        <div class="s">Set 16</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><rect x="34" y="16" width="52" height="11" fill="none" stroke="var(--ink)" stroke-width="2"/><rect x="34" y="32" width="52" height="11" fill="var(--teal)" opacity=".55"/><rect x="34" y="48" width="52" height="11" fill="none" stroke="var(--ink)" stroke-width="2"/><rect x="34" y="48" width="20" height="11" fill="var(--accent)"/></svg></div><div class="meta">
-        <div class="t">Open-Source Compliance Ladder</div><div class="d">Obligations by licence type</div>
-        <div class="s">Set 16</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><circle cx="60" cy="40" r="22" fill="none" stroke="var(--ink)" stroke-width="2.4"/><circle cx="60" cy="18" r="4" fill="var(--accent)"/><circle cx="79" cy="51" r="4" fill="var(--teal)"/><circle cx="41" cy="51" r="4" fill="var(--ink)"/></svg></div><div class="meta">
-        <div class="t">AI Output Ownership Flow</div><div class="d">Who owns model-generated code/content</div>
-        <div class="s">Set 16</div></div></div></div></div>
-</div></section>
+<div class="footer"><b>BARBM312</b> · AI in Investment and Business Growth · © 2026 Dr. Hildegard Haas · EU Business School<br/>
+Applying JD Meier’s <b>Thumbnail Thinking</b> &amp; the <b>Council of Giants</b> · core message via Bostelaar</div>
 
-<section style="padding-top:0"><div class="wrap">
-  <div class="sec-head"><span class="kicker">Council of Giants</span><h2 class="serif">The minds behind Unit 4</h2></div>
-  <p class="sec-sub">Run your Unit 4 challenge through these five lenses before you decide.</p>
-  <div class="giants">
-    <div class="giant"><div class="av">JL</div>
-      <div class="gn">Jyh-An Lee et al.</div><div class="gr">Authorship Decision Tree</div><div class="gl">"Authorship requires a human spark."</div></div><div class="giant"><div class="av">HH</div>
-      <div class="gn">Hamilton Helmer</div><div class="gr">7 Powers</div><div class="gl">"Power is the potential to earn persistent returns."</div></div><div class="giant"><div class="av">PT</div>
-      <div class="gn">Peter Thiel</div><div class="gr">Differentiation &amp; Monopoly</div><div class="gl">"Is your product better — or different?"</div></div><div class="giant"><div class="av">LL</div>
-      <div class="gn">Lawrence Lessig</div><div class="gr">Code &amp; IP / Licensing</div><div class="gl">"Code is law; licences are choices."</div></div><div class="giant"><div class="av">AH</div>
-      <div class="gn">Andrei Hagiu &amp; Julian Wright</div><div class="gr">Data Network Effects</div><div class="gl">"Data advantage must compound to matter."</div></div>
+<!-- popup -->
+<div class="scrim" id="scrim">
+  <div class="modal" id="modal">
+    <button class="x" id="xbtn" aria-label="Close">×</button>
+    <div class="ek" id="m-ek"></div>
+    <h2 id="m-title"></h2>
+    <div class="def" id="m-def"></div>
+    <p class="subline" id="m-sub"></p>
+    <div class="figwrap" id="m-fig"></div>
+    <ul id="m-bullets"></ul>
+    <div class="refbox"><div class="rk">Reference</div><p id="m-ref"></p></div>
+    <button class="viewbtn" id="m-view">📄 View Full A4 Reference Sheet</button>
   </div>
-  <p class="sec-sub" style="margin-top:18px"><a href="slibrary.html#unit4" style="color:var(--accent-2);font-weight:600">See all Giants across the course →</a></p>
-</div></section>
+</div>
+<!-- pdf viewer -->
+<div class="pv" id="pv">
+  <div class="pvbar">
+    <div class="ti" id="pv-title">Framework Sheet<small id="pv-sub"></small></div>
+    <div class="sp"></div>
+    <button id="pv-open">Open in new tab ↗</button>
+    <button id="pv-close">✕ Close</button>
+  </div>
+  <iframe id="pv-frame" title="Framework Sheet Library"></iframe>
+</div>
+<script>
+const PDF = "BARBM312_Framework_Sheet_Library.pdf";
+const ACC = '#9e1b32', FILL='#f7e7ea';
+function classify(title, sub){
+  const s=(title+' '+sub).toLowerCase();
+  if(/pyramid|stack|tier|ladder|iceberg/.test(s)){ if(/iceberg/.test(s))return'iceberg'; if(/ladder|staircase|maturity|stages/.test(s))return'stairs'; return'pyramid'; }
+  if(/loop|cycle|flywheel|ooda|crisp|continuous|funnel|pipeline/.test(s)){ if(/funnel/.test(s))return'funnel'; return'loop'; }
+  if(/s-curve|j-curve|curve|diffusion|trajector|frontier|adoption/.test(s))return'scurve';
+  if(/2×2|2x2|matrix|grid|quadrant|vs\.|versus|build · buy|map\b/.test(s))return'matrix';
+  if(/journey|flow|chain|funnel|→|sequence|path|waterfall/.test(s))return'flow';
+  if(/high performer|bars|benefit|ratio|metric|rule of 40/.test(s))return'bars';
+  if(/network|effect|node|platform/.test(s))return'network';
+  return'loop';
+}
+const GLY={
+  pyramid:()=>'<svg viewBox="0 0 200 130"><polygon points="100,18 168,112 32,112" fill="none" stroke="'+ACC+'" stroke-width="2.2"/><line x1="58" y1="88" x2="142" y2="88" stroke="'+ACC+'" stroke-width="1.4" opacity=".55"/><line x1="72" y1="64" x2="128" y2="64" stroke="'+ACC+'" stroke-width="1.4" opacity=".55"/><line x1="86" y1="40" x2="114" y2="40" stroke="'+ACC+'" stroke-width="1.4" opacity=".55"/></svg>',
+  stairs:()=>'<svg viewBox="0 0 200 130"><g fill="'+FILL+'" stroke="'+ACC+'" stroke-width="1.8"><rect x="28" y="92" width="34" height="22"/><rect x="62" y="74" width="34" height="40"/><rect x="96" y="56" width="34" height="58"/><rect x="130" y="36" width="34" height="78"/></g></svg>',
+  iceberg:()=>'<svg viewBox="0 0 200 130"><line x1="20" y1="58" x2="180" y2="58" stroke="'+ACC+'" stroke-width="1" opacity=".5" stroke-dasharray="4 4"/><polygon points="100,20 128,58 72,58" fill="'+FILL+'" stroke="'+ACC+'" stroke-width="2"/><polygon points="72,58 128,58 150,112 50,112" fill="'+FILL+'" stroke="'+ACC+'" stroke-width="1.6" opacity=".55"/></svg>',
+  loop:()=>'<svg viewBox="0 0 200 130"><circle cx="100" cy="65" r="42" fill="none" stroke="'+ACC+'" stroke-width="2.2"/><g fill="'+ACC+'"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g></svg>',
+  funnel:()=>'<svg viewBox="0 0 200 130"><polygon points="34,24 166,24 120,82 120,112 80,112 80,82" fill="'+FILL+'" stroke="'+ACC+'" stroke-width="2"/><line x1="56" y1="46" x2="144" y2="46" stroke="'+ACC+'" stroke-width="1.2" opacity=".5"/></svg>',
+  scurve:()=>'<svg viewBox="0 0 200 130"><path d="M24 108 C 70 106, 78 30, 176 24" fill="none" stroke="'+ACC+'" stroke-width="2.6"/><line x1="24" y1="114" x2="180" y2="114" stroke="'+ACC+'" stroke-width="1" opacity=".4"/><line x1="24" y1="114" x2="24" y2="18" stroke="'+ACC+'" stroke-width="1" opacity=".4"/></svg>',
+  matrix:()=>'<svg viewBox="0 0 200 130"><rect x="40" y="20" width="120" height="92" fill="none" stroke="'+ACC+'" stroke-width="2"/><line x1="100" y1="20" x2="100" y2="112" stroke="'+ACC+'" stroke-width="1.4"/><line x1="40" y1="66" x2="160" y2="66" stroke="'+ACC+'" stroke-width="1.4"/><rect x="103" y="23" width="54" height="40" fill="'+FILL+'"/></svg>',
+  flow:()=>'<svg viewBox="0 0 200 130"><g fill="'+FILL+'" stroke="'+ACC+'" stroke-width="1.8"><rect x="20" y="52" width="34" height="26" rx="3"/><rect x="83" y="52" width="34" height="26" rx="3"/><rect x="146" y="52" width="34" height="26" rx="3"/></g><g stroke="'+ACC+'" stroke-width="2" fill="none"><path d="M56 65 h25 M75 60 l8 5 -8 5"/><path d="M119 65 h25 M138 60 l8 5 -8 5"/></g></svg>',
+  bars:()=>'<svg viewBox="0 0 200 130"><g fill="'+FILL+'" stroke="'+ACC+'" stroke-width="1.8"><rect x="36" y="78" width="26" height="34"/><rect x="74" y="58" width="26" height="54"/><rect x="112" y="40" width="26" height="72"/><rect x="150" y="24" width="26" height="88"/></g></svg>',
+  network:()=>'<svg viewBox="0 0 200 130"><g stroke="'+ACC+'" stroke-width="1.5" opacity=".7"><line x1="100" y1="65" x2="48" y2="34"/><line x1="100" y1="65" x2="152" y2="34"/><line x1="100" y1="65" x2="48" y2="96"/><line x1="100" y1="65" x2="152" y2="96"/></g><g fill="'+ACC+'"><circle cx="100" cy="65" r="8"/><circle cx="48" cy="34" r="5"/><circle cx="152" cy="34" r="5"/><circle cx="48" cy="96" r="5"/><circle cx="152" cy="96" r="5"/></g></svg>',
+};
+function DIAG(title,sub){ return GLY[classify(title,sub)](); }
+const scrim=document.getElementById('scrim'), modal=document.getElementById('modal');
+const pv=document.getElementById('pv'), pvf=document.getElementById('pv-frame');
+let current=null;
+function openModal(d){
+  current=d;
+  document.getElementById('m-ek').textContent = 'Slibrary '+d.slib+' — '+d.setName;
+  document.getElementById('m-title').textContent = d.title;
+  document.getElementById('m-def').textContent = d.def;
+  document.getElementById('m-sub').textContent = d.sub;
+  document.getElementById('m-fig').innerHTML = DIAG(d.title, d.sub);
+  document.getElementById('m-bullets').innerHTML = d.bullets.map(b=>'<li>'+esc(b)+'</li>').join('');
+  document.getElementById('m-ref').textContent = d.ref;
+  scrim.classList.add('open');
+}
+function closeModal(){ scrim.classList.remove('open'); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+document.querySelectorAll('.card').forEach(c=>{
+  c.addEventListener('click',()=>openModal(JSON.parse(c.getAttribute('data-fw'))));
+});
+document.getElementById('xbtn').addEventListener('click',closeModal);
+scrim.addEventListener('click',e=>{ if(e.target===scrim) closeModal(); });
+document.getElementById('m-view').addEventListener('click',()=>{
+  if(!current) return;
+  const url = PDF + '#page=' + current.page;
+  document.getElementById('pv-title').firstChild.textContent = current.title;
+  document.getElementById('pv-sub').textContent = 'Slibrary '+current.slib+' · Page '+current.page+' of the Framework Sheet Library';
+  pvf.src = url;
+  document.getElementById('pv-open').onclick=()=>window.open(url,'_blank');
+  pv.classList.add('open');
+});
+document.getElementById('pv-close').addEventListener('click',()=>{ pv.classList.remove('open'); pvf.src='about:blank'; });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModal(); pv.classList.remove('open'); } });
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('copy',e=>e.preventDefault());
+document.addEventListener('cut',e=>e.preventDefault());
+document.addEventListener('dragstart',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{
+  const k=e.key.toLowerCase();
+  if((e.ctrlKey||e.metaKey)&&(k==='p'||k==='s'||k==='u'||k==='c')){ e.preventDefault(); }
+});
 
-<footer><div class="wrap">
-  <div><strong>© Dr. Hildegard Haas 2026</strong> · BARBM312 AI in Investment and Business Growth · EU Business School</div>
-  <div>Applying <span class="acc">Thumbnail Thinking</span> & the <span class="acc">Council of Giants</span> (JD Meier) · Core message via <span class="acc">Bostelaar</span></div>
-</div></footer>
+</script>
 </body></html>

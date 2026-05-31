@@ -1,110 +1,385 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>BARBM312 Unit 6 — Investment Strategies in the AI Era</title>
-<link rel="stylesheet" href="styles.css">
-<script src="protect.js" defer></script>
+<style>
+:root{ --ink:#14223d; --ink2:#46546e; --line:#e3e7ef; --bg:#f3f5f9; --card:#ffffff;
+       --crimson:#9e1b32; --navy:#14223d; }
+*{box-sizing:border-box}
+/* copy / selection deterrents */
+html,body{ -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; user-select:none; }
+img,svg{ -webkit-user-drag:none; user-drag:none; pointer-events:auto; }
+/* allow selection only inside form inputs (search box) */
+input,textarea{ -webkit-user-select:text; user-select:text; }
+/* print deterrent: hide everything, show a notice */
+@media print{
+  body * { visibility:hidden !important; }
+  #noprint-notice { visibility:visible !important; position:fixed; inset:0; display:flex !important;
+    align-items:center; justify-content:center; text-align:center; padding:40px;
+    font-family:Arial,Helvetica,sans-serif; color:#14223d; font-size:18px; }
+}
+#noprint-notice{ display:none; }
+body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.topband{background:#11203b;color:#cdd6e6;font-size:13px;padding:9px 22px}
+.topband a{color:#9fd3c0;text-decoration:none;font-weight:bold}
+.crimsonbar{background:var(--crimson);color:#fff;font-size:11.5px;letter-spacing:.04em;padding:5px 22px}
+.hero{background:#14223d;color:#fff;padding:30px 22px 26px}
+.hero .kick{color:#e0a23c;font-weight:bold;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.hero h1{font-size:30px;margin:8px 0 6px;font-weight:bold;letter-spacing:-.01em}
+.hero p{margin:0;color:#aebbd2;max-width:760px;font-size:14.5px;line-height:1.5}
+.hero .cred{color:#7f8ca8;font-size:12px;font-style:italic;margin-top:10px}
+.stats{display:flex;gap:38px;margin-top:20px;flex-wrap:wrap}
+.stat b{display:block;color:#3ec79a;font-size:30px;line-height:1}
+.stat span{color:#8493ad;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.core{max-width:1180px;margin:18px auto 0;padding:0 22px}
+.corebox{background:#fff;border:1px solid var(--line);border-left:4px solid var(--crimson);border-radius:10px;padding:14px 18px}
+.corebox .lab{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--crimson);font-weight:bold}
+.corebox p{margin:6px 0 0;font-size:15px;font-weight:bold;color:var(--navy)}
+.wrap{max-width:1180px;margin:0 auto;padding:14px 22px 60px}
+.setblock{margin-top:26px}
+.sethead{display:flex;align-items:center;gap:10px;margin:0 0 12px;font-size:16px;font-weight:bold;color:var(--navy)}
+.dot{width:11px;height:11px;border-radius:50%}
+.chip{background:#e9edf4;color:#56627c;font-size:11px;font-weight:bold;padding:3px 9px;border-radius:20px;letter-spacing:.02em}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+@media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;
+      transition:transform .12s ease,box-shadow .12s ease;display:flex;flex-direction:column}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(20,34,61,.12)}
+.card .top{height:4px}
+.card .fig{height:104px;display:flex;align-items:center;justify-content:center;background:#fafbfd}
+.card .fig svg{width:78px;height:62px}
+.card .body{padding:12px 13px 14px;flex:1;display:flex;flex-direction:column}
+.card h3{margin:0 0 5px;font-size:14px;font-weight:bold;color:var(--navy);line-height:1.25}
+.card .sub{margin:0;font-size:12px;color:var(--ink2);line-height:1.4;flex:1}
+.card .badge{display:inline-block;margin-top:11px;color:#fff;font-size:11px;font-weight:bold;padding:4px 10px;border-radius:6px;align-self:flex-start}
+/* popup */
+.scrim{position:fixed;inset:0;background:rgba(16,28,52,.55);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+.scrim.open{display:flex}
+.modal{background:#fff;border-radius:16px;max-width:560px;width:100%;max-height:88vh;overflow:auto;padding:26px 28px 24px;position:relative;box-shadow:0 24px 60px rgba(10,18,38,.4)}
+.modal .x{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;border:none;background:#eef1f6;color:#56627c;font-size:16px;cursor:pointer}
+.modal .ek{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#8493ad;font-weight:bold}
+.modal h2{margin:5px 0 12px;font-size:22px;color:var(--navy)}
+.modal .def{color:var(--crimson);font-weight:bold;font-size:14.5px;line-height:1.5;border-left:3px solid var(--crimson);padding-left:12px;margin-bottom:12px}
+.modal .subline{color:var(--ink2);font-size:13.5px;margin:0 0 14px}
+.modal .figwrap{background:#f7f9fc;border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;justify-content:center;margin-bottom:14px}
+.modal .figwrap svg{width:150px;height:96px}
+.modal ul{list-style:none;margin:0 0 14px;padding:0}
+.modal li{display:flex;gap:9px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink)}
+.modal li:before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:var(--crimson);margin-top:6px}
+.modal .refbox{background:#f4f7f5;border-left:3px solid #1f7a52;border-radius:0 8px 8px 0;padding:11px 14px;margin-bottom:18px}
+.modal .refbox .rk{color:#1f7a52;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:bold;margin-bottom:4px}
+.modal .refbox p{margin:0;font-size:12.5px;color:#3a4a3f;line-height:1.45}
+.modal .viewbtn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#1f9d6b;color:#fff;border:none;border-radius:24px;padding:12px;font-size:14px;font-weight:bold;cursor:pointer}
+.modal .viewbtn:hover{background:#198256}
+/* pdf viewer */
+.pv{position:fixed;inset:0;background:#14223d;display:none;flex-direction:column;z-index:60}
+.pv.open{display:flex}
+.pvbar{display:flex;align-items:center;gap:14px;padding:10px 16px;color:#fff;flex-wrap:wrap}
+.pvbar .ti{font-weight:bold;font-size:14px}.pvbar .ti small{display:block;color:#9fb0cb;font-weight:normal;font-size:11px}
+.pvbar .sp{flex:1}
+.pvbar button{background:#1f3158;color:#fff;border:none;border-radius:8px;padding:7px 12px;cursor:pointer;font-size:14px}
+.pv iframe{flex:1;border:none;background:#fff;width:100%}
+.footer{background:#11203b;color:#9fb0cb;text-align:center;font-size:12.5px;padding:18px;line-height:1.6}
+.footer b{color:#fff}
+/* gallery wall search */
+.searchwrap{max-width:1180px;margin:18px auto 0;padding:0 22px}
+.searchbar{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:30px;padding:10px 18px;box-shadow:0 2px 10px rgba(20,34,61,.05)}
+.searchbar .mag{color:#8493ad;font-size:20px}
+.searchbar input{flex:1;border:none;outline:none;font-size:15px;font-family:inherit;color:var(--ink);background:transparent}
+.searchbar #clear{border:none;background:#eef1f6;color:#56627c;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:16px}
+.count{color:#8493ad;font-size:12.5px;margin:9px 4px 0;letter-spacing:.02em}
+.wallgrid{margin-top:16px}
+.empty{display:none;text-align:center;color:#8493ad;font-size:15px;padding:50px 0}
+</style>
 </head>
 <body>
-<div class="topbar"><div class="wrap">
-    <div class="tb-left"><span class="code">BARBM312</span> &nbsp;<span class="nm">Unit 6</span></div>
-    <a class="back" href="index.html">‹ Course Overview</a>
-  </div></div>
-  <div class="copybar"><div class="wrap">© Dr. Hildegard Haas 2026 · EU Business School · BARBM312 AI in Investment and Business Growth</div></div>
-<header class="hero"><div class="wrap">
-  <div class="eyebrow">BARBM312 · Unit 6 · Live Data Lab</div>
-  <h1 class="serif">Investment Strategies in the AI Era</h1>
-  <p class="sub">Select any framework to explore it. Foundational investment principles; disruption of finance through AI/ML; market prediction, risk profiling, diversification; AI-advisors, ML analytics, blockchain instruments; algorithmic &amp; high-frequency trading.</p>
-</div></header>
-
-<div class="wrap"><div class="stats">
-  <div class="stat"><div class="num">4</div><div class="lbl">Slibraries</div></div>
-  <div class="stat"><div class="num">20</div><div class="lbl">Frameworks</div></div>
-  <div class="stat"><div class="num">5</div><div class="lbl">Giants</div></div>
-  <div class="stat"><div class="num">6</div><div class="lbl">Unit</div></div>
-</div></div>
-
-<section><div class="wrap">
-  <div class="sec-head"><span class="kicker">Core message · Bostelaar</span></div>
-  <div class="core">
-    <div class="lab">The one thing to remember</div>
-    <div class="msg">"AI changes the speed and the inputs of investing — not the laws of risk and return."</div>
-    <div class="wyw">
-      <div class="b why"><div class="h">Why it matters</div>Hype suggests AI repeals diversification and risk. Anchoring on timeless principles prevents costly over-belief.</div>
-      <div class="b what"><div class="h">What it covers</div>Portfolio principles, ML disruption of finance, prediction &amp; risk tooling, robo-advice, and algo/HFT trading.</div>
-    </div>
-    <div class="spectrum">
-      <div class="ends"><span>Convince · inspire</span><span>Clarify · instruct</span></div>
-      <div class="track"><div class="dot" style="left:60%"></div></div>
-      <div class="note"><strong>Message strategy:</strong> Quantitative, decision-oriented audience → lean Clarify; convince only where AI hype must be tempered.</div>
-    </div>
+<div id="noprint-notice">© 2026 Dr. Hildegard Haas · EU Business School — this material is not available for printing.</div>
+<div class="topband"><a href="index.html">‹ Back to Course Overview</a></div>
+<div class="crimsonbar">© Dr. Hildegard Haas 2026 · EU Business School · BARBM312 AI in Investment and Business Growth</div>
+<header class="hero">
+  <div class="kick">BARBM312 · Unit 6 · Live Data Lab</div>
+  <h1>Investment Strategies in the AI Era</h1>
+  <p>Foundational investment principles; disruption of finance through AI/ML; market prediction, risk profiling, diversification; AI-advisors, ML analytics, blockchain instruments; algorithmic &amp; high-frequency trading.</p>
+  <div class="cred">Select any framework to explore it in detail · © 2026 Dr. Hildegard Haas</div>
+  <div class="stats">
+    <div class="stat"><b>4</b><span>Slibraries</span></div>
+    <div class="stat"><b>20</b><span>Frameworks</span></div>
+    <div class="stat"><b>Unit 6</b><span>of 7</span></div>
   </div>
-</div></section>
+</header>
+<div class="core"><div class="corebox"><div class="lab">Core message · Bostelaar</div><p>“AI changes the speed and the inputs of investing — not the laws of risk and return.”</p></div></div>
+<div class="wrap"><div class="setblock">
+      <div class="sethead"><span class="dot" style="background:#2f4b8f"></span>Set 21 — Investment Foundations <span class="chip">5 frameworks</span></div>
+      <div class="grid"><div class="card" data-fw="{&quot;title&quot;:&quot;Modern Portfolio Theory&quot;,&quot;sub&quot;:&quot;Efficient frontier of risk vs. return&quot;,&quot;slib&quot;:21,&quot;page&quot;:104,&quot;def&quot;:&quot;Markowitz's framework for assembling portfolios that maximise expected return for a given level of risk by exploiting imperfect correlations between assets.&quot;,&quot;bullets&quot;:[&quot;Diversification is the 'free lunch'&quot;,&quot;Risk measured at portfolio level&quot;,&quot;Efficient frontier of optimal mixes&quot;,&quot;AI changes inputs, not the logic&quot;],&quot;ref&quot;:&quot;Markowitz, H. (1952) 'Portfolio selection', The Journal of Finance, 7(1), pp. 77–91.&quot;,&quot;setName&quot;:&quot;Investment Foundations&quot;}" style="--accent:#2f4b8f;--accent-fill:#e7ecf7">
+        <div class="top" style="background:#2f4b8f"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><polygon points="100,18 168,112 32,112" fill="none" stroke="var(--accent)" stroke-width="2.2"/><line x1="58" y1="88" x2="142" y2="88" stroke="var(--accent)" stroke-width="1.4" opacity=".55"/><line x1="72" y1="64" x2="128" y2="64" stroke="var(--accent)" stroke-width="1.4" opacity=".55"/><line x1="86" y1="40" x2="114" y2="40" stroke="var(--accent)" stroke-width="1.4" opacity=".55"/></svg></div>
+        <div class="body">
+          <h3>Modern Portfolio Theory</h3>
+          <p class="sub">Efficient frontier of risk vs. return</p>
+          <span class="badge" style="background:#2f4b8f">Slibrary 21</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Risk-Return Spectrum&quot;,&quot;sub&quot;:&quot;No return without bearing risk&quot;,&quot;slib&quot;:21,&quot;page&quot;:105,&quot;def&quot;:&quot;Risk-Return Spectrum — No return without bearing risk. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: no return without bearing risk&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;Investment Foundations&quot;}" style="--accent:#2f4b8f;--accent-fill:#e7ecf7">
+        <div class="top" style="background:#2f4b8f"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Risk-Return Spectrum</h3>
+          <p class="sub">No return without bearing risk</p>
+          <span class="badge" style="background:#2f4b8f">Slibrary 21</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Diversification Curve&quot;,&quot;sub&quot;:&quot;Falling risk as assets decorrelate&quot;,&quot;slib&quot;:21,&quot;page&quot;:106,&quot;def&quot;:&quot;Diversification Curve — Falling risk as assets decorrelate. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: falling risk as assets decorrelate&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;Investment Foundations&quot;}" style="--accent:#2f4b8f;--accent-fill:#e7ecf7">
+        <div class="top" style="background:#2f4b8f"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><path d="M24 108 C 70 106, 78 30, 176 24" fill="none" stroke="var(--accent)" stroke-width="2.6"/><line x1="24" y1="114" x2="180" y2="114" stroke="var(--accent)" stroke-width="1" opacity=".4"/><line x1="24" y1="114" x2="24" y2="18" stroke="var(--accent)" stroke-width="1" opacity=".4"/></svg></div>
+        <div class="body">
+          <h3>Diversification Curve</h3>
+          <p class="sub">Falling risk as assets decorrelate</p>
+          <span class="badge" style="background:#2f4b8f">Slibrary 21</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Capital Asset Pricing Model&quot;,&quot;sub&quot;:&quot;Beta and the price of market risk&quot;,&quot;slib&quot;:21,&quot;page&quot;:107,&quot;def&quot;:&quot;A model pricing an asset's expected return as the risk-free rate plus a premium for its non-diversifiable market risk, measured by beta.&quot;,&quot;bullets&quot;:[&quot;Return = risk-free + beta × premium&quot;,&quot;Only market risk is rewarded&quot;,&quot;Beta measures systematic risk&quot;,&quot;Baseline for cost-of-capital decisions&quot;],&quot;ref&quot;:&quot;Sharpe, W.F. (1964) 'Capital asset prices', The Journal of Finance, 19(3), pp. 425–442.&quot;,&quot;setName&quot;:&quot;Investment Foundations&quot;}" style="--accent:#2f4b8f;--accent-fill:#e7ecf7">
+        <div class="top" style="background:#2f4b8f"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Capital Asset Pricing Model</h3>
+          <p class="sub">Beta and the price of market risk</p>
+          <span class="badge" style="background:#2f4b8f">Slibrary 21</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Black-Litterman Model&quot;,&quot;sub&quot;:&quot;Blending views with market equilibrium&quot;,&quot;slib&quot;:21,&quot;page&quot;:108,&quot;def&quot;:&quot;A Bayesian allocation model that starts from market-equilibrium returns and blends in an investor's specific views to produce stable, intuitive portfolios.&quot;,&quot;bullets&quot;:[&quot;Start from the market equilibrium&quot;,&quot;Add explicit investor views&quot;,&quot;Blend by confidence level&quot;,&quot;Avoids extreme, unstable weights&quot;],&quot;ref&quot;:&quot;Black, F. and Litterman, R. (1992) 'Global portfolio optimization', Financial Analysts Journal, 48(5), pp. 28–43.&quot;,&quot;setName&quot;:&quot;Investment Foundations&quot;}" style="--accent:#2f4b8f;--accent-fill:#e7ecf7">
+        <div class="top" style="background:#2f4b8f"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Black-Litterman Model</h3>
+          <p class="sub">Blending views with market equilibrium</p>
+          <span class="badge" style="background:#2f4b8f">Slibrary 21</span>
+        </div>
+      </div></div>
+    </div><div class="setblock">
+      <div class="sethead"><span class="dot" style="background:#9e1b32"></span>Set 22 — AI Disrupting Finance <span class="chip">5 frameworks</span></div>
+      <div class="grid"><div class="card" data-fw="{&quot;title&quot;:&quot;Fintech Disruption Map&quot;,&quot;sub&quot;:&quot;Where AI re-prices financial services&quot;,&quot;slib&quot;:22,&quot;page&quot;:109,&quot;def&quot;:&quot;Fintech Disruption Map — Where AI re-prices financial services. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: where ai re-prices financial services&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;AI Disrupting Finance&quot;}" style="--accent:#9e1b32;--accent-fill:#f7e7ea">
+        <div class="top" style="background:#9e1b32"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><rect x="40" y="20" width="120" height="92" fill="none" stroke="var(--accent)" stroke-width="2"/><line x1="100" y1="20" x2="100" y2="112" stroke="var(--accent)" stroke-width="1.4"/><line x1="40" y1="66" x2="160" y2="66" stroke="var(--accent)" stroke-width="1.4"/><rect x="103" y="23" width="54" height="40" fill="var(--accent-fill)"/></svg></div>
+        <div class="body">
+          <h3>Fintech Disruption Map</h3>
+          <p class="sub">Where AI re-prices financial services</p>
+          <span class="badge" style="background:#9e1b32">Slibrary 22</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;ML Adoption Curve (Investing)&quot;,&quot;sub&quot;:&quot;Muldowney's stages of ML in asset mgmt&quot;,&quot;slib&quot;:22,&quot;page&quot;:110,&quot;def&quot;:&quot;ML Adoption Curve (Investing) — Muldowney's stages of ML in asset mgmt. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: muldowney's stages of ml in asset mgmt&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;AI Disrupting Finance&quot;}" style="--accent:#9e1b32;--accent-fill:#f7e7ea">
+        <div class="top" style="background:#9e1b32"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><path d="M24 108 C 70 106, 78 30, 176 24" fill="none" stroke="var(--accent)" stroke-width="2.6"/><line x1="24" y1="114" x2="180" y2="114" stroke="var(--accent)" stroke-width="1" opacity=".4"/><line x1="24" y1="114" x2="24" y2="18" stroke="var(--accent)" stroke-width="1" opacity=".4"/></svg></div>
+        <div class="body">
+          <h3>ML Adoption Curve (Investing)</h3>
+          <p class="sub">Muldowney's stages of ML in asset mgmt</p>
+          <span class="badge" style="background:#9e1b32">Slibrary 22</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Robo-Advisory Stack&quot;,&quot;sub&quot;:&quot;Profiling → allocation → rebalancing&quot;,&quot;slib&quot;:22,&quot;page&quot;:111,&quot;def&quot;:&quot;Robo-Advisory Stack — Profiling → allocation → rebalancing. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: profiling → allocation → rebalancing&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;AI Disrupting Finance&quot;}" style="--accent:#9e1b32;--accent-fill:#f7e7ea">
+        <div class="top" style="background:#9e1b32"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><polygon points="100,18 168,112 32,112" fill="none" stroke="var(--accent)" stroke-width="2.2"/><line x1="58" y1="88" x2="142" y2="88" stroke="var(--accent)" stroke-width="1.4" opacity=".55"/><line x1="72" y1="64" x2="128" y2="64" stroke="var(--accent)" stroke-width="1.4" opacity=".55"/><line x1="86" y1="40" x2="114" y2="40" stroke="var(--accent)" stroke-width="1.4" opacity=".55"/></svg></div>
+        <div class="body">
+          <h3>Robo-Advisory Stack</h3>
+          <p class="sub">Profiling → allocation → rebalancing</p>
+          <span class="badge" style="background:#9e1b32">Slibrary 22</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Alt-Data Pyramid&quot;,&quot;sub&quot;:&quot;Satellite, card, web data as alpha&quot;,&quot;slib&quot;:22,&quot;page&quot;:112,&quot;def&quot;:&quot;Alt-Data Pyramid — Satellite, card, web data as alpha. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: satellite, card, web data as alpha&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;AI Disrupting Finance&quot;}" style="--accent:#9e1b32;--accent-fill:#f7e7ea">
+        <div class="top" style="background:#9e1b32"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><polygon points="100,18 168,112 32,112" fill="none" stroke="var(--accent)" stroke-width="2.2"/><line x1="58" y1="88" x2="142" y2="88" stroke="var(--accent)" stroke-width="1.4" opacity=".55"/><line x1="72" y1="64" x2="128" y2="64" stroke="var(--accent)" stroke-width="1.4" opacity=".55"/><line x1="86" y1="40" x2="114" y2="40" stroke="var(--accent)" stroke-width="1.4" opacity=".55"/></svg></div>
+        <div class="body">
+          <h3>Alt-Data Pyramid</h3>
+          <p class="sub">Satellite, card, web data as alpha</p>
+          <span class="badge" style="background:#9e1b32">Slibrary 22</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Blockchain Instrument Map&quot;,&quot;sub&quot;:&quot;Tokenised and smart-contract assets&quot;,&quot;slib&quot;:22,&quot;page&quot;:113,&quot;def&quot;:&quot;Blockchain Instrument Map — Tokenised and smart-contract assets. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: tokenised and smart-contract assets&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;AI Disrupting Finance&quot;}" style="--accent:#9e1b32;--accent-fill:#f7e7ea">
+        <div class="top" style="background:#9e1b32"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><rect x="40" y="20" width="120" height="92" fill="none" stroke="var(--accent)" stroke-width="2"/><line x1="100" y1="20" x2="100" y2="112" stroke="var(--accent)" stroke-width="1.4"/><line x1="40" y1="66" x2="160" y2="66" stroke="var(--accent)" stroke-width="1.4"/><rect x="103" y="23" width="54" height="40" fill="var(--accent-fill)"/></svg></div>
+        <div class="body">
+          <h3>Blockchain Instrument Map</h3>
+          <p class="sub">Tokenised and smart-contract assets</p>
+          <span class="badge" style="background:#9e1b32">Slibrary 22</span>
+        </div>
+      </div></div>
+    </div><div class="setblock">
+      <div class="sethead"><span class="dot" style="background:#c4761b"></span>Set 23 — Prediction &amp; Risk <span class="chip">5 frameworks</span></div>
+      <div class="grid"><div class="card" data-fw="{&quot;title&quot;:&quot;Fama-French Factors&quot;,&quot;sub&quot;:&quot;Size, value and beyond-market returns&quot;,&quot;slib&quot;:23,&quot;page&quot;:114,&quot;def&quot;:&quot;An asset-pricing model extending CAPM with size and value factors (and later profitability and investment) to better explain cross-sectional returns.&quot;,&quot;bullets&quot;:[&quot;Adds size and value to market beta&quot;,&quot;Returns have multiple sources&quot;,&quot;Empirically outperforms plain CAPM&quot;,&quot;Frames factor-based AI strategies&quot;],&quot;ref&quot;:&quot;Fama, E.F. and French, K.R. (1993) 'Common risk factors in the returns on stocks and bonds', Journal of Financial Economics, 33(1), pp. 3–56.&quot;,&quot;setName&quot;:&quot;Prediction &amp; Risk&quot;}" style="--accent:#c4761b;--accent-fill:#f9efe1">
+        <div class="top" style="background:#c4761b"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Fama-French Factors</h3>
+          <p class="sub">Size, value and beyond-market returns</p>
+          <span class="badge" style="background:#c4761b">Slibrary 23</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Risk-Profiling Matrix&quot;,&quot;sub&quot;:&quot;Capacity × tolerance for risk&quot;,&quot;slib&quot;:23,&quot;page&quot;:115,&quot;def&quot;:&quot;Risk-Profiling Matrix — Capacity × tolerance for risk. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: capacity × tolerance for risk&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;Prediction &amp; Risk&quot;}" style="--accent:#c4761b;--accent-fill:#f9efe1">
+        <div class="top" style="background:#c4761b"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><rect x="40" y="20" width="120" height="92" fill="none" stroke="var(--accent)" stroke-width="2"/><line x1="100" y1="20" x2="100" y2="112" stroke="var(--accent)" stroke-width="1.4"/><line x1="40" y1="66" x2="160" y2="66" stroke="var(--accent)" stroke-width="1.4"/><rect x="103" y="23" width="54" height="40" fill="var(--accent-fill)"/></svg></div>
+        <div class="body">
+          <h3>Risk-Profiling Matrix</h3>
+          <p class="sub">Capacity × tolerance for risk</p>
+          <span class="badge" style="background:#c4761b">Slibrary 23</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Prediction Machines Lens&quot;,&quot;sub&quot;:&quot;AI cheapens prediction, not judgment&quot;,&quot;slib&quot;:23,&quot;page&quot;:116,&quot;def&quot;:&quot;The economic lens that AI is fundamentally a drop in the cost of prediction — which raises the value of complementary human judgement, data and action.&quot;,&quot;bullets&quot;:[&quot;AI lowers the cost of prediction&quot;,&quot;Prediction is not judgement&quot;,&quot;Cheaper prediction raises judgement's value&quot;,&quot;Reframes where humans add value&quot;],&quot;ref&quot;:&quot;Agrawal, A., Gans, J. and Goldfarb, A. (2018) Prediction Machines. Boston: Harvard Business Review Press.&quot;,&quot;setName&quot;:&quot;Prediction &amp; Risk&quot;}" style="--accent:#c4761b;--accent-fill:#f9efe1">
+        <div class="top" style="background:#c4761b"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Prediction Machines Lens</h3>
+          <p class="sub">AI cheapens prediction, not judgment</p>
+          <span class="badge" style="background:#c4761b">Slibrary 23</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Backtesting Pitfalls Map&quot;,&quot;sub&quot;:&quot;Overfitting and look-ahead bias&quot;,&quot;slib&quot;:23,&quot;page&quot;:117,&quot;def&quot;:&quot;A map of the ways quantitative backtests mislead — overfitting, look-ahead bias and multiple testing — leading to false discoveries that fail in live markets.&quot;,&quot;bullets&quot;:[&quot;Overfitting fits noise, not signal&quot;,&quot;Look-ahead bias leaks the future&quot;,&quot;Multiple testing manufactures 'edges'&quot;,&quot;Treat a great backtest as a hypothesis&quot;],&quot;ref&quot;:&quot;López de Prado, M. (2018) Advances in Financial Machine Learning. Hoboken: Wiley.&quot;,&quot;setName&quot;:&quot;Prediction &amp; Risk&quot;}" style="--accent:#c4761b;--accent-fill:#f9efe1">
+        <div class="top" style="background:#c4761b"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><rect x="40" y="20" width="120" height="92" fill="none" stroke="var(--accent)" stroke-width="2"/><line x1="100" y1="20" x2="100" y2="112" stroke="var(--accent)" stroke-width="1.4"/><line x1="40" y1="66" x2="160" y2="66" stroke="var(--accent)" stroke-width="1.4"/><rect x="103" y="23" width="54" height="40" fill="var(--accent-fill)"/></svg></div>
+        <div class="body">
+          <h3>Backtesting Pitfalls Map</h3>
+          <p class="sub">Overfitting and look-ahead bias</p>
+          <span class="badge" style="background:#c4761b">Slibrary 23</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Monte Carlo Cone&quot;,&quot;sub&quot;:&quot;Distribution of possible outcomes&quot;,&quot;slib&quot;:23,&quot;page&quot;:118,&quot;def&quot;:&quot;Monte Carlo Cone — Distribution of possible outcomes. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: distribution of possible outcomes&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;Prediction &amp; Risk&quot;}" style="--accent:#c4761b;--accent-fill:#f9efe1">
+        <div class="top" style="background:#c4761b"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Monte Carlo Cone</h3>
+          <p class="sub">Distribution of possible outcomes</p>
+          <span class="badge" style="background:#c4761b">Slibrary 23</span>
+        </div>
+      </div></div>
+    </div><div class="setblock">
+      <div class="sethead"><span class="dot" style="background:#1f7a52"></span>Set 24 — Algo &amp; HFT <span class="chip">5 frameworks</span></div>
+      <div class="grid"><div class="card" data-fw="{&quot;title&quot;:&quot;Algo-Trading Pipeline&quot;,&quot;sub&quot;:&quot;Signal → execution → monitoring&quot;,&quot;slib&quot;:24,&quot;page&quot;:119,&quot;def&quot;:&quot;Algo-Trading Pipeline — Signal → execution → monitoring. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: signal → execution → monitoring&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;Algo &amp; HFT&quot;}" style="--accent:#1f7a52;--accent-fill:#e4f2ec">
+        <div class="top" style="background:#1f7a52"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Algo-Trading Pipeline</h3>
+          <p class="sub">Signal → execution → monitoring</p>
+          <span class="badge" style="background:#1f7a52">Slibrary 24</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Latency Arms Race&quot;,&quot;sub&quot;:&quot;Microseconds as competitive edge&quot;,&quot;slib&quot;:24,&quot;page&quot;:120,&quot;def&quot;:&quot;Latency Arms Race — Microseconds as competitive edge. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: microseconds as competitive edge&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;Algo &amp; HFT&quot;}" style="--accent:#1f7a52;--accent-fill:#e4f2ec">
+        <div class="top" style="background:#1f7a52"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Latency Arms Race</h3>
+          <p class="sub">Microseconds as competitive edge</p>
+          <span class="badge" style="background:#1f7a52">Slibrary 24</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Market Microstructure Map&quot;,&quot;sub&quot;:&quot;Order books, spreads and impact&quot;,&quot;slib&quot;:24,&quot;page&quot;:121,&quot;def&quot;:&quot;Market Microstructure Map — Order books, spreads and impact. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: order books, spreads and impact&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;Algo &amp; HFT&quot;}" style="--accent:#1f7a52;--accent-fill:#e4f2ec">
+        <div class="top" style="background:#1f7a52"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><rect x="40" y="20" width="120" height="92" fill="none" stroke="var(--accent)" stroke-width="2"/><line x1="100" y1="20" x2="100" y2="112" stroke="var(--accent)" stroke-width="1.4"/><line x1="40" y1="66" x2="160" y2="66" stroke="var(--accent)" stroke-width="1.4"/><rect x="103" y="23" width="54" height="40" fill="var(--accent-fill)"/></svg></div>
+        <div class="body">
+          <h3>Market Microstructure Map</h3>
+          <p class="sub">Order books, spreads and impact</p>
+          <span class="badge" style="background:#1f7a52">Slibrary 24</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Flash-Crash Risk Loop&quot;,&quot;sub&quot;:&quot;How automation amplifies shocks&quot;,&quot;slib&quot;:24,&quot;page&quot;:122,&quot;def&quot;:&quot;Flash-Crash Risk Loop — How automation amplifies shocks. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: how automation amplifies shocks&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;Algo &amp; HFT&quot;}" style="--accent:#1f7a52;--accent-fill:#e4f2ec">
+        <div class="top" style="background:#1f7a52"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="65" r="42" fill="none" stroke="var(--accent)" stroke-width="2.2"/><g fill="var(--accent)"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g><path d="M134 40 l8 -2 -2 8" fill="none" stroke="var(--accent)" stroke-width="2"/></svg></div>
+        <div class="body">
+          <h3>Flash-Crash Risk Loop</h3>
+          <p class="sub">How automation amplifies shocks</p>
+          <span class="badge" style="background:#1f7a52">Slibrary 24</span>
+        </div>
+      </div><div class="card" data-fw="{&quot;title&quot;:&quot;Execution Cost Frontier&quot;,&quot;sub&quot;:&quot;Speed vs. slippage trade-off&quot;,&quot;slib&quot;:24,&quot;page&quot;:123,&quot;def&quot;:&quot;Execution Cost Frontier — Speed vs. slippage trade-off. A single-visual framework in the BARBM312 Slibrary: a thumbnail model you can recall under pressure and apply to AI-driven business and investment decisions.&quot;,&quot;bullets&quot;:[&quot;Core idea: speed vs. slippage trade-off&quot;,&quot;Designed for fast recall as a thumbnail&quot;,&quot;Applied to AI strategy, growth or investment&quot;,&quot;See the full A4 reference sheet for detail&quot;],&quot;ref&quot;:&quot;Meier, J.D. (2025) Thumbnail Thinking. Bellevue, WA: Sources of Insight.&quot;,&quot;setName&quot;:&quot;Algo &amp; HFT&quot;}" style="--accent:#1f7a52;--accent-fill:#e4f2ec">
+        <div class="top" style="background:#1f7a52"></div>
+        <div class="fig"><svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg"><polygon points="100,18 168,112 32,112" fill="none" stroke="var(--accent)" stroke-width="2.2"/><line x1="58" y1="88" x2="142" y2="88" stroke="var(--accent)" stroke-width="1.4" opacity=".55"/><line x1="72" y1="64" x2="128" y2="64" stroke="var(--accent)" stroke-width="1.4" opacity=".55"/><line x1="86" y1="40" x2="114" y2="40" stroke="var(--accent)" stroke-width="1.4" opacity=".55"/></svg></div>
+        <div class="body">
+          <h3>Execution Cost Frontier</h3>
+          <p class="sub">Speed vs. slippage trade-off</p>
+          <span class="badge" style="background:#1f7a52">Slibrary 24</span>
+        </div>
+      </div></div>
+    </div></div>
 
-<section style="padding-top:8px"><div class="wrap">
-  <div class="sec-head"><span class="kicker">Framework Gallery · Thumbnail Thinking</span><h2 class="serif">The Slibrary</h2></div>
-  <p class="sec-sub">Each card is a single-visual framework — a thumbnail you can recall under pressure. Build the catalogue; think in pictures.</p>
-  <div class="setblock"><div class="setname">Set 21 — Investment Foundations · 5 frameworks</div><div class="thumbs"><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><polygon points="60,12 100,68 20,68" fill="none" stroke="var(--ink)" stroke-width="2.4"/><line x1="38" y1="49" x2="82" y2="49" stroke="var(--accent)" stroke-width="2.4"/><line x1="48" y1="31" x2="72" y2="31" stroke="var(--teal)" stroke-width="2.4"/></svg></div><div class="meta">
-        <div class="t">Modern Portfolio Theory</div><div class="d">Efficient frontier of risk vs. return</div>
-        <div class="s">Set 21</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><circle cx="60" cy="40" r="26" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-dasharray="4 5"/><polygon points="86,40 78,34 78,46" fill="var(--accent)"/><circle cx="60" cy="40" r="6" fill="var(--teal)"/></svg></div><div class="meta">
-        <div class="t">Risk-Return Spectrum</div><div class="d">No return without bearing risk</div>
-        <div class="s">Set 21</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><rect x="26" y="12" width="68" height="56" fill="none" stroke="var(--ink)" stroke-width="2.4"/><line x1="60" y1="12" x2="60" y2="68" stroke="var(--ink)" stroke-width="2"/><line x1="26" y1="40" x2="94" y2="40" stroke="var(--ink)" stroke-width="2"/><rect x="62" y="14" width="30" height="24" fill="var(--accent)" opacity=".7"/></svg></div><div class="meta">
-        <div class="t">Diversification Curve</div><div class="d">Falling risk as assets decorrelate</div>
-        <div class="s">Set 21</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><line x1="22" y1="66" x2="100" y2="66" stroke="var(--ink)" stroke-width="2"/><rect x="30" y="46" width="12" height="20" fill="var(--teal)"/><rect x="50" y="34" width="12" height="32" fill="var(--accent)"/><rect x="70" y="22" width="12" height="44" fill="var(--ink)"/></svg></div><div class="meta">
-        <div class="t">Capital Asset Pricing Model</div><div class="d">Beta and the price of market risk</div>
-        <div class="s">Set 21</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><polygon points="28,16 92,16 70,46 70,66 50,66 50,46" fill="none" stroke="var(--ink)" stroke-width="2.4"/><line x1="36" y1="26" x2="84" y2="26" stroke="var(--accent)" stroke-width="2.4"/></svg></div><div class="meta">
-        <div class="t">Black-Litterman Model</div><div class="d">Blending views with market equilibrium</div>
-        <div class="s">Set 21</div></div></div></div></div><div class="setblock"><div class="setname">Set 22 — AI Disrupting Finance · 5 frameworks</div><div class="thumbs"><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><path d="M22,64 C46,64 50,18 98,16" fill="none" stroke="var(--accent)" stroke-width="2.8"/><path d="M22,64 C56,64 60,40 98,40" fill="none" stroke="var(--teal)" stroke-width="2.2" stroke-dasharray="4 4"/></svg></div><div class="meta">
-        <div class="t">Fintech Disruption Map</div><div class="d">Where AI re-prices financial services</div>
-        <div class="s">Set 22</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><rect x="34" y="16" width="52" height="11" fill="none" stroke="var(--ink)" stroke-width="2"/><rect x="34" y="32" width="52" height="11" fill="var(--teal)" opacity=".55"/><rect x="34" y="48" width="52" height="11" fill="none" stroke="var(--ink)" stroke-width="2"/><rect x="34" y="48" width="20" height="11" fill="var(--accent)"/></svg></div><div class="meta">
-        <div class="t">ML Adoption Curve (Investing)</div><div class="d">Muldowney's stages of ML in asset mgmt</div>
-        <div class="s">Set 22</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><circle cx="60" cy="40" r="22" fill="none" stroke="var(--ink)" stroke-width="2.4"/><circle cx="60" cy="18" r="4" fill="var(--accent)"/><circle cx="79" cy="51" r="4" fill="var(--teal)"/><circle cx="41" cy="51" r="4" fill="var(--ink)"/></svg></div><div class="meta">
-        <div class="t">Robo-Advisory Stack</div><div class="d">Profiling → allocation → rebalancing</div>
-        <div class="s">Set 22</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><circle cx="34" cy="26" r="6" fill="var(--teal)"/><circle cx="86" cy="22" r="6" fill="var(--accent)"/><circle cx="60" cy="58" r="6" fill="var(--ink)"/><line x1="34" y1="26" x2="60" y2="58" stroke="var(--muted)" stroke-width="1.8"/><line x1="86" y1="22" x2="60" y2="58" stroke="var(--muted)" stroke-width="1.8"/><line x1="34" y1="26" x2="86" y2="22" stroke="var(--muted)" stroke-width="1.8" stroke-dasharray="3 3"/></svg></div><div class="meta">
-        <div class="t">Alt-Data Pyramid</div><div class="d">Satellite, card, web data as alpha</div>
-        <div class="s">Set 22</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><rect x="24" y="16" width="72" height="48" fill="none" stroke="var(--ink)" stroke-width="2.4"/><line x1="48" y1="16" x2="48" y2="64" stroke="var(--muted)" stroke-width="1.6"/><line x1="72" y1="16" x2="72" y2="64" stroke="var(--muted)" stroke-width="1.6"/><line x1="24" y1="40" x2="96" y2="40" stroke="var(--muted)" stroke-width="1.6"/><rect x="24" y="16" width="24" height="24" fill="var(--accent)" opacity=".5"/></svg></div><div class="meta">
-        <div class="t">Blockchain Instrument Map</div><div class="d">Tokenised and smart-contract assets</div>
-        <div class="s">Set 22</div></div></div></div></div><div class="setblock"><div class="setname">Set 23 — Prediction &amp; Risk · 5 frameworks</div><div class="thumbs"><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><circle cx="60" cy="40" r="24" fill="none" stroke="var(--muted)" stroke-width="1.4"/><circle cx="60" cy="40" r="14" fill="none" stroke="var(--muted)" stroke-width="1.4"/><polygon points="60,20 78,46 44,52" fill="var(--accent)" opacity=".55" stroke="var(--accent)" stroke-width="1.6"/></svg></div><div class="meta">
-        <div class="t">Fama-French Factors</div><div class="d">Size, value and beyond-market returns</div>
-        <div class="s">Set 23</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><line x1="24" y1="66" x2="24" y2="14" stroke="var(--ink)" stroke-width="2"/><line x1="24" y1="66" x2="100" y2="66" stroke="var(--ink)" stroke-width="2"/><path d="M28,60 Q40,24 96,20" fill="none" stroke="var(--accent)" stroke-width="2.8"/><circle cx="60" cy="33" r="4" fill="var(--teal)"/></svg></div><div class="meta">
-        <div class="t">Risk-Profiling Matrix</div><div class="d">Capacity × tolerance for risk</div>
-        <div class="s">Set 23</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><polygon points="60,12 100,68 20,68" fill="none" stroke="var(--ink)" stroke-width="2.4"/><line x1="38" y1="49" x2="82" y2="49" stroke="var(--accent)" stroke-width="2.4"/><line x1="48" y1="31" x2="72" y2="31" stroke="var(--teal)" stroke-width="2.4"/></svg></div><div class="meta">
-        <div class="t">Prediction Machines Lens</div><div class="d">AI cheapens prediction, not judgment</div>
-        <div class="s">Set 23</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><circle cx="60" cy="40" r="26" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-dasharray="4 5"/><polygon points="86,40 78,34 78,46" fill="var(--accent)"/><circle cx="60" cy="40" r="6" fill="var(--teal)"/></svg></div><div class="meta">
-        <div class="t">Backtesting Pitfalls Map</div><div class="d">Overfitting and look-ahead bias</div>
-        <div class="s">Set 23</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><rect x="26" y="12" width="68" height="56" fill="none" stroke="var(--ink)" stroke-width="2.4"/><line x1="60" y1="12" x2="60" y2="68" stroke="var(--ink)" stroke-width="2"/><line x1="26" y1="40" x2="94" y2="40" stroke="var(--ink)" stroke-width="2"/><rect x="62" y="14" width="30" height="24" fill="var(--accent)" opacity=".7"/></svg></div><div class="meta">
-        <div class="t">Monte Carlo Cone</div><div class="d">Distribution of possible outcomes</div>
-        <div class="s">Set 23</div></div></div></div></div><div class="setblock"><div class="setname">Set 24 — Algo &amp; HFT · 5 frameworks</div><div class="thumbs"><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><line x1="22" y1="66" x2="100" y2="66" stroke="var(--ink)" stroke-width="2"/><rect x="30" y="46" width="12" height="20" fill="var(--teal)"/><rect x="50" y="34" width="12" height="32" fill="var(--accent)"/><rect x="70" y="22" width="12" height="44" fill="var(--ink)"/></svg></div><div class="meta">
-        <div class="t">Algo-Trading Pipeline</div><div class="d">Signal → execution → monitoring</div>
-        <div class="s">Set 24</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><polygon points="28,16 92,16 70,46 70,66 50,66 50,46" fill="none" stroke="var(--ink)" stroke-width="2.4"/><line x1="36" y1="26" x2="84" y2="26" stroke="var(--accent)" stroke-width="2.4"/></svg></div><div class="meta">
-        <div class="t">Latency Arms Race</div><div class="d">Microseconds as competitive edge</div>
-        <div class="s">Set 24</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><path d="M22,64 C46,64 50,18 98,16" fill="none" stroke="var(--accent)" stroke-width="2.8"/><path d="M22,64 C56,64 60,40 98,40" fill="none" stroke="var(--teal)" stroke-width="2.2" stroke-dasharray="4 4"/></svg></div><div class="meta">
-        <div class="t">Market Microstructure Map</div><div class="d">Order books, spreads and impact</div>
-        <div class="s">Set 24</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><rect x="34" y="16" width="52" height="11" fill="none" stroke="var(--ink)" stroke-width="2"/><rect x="34" y="32" width="52" height="11" fill="var(--teal)" opacity=".55"/><rect x="34" y="48" width="52" height="11" fill="none" stroke="var(--ink)" stroke-width="2"/><rect x="34" y="48" width="20" height="11" fill="var(--accent)"/></svg></div><div class="meta">
-        <div class="t">Flash-Crash Risk Loop</div><div class="d">How automation amplifies shocks</div>
-        <div class="s">Set 24</div></div></div><div class="thumb"><div class="canvas"><svg viewBox="0 0 120 80"><circle cx="60" cy="40" r="22" fill="none" stroke="var(--ink)" stroke-width="2.4"/><circle cx="60" cy="18" r="4" fill="var(--accent)"/><circle cx="79" cy="51" r="4" fill="var(--teal)"/><circle cx="41" cy="51" r="4" fill="var(--ink)"/></svg></div><div class="meta">
-        <div class="t">Execution Cost Frontier</div><div class="d">Speed vs. slippage trade-off</div>
-        <div class="s">Set 24</div></div></div></div></div>
-</div></section>
+<div class="footer"><b>BARBM312</b> · AI in Investment and Business Growth · © 2026 Dr. Hildegard Haas · EU Business School<br/>
+Applying JD Meier’s <b>Thumbnail Thinking</b> &amp; the <b>Council of Giants</b> · core message via Bostelaar</div>
 
-<section style="padding-top:0"><div class="wrap">
-  <div class="sec-head"><span class="kicker">Council of Giants</span><h2 class="serif">The minds behind Unit 6</h2></div>
-  <p class="sec-sub">Run your Unit 6 challenge through these five lenses before you decide.</p>
-  <div class="giants">
-    <div class="giant"><div class="av">HM</div>
-      <div class="gn">Harry Markowitz</div><div class="gr">Modern Portfolio Theory</div><div class="gl">"Diversification is the only free lunch."</div></div><div class="giant"><div class="av">FB</div>
-      <div class="gn">Fischer Black &amp; Robert Litterman</div><div class="gr">Bayesian Allocation</div><div class="gl">"Start from the market, then add your views."</div></div><div class="giant"><div class="av">EF</div>
-      <div class="gn">Eugene Fama &amp; Kenneth French</div><div class="gr">Multi-Factor Pricing</div><div class="gl">"Returns have more than one source."</div></div><div class="giant"><div class="av">ML</div>
-      <div class="gn">Marcos López de Prado</div><div class="gr">Financial ML</div><div class="gl">"Most backtests are false discoveries."</div></div><div class="giant"><div class="av">AG</div>
-      <div class="gn">Agrawal, Gans &amp; Goldfarb</div><div class="gr">Prediction Machines</div><div class="gl">"AI lowers the cost of prediction."</div></div>
+<!-- popup -->
+<div class="scrim" id="scrim">
+  <div class="modal" id="modal">
+    <button class="x" id="xbtn" aria-label="Close">×</button>
+    <div class="ek" id="m-ek"></div>
+    <h2 id="m-title"></h2>
+    <div class="def" id="m-def"></div>
+    <p class="subline" id="m-sub"></p>
+    <div class="figwrap" id="m-fig"></div>
+    <ul id="m-bullets"></ul>
+    <div class="refbox"><div class="rk">Reference</div><p id="m-ref"></p></div>
+    <button class="viewbtn" id="m-view">📄 View Full A4 Reference Sheet</button>
   </div>
-  <p class="sec-sub" style="margin-top:18px"><a href="slibrary.html#unit6" style="color:var(--accent-2);font-weight:600">See all Giants across the course →</a></p>
-</div></section>
+</div>
+<!-- pdf viewer -->
+<div class="pv" id="pv">
+  <div class="pvbar">
+    <div class="ti" id="pv-title">Framework Sheet<small id="pv-sub"></small></div>
+    <div class="sp"></div>
+    <button id="pv-open">Open in new tab ↗</button>
+    <button id="pv-close">✕ Close</button>
+  </div>
+  <iframe id="pv-frame" title="Framework Sheet Library"></iframe>
+</div>
+<script>
+const PDF = "BARBM312_Framework_Sheet_Library.pdf";
+const ACC = '#9e1b32', FILL='#f7e7ea';
+function classify(title, sub){
+  const s=(title+' '+sub).toLowerCase();
+  if(/pyramid|stack|tier|ladder|iceberg/.test(s)){ if(/iceberg/.test(s))return'iceberg'; if(/ladder|staircase|maturity|stages/.test(s))return'stairs'; return'pyramid'; }
+  if(/loop|cycle|flywheel|ooda|crisp|continuous|funnel|pipeline/.test(s)){ if(/funnel/.test(s))return'funnel'; return'loop'; }
+  if(/s-curve|j-curve|curve|diffusion|trajector|frontier|adoption/.test(s))return'scurve';
+  if(/2×2|2x2|matrix|grid|quadrant|vs\.|versus|build · buy|map\b/.test(s))return'matrix';
+  if(/journey|flow|chain|funnel|→|sequence|path|waterfall/.test(s))return'flow';
+  if(/high performer|bars|benefit|ratio|metric|rule of 40/.test(s))return'bars';
+  if(/network|effect|node|platform/.test(s))return'network';
+  return'loop';
+}
+const GLY={
+  pyramid:()=>'<svg viewBox="0 0 200 130"><polygon points="100,18 168,112 32,112" fill="none" stroke="'+ACC+'" stroke-width="2.2"/><line x1="58" y1="88" x2="142" y2="88" stroke="'+ACC+'" stroke-width="1.4" opacity=".55"/><line x1="72" y1="64" x2="128" y2="64" stroke="'+ACC+'" stroke-width="1.4" opacity=".55"/><line x1="86" y1="40" x2="114" y2="40" stroke="'+ACC+'" stroke-width="1.4" opacity=".55"/></svg>',
+  stairs:()=>'<svg viewBox="0 0 200 130"><g fill="'+FILL+'" stroke="'+ACC+'" stroke-width="1.8"><rect x="28" y="92" width="34" height="22"/><rect x="62" y="74" width="34" height="40"/><rect x="96" y="56" width="34" height="58"/><rect x="130" y="36" width="34" height="78"/></g></svg>',
+  iceberg:()=>'<svg viewBox="0 0 200 130"><line x1="20" y1="58" x2="180" y2="58" stroke="'+ACC+'" stroke-width="1" opacity=".5" stroke-dasharray="4 4"/><polygon points="100,20 128,58 72,58" fill="'+FILL+'" stroke="'+ACC+'" stroke-width="2"/><polygon points="72,58 128,58 150,112 50,112" fill="'+FILL+'" stroke="'+ACC+'" stroke-width="1.6" opacity=".55"/></svg>',
+  loop:()=>'<svg viewBox="0 0 200 130"><circle cx="100" cy="65" r="42" fill="none" stroke="'+ACC+'" stroke-width="2.2"/><g fill="'+ACC+'"><circle cx="100" cy="23" r="5"/><circle cx="142" cy="65" r="5"/><circle cx="100" cy="107" r="5"/><circle cx="58" cy="65" r="5"/></g></svg>',
+  funnel:()=>'<svg viewBox="0 0 200 130"><polygon points="34,24 166,24 120,82 120,112 80,112 80,82" fill="'+FILL+'" stroke="'+ACC+'" stroke-width="2"/><line x1="56" y1="46" x2="144" y2="46" stroke="'+ACC+'" stroke-width="1.2" opacity=".5"/></svg>',
+  scurve:()=>'<svg viewBox="0 0 200 130"><path d="M24 108 C 70 106, 78 30, 176 24" fill="none" stroke="'+ACC+'" stroke-width="2.6"/><line x1="24" y1="114" x2="180" y2="114" stroke="'+ACC+'" stroke-width="1" opacity=".4"/><line x1="24" y1="114" x2="24" y2="18" stroke="'+ACC+'" stroke-width="1" opacity=".4"/></svg>',
+  matrix:()=>'<svg viewBox="0 0 200 130"><rect x="40" y="20" width="120" height="92" fill="none" stroke="'+ACC+'" stroke-width="2"/><line x1="100" y1="20" x2="100" y2="112" stroke="'+ACC+'" stroke-width="1.4"/><line x1="40" y1="66" x2="160" y2="66" stroke="'+ACC+'" stroke-width="1.4"/><rect x="103" y="23" width="54" height="40" fill="'+FILL+'"/></svg>',
+  flow:()=>'<svg viewBox="0 0 200 130"><g fill="'+FILL+'" stroke="'+ACC+'" stroke-width="1.8"><rect x="20" y="52" width="34" height="26" rx="3"/><rect x="83" y="52" width="34" height="26" rx="3"/><rect x="146" y="52" width="34" height="26" rx="3"/></g><g stroke="'+ACC+'" stroke-width="2" fill="none"><path d="M56 65 h25 M75 60 l8 5 -8 5"/><path d="M119 65 h25 M138 60 l8 5 -8 5"/></g></svg>',
+  bars:()=>'<svg viewBox="0 0 200 130"><g fill="'+FILL+'" stroke="'+ACC+'" stroke-width="1.8"><rect x="36" y="78" width="26" height="34"/><rect x="74" y="58" width="26" height="54"/><rect x="112" y="40" width="26" height="72"/><rect x="150" y="24" width="26" height="88"/></g></svg>',
+  network:()=>'<svg viewBox="0 0 200 130"><g stroke="'+ACC+'" stroke-width="1.5" opacity=".7"><line x1="100" y1="65" x2="48" y2="34"/><line x1="100" y1="65" x2="152" y2="34"/><line x1="100" y1="65" x2="48" y2="96"/><line x1="100" y1="65" x2="152" y2="96"/></g><g fill="'+ACC+'"><circle cx="100" cy="65" r="8"/><circle cx="48" cy="34" r="5"/><circle cx="152" cy="34" r="5"/><circle cx="48" cy="96" r="5"/><circle cx="152" cy="96" r="5"/></g></svg>',
+};
+function DIAG(title,sub){ return GLY[classify(title,sub)](); }
+const scrim=document.getElementById('scrim'), modal=document.getElementById('modal');
+const pv=document.getElementById('pv'), pvf=document.getElementById('pv-frame');
+let current=null;
+function openModal(d){
+  current=d;
+  document.getElementById('m-ek').textContent = 'Slibrary '+d.slib+' — '+d.setName;
+  document.getElementById('m-title').textContent = d.title;
+  document.getElementById('m-def').textContent = d.def;
+  document.getElementById('m-sub').textContent = d.sub;
+  document.getElementById('m-fig').innerHTML = DIAG(d.title, d.sub);
+  document.getElementById('m-bullets').innerHTML = d.bullets.map(b=>'<li>'+esc(b)+'</li>').join('');
+  document.getElementById('m-ref').textContent = d.ref;
+  scrim.classList.add('open');
+}
+function closeModal(){ scrim.classList.remove('open'); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+document.querySelectorAll('.card').forEach(c=>{
+  c.addEventListener('click',()=>openModal(JSON.parse(c.getAttribute('data-fw'))));
+});
+document.getElementById('xbtn').addEventListener('click',closeModal);
+scrim.addEventListener('click',e=>{ if(e.target===scrim) closeModal(); });
+document.getElementById('m-view').addEventListener('click',()=>{
+  if(!current) return;
+  const url = PDF + '#page=' + current.page;
+  document.getElementById('pv-title').firstChild.textContent = current.title;
+  document.getElementById('pv-sub').textContent = 'Slibrary '+current.slib+' · Page '+current.page+' of the Framework Sheet Library';
+  pvf.src = url;
+  document.getElementById('pv-open').onclick=()=>window.open(url,'_blank');
+  pv.classList.add('open');
+});
+document.getElementById('pv-close').addEventListener('click',()=>{ pv.classList.remove('open'); pvf.src='about:blank'; });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModal(); pv.classList.remove('open'); } });
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('copy',e=>e.preventDefault());
+document.addEventListener('cut',e=>e.preventDefault());
+document.addEventListener('dragstart',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{
+  const k=e.key.toLowerCase();
+  if((e.ctrlKey||e.metaKey)&&(k==='p'||k==='s'||k==='u'||k==='c')){ e.preventDefault(); }
+});
 
-<footer><div class="wrap">
-  <div><strong>© Dr. Hildegard Haas 2026</strong> · BARBM312 AI in Investment and Business Growth · EU Business School</div>
-  <div>Applying <span class="acc">Thumbnail Thinking</span> & the <span class="acc">Council of Giants</span> (JD Meier) · Core message via <span class="acc">Bostelaar</span></div>
-</div></footer>
+</script>
 </body></html>
